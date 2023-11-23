@@ -1,0 +1,59 @@
+import React, { useState } from 'react';
+import {Registry} from './ConnexionAPI.js';
+
+function Register(){
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        Registry(username, password, name, firstName);
+    };
+
+    return(
+        <div>
+
+            <label htmlFor="firstName">Prenom :</label>
+            <input
+                type="firstName"
+                id="firstName"
+                name="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+            />
+            
+            <label htmlFor="name">Nom :</label>
+            <input
+                type="name"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+            
+            <label htmlFor="username">Identifiant :</label>
+            <input
+                type="username"
+                id="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            
+            <label htmlFor="password">Mot de passe :</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button onClick={handleRegister}>S'inscrire</button>
+
+        </div>
+
+    );
+}export default Register;
