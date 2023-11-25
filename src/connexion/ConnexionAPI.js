@@ -1,18 +1,18 @@
 import axios from 'axios';
 
 export const Authenticate = async (user, password) => {
-    axios.get('http://localhost:3001/api/user/login', {
+    return axios.get('http://localhost:3001/api/user/login', {
         params : {
             'username':user,
             'password':password
         }
     })
-    .then(response => {console.log(response.data)})
-    .catch(error => console.log(error))
+    .then(response => {return response.data})
+    .catch(error => {console.log(error); throw error;})
 }
 
 export const Registry = async (user, password, name, firstName) => {
-    axios.post('http://localhost:3001/api/user/register', {
+    return axios.post('http://localhost:3001/api/user/register', {
         params : {
             'username':user,
             'password':password,
@@ -20,6 +20,6 @@ export const Registry = async (user, password, name, firstName) => {
             'firstName':firstName
         }
     })
-    .then(response => {console.log(response.data)})
-    .catch(error => console.log(error))
+    .then(response => {console.log(response.data); return response.data})
+    .catch(error => {console.log(error); throw error;})
 }

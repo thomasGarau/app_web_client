@@ -1,5 +1,10 @@
+//dependances
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+//modules
 import {Registry} from './ConnexionAPI.js';
+import {createCookie, readCookie, eraseCookie} from '../services/Cookie.js';
 
 function Register(){
     const [username, setUsername] = useState('');
@@ -7,9 +12,23 @@ function Register(){
     const [name, setName] = useState('');
     const [firstName, setFirstName] = useState('');
 
-    const handleRegister = (e) => {
+    const navigate = useNavigate();
+
+    const handleRegister = async (e) => {
         e.preventDefault();
-        Registry(username, password, name, firstName);
+        await Registry(username, password, name, firstName)
+        .then(data => {
+            const {username, token, days} = data;
+            if (token) {
+              createCookie(username, token, days);
+              navigate('/secure_page');
+            } else {
+              console.log("Erreur lors de l'inscription");
+            }
+          })
+          .catch(error => {
+            console.error('Erreur lors de l\'inscription :', error);
+          });
     };
 
     return(

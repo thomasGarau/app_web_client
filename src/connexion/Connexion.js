@@ -1,7 +1,10 @@
-// Accueil.js
+//dependances
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+//modules
 import {Authenticate} from './ConnexionAPI.js';
+import {createCookie, getToken, eraseCookie} from '../services/Cookie.js';
 
 function Connexion() {   
   const [username, setUsername] = useState('');
@@ -9,9 +12,23 @@ function Connexion() {
 
 const navigate = useNavigate();
 
-const handleLogin = (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
-  Authenticate(username, password);
+  await Authenticate(username, password)
+  .then(data => {
+    const {username, token, days} = data;
+    if (token) {
+      createCookie(username, token, days);
+      console.log(getToken(username));
+      navigate('/secure_page');
+    } else {
+      console.log("Erreur de connexion");
+    }
+  })
+  .catch(error => {
+    console.error('Erreur lors de l\'authentification :', error);
+  });
+
 };
 
 return (
