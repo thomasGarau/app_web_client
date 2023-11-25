@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //modules
-import {Registry} from './ConnexionAPI.js';
+import {Registry} from './UserAPI.js';
 import {createCookie, readCookie, eraseCookie} from '../services/Cookie.js';
 
 function Register(){
@@ -20,7 +20,7 @@ function Register(){
         .then(data => {
             const {username, token, days} = data;
             if (token) {
-              createCookie(username, token, days);
+              createCookie(token, days);
               navigate('/secure_page');
             } else {
               console.log("Erreur lors de l'inscription");

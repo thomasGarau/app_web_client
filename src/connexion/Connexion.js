@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //modules
-import {Authenticate} from './ConnexionAPI.js';
-import {createCookie, getToken, eraseCookie} from '../services/Cookie.js';
+import {Authenticate } from './UserAPI.js';
+import {createCookie} from '../services/Cookie.js';
 
 function Connexion() {   
   const [username, setUsername] = useState('');
@@ -16,10 +16,9 @@ const handleLogin = async (e) => {
   e.preventDefault();
   await Authenticate(username, password)
   .then(data => {
-    const {username, token, days} = data;
+    const {username, token, days, role} = data;
     if (token) {
-      createCookie(username, token, days);
-      console.log(getToken(username));
+      createCookie(token, days, role);
       navigate('/secure_page');
     } else {
       console.log("Erreur de connexion");
