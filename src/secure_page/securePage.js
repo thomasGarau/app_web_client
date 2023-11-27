@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { testSecure } from "./securePageAPI.js";
-import { getTokenAndRole } from "../services/Cookie.js";
+import { logout } from "../connexion/UserAPI.js";
+import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
+
 
 function SecurePage() {
   const [isSecure, setIsSecure] = useState(null);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const fetchSecureData = async () => {
       try {
@@ -19,10 +23,24 @@ function SecurePage() {
     fetchSecureData();
   }, []);
 
+  async function handleDisconnection() {
+    try{
+      const {token, role} = getTokenAndRole();
+      await logout(token)
+      eraseCookie();
+    }catch(error){
+      console.error('Erreur lors de la déconnexion :', error);
+      throw error;
+    }finally{
+      navigate('/');
+    }
+  }
+
   return (
     <div>
       <h1>Page sécurisée</h1>
       {isSecure}
+      <button onClick={handleDisconnection}>Deconnexion</button>
     </div>
   );
 }

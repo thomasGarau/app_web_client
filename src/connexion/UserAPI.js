@@ -29,3 +29,13 @@ export const verifyToken = async (token) => {
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
 }
+
+export const logout = async (token) => {
+    return axios.post('http://localhost:3001/api/user/logout', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {return response.data})
+    .catch(error => {console.log(error); throw error;})
+}

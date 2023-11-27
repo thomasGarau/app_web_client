@@ -41,4 +41,13 @@ const getCookieValue = (name) => {
     }
     return null;
 };
-export const eraseCookie = (name) => { };
+
+export const eraseCookie = () => {
+    try {
+        //on redéfinit le cookie avec une date d'expiration dépassée pour que le navigateur le supprime
+        const expires = "; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+        document.cookie = "authData=" + expires + "; path=/";
+    } catch (error) {
+        console.error('Erreur lors de la suppression du cookie :', error);
+    }
+};
