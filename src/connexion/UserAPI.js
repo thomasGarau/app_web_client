@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const Authenticate = async (user, password) => {
+    console.log("authenticate")
     return axios.post('http://localhost:3001/api/user/login', {
         username:user,
         password
@@ -10,6 +11,7 @@ export const Authenticate = async (user, password) => {
 }
 
 export const Registry = async (user, password, name, firstName) => {
+    console.log("registry")
     return axios.post('http://localhost:3001/api/user/register', {
             'username':user,
             'password':password,
@@ -21,9 +23,10 @@ export const Registry = async (user, password, name, firstName) => {
 }
 
 export const verifyToken = async (token) => {
-    return axios.get('http://localhost:3001/api/user/verify-token', {
-        params : {
-            'token':token
+    console.log("verifyToken")
+    return axios.get('http://localhost:3001/api/user/verify-token',  {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {return response.data})
@@ -31,7 +34,7 @@ export const verifyToken = async (token) => {
 }
 
 export const logout = async (token) => {
-    return axios.post('http://localhost:3001/api/user/logout', {
+    return axios.post('http://localhost:3001/api/user/logout', {}, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
