@@ -7,6 +7,7 @@ import { Authenticate } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
+import Header from '../composent/Header.js';
 
 
 function Connexion() {
@@ -40,11 +41,12 @@ function Connexion() {
 
   return (
     <div className='background'>
+      <Header></Header>
       <div className='base-container'>
-        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "60px", margin: "0px" }}>Connexion</h1>
+        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "80px", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
           <input
-            style={{ fontFamily: "Nanum Pen Script", fontSize: "25px" }}
+            style={{ fontFamily: "Nanum Pen Script", fontSize: "35px" }}
             type="text"
             id="username"
             name="username"
@@ -53,22 +55,22 @@ function Connexion() {
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
-            style={{ fontFamily: "Nanum Pen Script", fontSize: "25px"}}
+            style={{ fontFamily: "Nanum Pen Script", fontSize: "35px"}}
             type="password"
             id="password"
             name="password"
-            placeholder='Mot de passe'
+            placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className='buttons-container'>
           <button
-            style={{ fontFamily: "Nanum Pen Script", fontSize: "30px" }}
+            style={{ fontFamily: "Nanum Pen Script"}}
             className='reg-button'
             onClick={toRegister}>Inscription</button>
           <button
-            style={{ fontFamily: "Nanum Pen Script", fontSize: "30px"  }}
+            style={{ fontFamily: "Nanum Pen Script" }}
             className='valid-button'
             onClick={handleLogin}>Valider</button>
         </div>
