@@ -6,7 +6,7 @@ import Connexion from './connexion/Connexion'
 import Register from './connexion/Register'
 import Liste_ue from './liste_ue/Liste_ue'
 import Carte_mental from './carte_mental/Carte_mental'
-import TestHeader from './testHeader/TestHeader'
+import TestHeader from './test/TestHeader'
 import SecurePage from './secure_page/securePage';
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Route path="/liste_ue" element={<PrivateRoute><Liste_ue /></PrivateRoute>} /> 
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
         <Route path="/secure_page" element={<PrivateRoute><SecurePage /></PrivateRoute>} />*
-        <Route path="testHeader" element={<TestHeader />} /> 
+        <Route path="/testHeader" element={<TestHeader />} /> 
         <Route path="/" element={<Principal />} /> 
       </Routes>
     </Router>
