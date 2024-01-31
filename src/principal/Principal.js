@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './principal.css';
+import "@fontsource/nanum-pen-script";
 
 function Accueil() {
   const navigate = useNavigate();
@@ -13,11 +15,11 @@ function Accueil() {
   };
 
   return (
-    <div>
-      <h1>Page d'accueil</h1>
-      <p>Bienvenue sur la page d'accueil de mon application.</p>
-      <button onClick={handleRegisterClick}>Inscription</button>
-      <button onClick={handleConnexionClick}>Connexion</button>
+    <div className='style_background'>
+      <div className='container1_style'>
+        <button className='button1' onClick={handleRegisterClick}>Inscription</button>
+        <button onClick={handleConnexionClick}>Connexion</button>
+      </div>
     </div>
   );
 }
