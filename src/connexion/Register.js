@@ -43,10 +43,10 @@ function Register() {
         <div className='background'>
             <Header></Header>
             <div className='base-container'>
-                <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "80px", margin: "0px" }}>Inscription</h1>
+                <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "6vw", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>
                     <input
-                        style={{ fontFamily: "Nanum Pen Script", fontSize: "35px"}}
+                        style={{ fontFamily: "Nanum Pen Script"}}
                         type="firstName"
                         id="firstName"
                         name="firstName"
@@ -57,7 +57,7 @@ function Register() {
                     />
 
                     <input
-                        style={{ fontFamily: "Nanum Pen Script", fontSize: "35px"}}
+                        style={{ fontFamily: "Nanum Pen Script"}}
                         type="name"
                         id="name"
                         name="name"
@@ -68,7 +68,7 @@ function Register() {
                     />
 
                     <input
-                        style={{ fontFamily: "Nanum Pen Script", fontSize: "35px"}}
+                        style={{ fontFamily: "Nanum Pen Script"}}
                         type="username"
                         id="username"
                         name="username"
@@ -79,7 +79,7 @@ function Register() {
                     />
 
                     <input
-                        style={{ fontFamily: "Nanum Pen Script", fontSize: "35px"}}
+                        style={{ fontFamily: "Nanum Pen Script"}}
                         type="password"
                         id="password"
                         name="password"

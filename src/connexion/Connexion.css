@@ -10,9 +10,18 @@
     flex-direction: column;
     align-items: center;
     width: 86vw;
-    height: 64vh;
+    height: 70vh;
     justify-content: space-evenly;
-    margin-top: 5%;
+    padding: 1%;
+    margin-top: 7.5%;
+}
+
+.background{
+    background-color: #C3D9FF;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 1250px) {   
@@ -31,54 +40,47 @@
         height: 62%;
         justify-content: space-evenly;
         align-items: center;
+        margin-bottom: 10px;
     }
-    
-    .background{
-        background-color: #C3D9FF;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
+     
     input {
         width: 57%;
         border-radius: 20px;
         height: 16%;
         padding: 0px 10px;
+        font-size: 3vw;
     }
     
     button {
         font-family: 'Nanum Pen Script';
-        font-size: 20px;
+        font-size: 3vw;
         border: none;
         color: white;
-        padding: 15px 32px;
+        padding: 15px 0px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 48px;
         border-radius: 50px;
         width: 43%;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         transition-duration: 0.4s;
     }
     
+    .valid-button {
+        background-color: #133D56;
+    }
+
     .valid-button:hover {
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
       }
     
-    .valid-button {
-        background-color: #133D56;
-    }
-    
-    .reg-button:hover {
-        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
-    }
-    
-    .reg-button{
+      .reg-button{
         background-color: #C3D9FF;
         color: black;
+    }
+
+    .reg-button:hover {
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
     }
     
     .buttons-container {
@@ -122,51 +124,47 @@
         align-items: center;
     }
     
-    .background{
-        background-color: #C3D9FF;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
+
     input {
         width: 57%;
         border-radius: 20px;
         height: 16%;
         padding: 0px 10px;
+        font-size: 4vw;
     }
     
     button {
         border: none;
         color: white;
-        padding: 15px 32px;
+        padding: 15px 0px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 32px;
+        font-size: 4vw;
         border-radius: 50px;
         width: 43%;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         transition-duration: 0.4s;
     }
     
+    .valid-button {
+        background-color: #133D56;
+    }
+
     .valid-button:hover {
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
       }
     
-    .valid-button {
-        background-color: #133D56;
+      .reg-button{
+        background-color: #C3D9FF;
+        color: black;
     }
-    
+
     .reg-button:hover {
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
     }
     
-    .reg-button{
-        background-color: #C3D9FF;
-        color: black;
-    }
+
     
     .buttons-container {
         display: flex;
