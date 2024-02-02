@@ -10,7 +10,7 @@ function Header() {
     const navigate = useNavigate();
 
     const versPagePrincipale = () => {
-        navigate('/secure_page');
+        navigate('/secure_page2');
     }
 
     const VersProfile = () => {
