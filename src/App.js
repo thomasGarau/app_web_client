@@ -8,6 +8,7 @@ import Liste_ue from './liste_ue/Liste_ue';
 import Carte_mental from './carte_mental/Carte_mental';
 import TestHeader from './test/TestHeader'
 import SecurePage from './secure_page/securePage';
+import Profile from './profile/Profile';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
         <Route path="/secure_page" element={<PrivateRoute><SecurePage /></PrivateRoute>} />*
         <Route path="/testHeader" element={<TestHeader />} /> 
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/" element={<Principal />} /> 
       </Routes>
     </Router>
