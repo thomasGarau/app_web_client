@@ -10,6 +10,7 @@ import TestHeader from './test/TestHeader'
 import SecurePage from './secure_page/securePage';
 import Profile from './profile/Profile';
 import Study from './STUDY/Study';
+import Forum from './question/Forum';
 import Quizz_principale from './quizz/Quizz_principale';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/quizz" element={/*<PrivateRoute> */<Quizz_principale /> /*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
         <Route path="/etude" element={/* <PrivateRoute> */<Study/>/* </PrivateRoute> */}/>
+        <Route path="/forum" element={/* <PrivateRoute> */<Forum/>/* </PrivateRoute> */}/>
         <Route path="/secure_page" element={<PrivateRoute><SecurePage /></PrivateRoute>} />
         <Route path="/testHeader" element={<TestHeader />} /> 
         <Route path='/secure_page2' element={<PrivateRoute2><SecurePage /></PrivateRoute2>} />
