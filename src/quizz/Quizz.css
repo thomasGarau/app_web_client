@@ -1,0 +1,108 @@
+.background_quizz_principale {
+    background-color: #C3D9FF;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.base-container_quizz_principale {
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.87);
+    -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 20px;
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+    display: flex;
+    flex-flow : column;
+    align-items: center;
+    width: 86vw;
+    height: 70vh;
+    justify-content: start;
+    padding: 0.5%;
+    margin-top: 7.5%;
+    overflow: hidden;
+}
+
+.container_quizz{
+    background-color: #133D56;
+        color: rgba(0, 0, 0, 0.87);
+        -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        border-radius: 38px;
+        box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 85%;
+        height: 120px;
+        margin-bottom: 10px;
+
+}
+
+.container_quizzs{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow : column;
+    align-items: center;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+
+.item_quizz, .theme_quizz, .quizz_like{
+    background-color: white;
+    border-radius: 38px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin : 2px;
+}
+
+.item_quizz{
+    width: 20%;
+    height: 70%;
+}
+
+.quizz_like{
+    width: 11%;
+    height: 70%;
+}
+
+.theme_quizz{
+    width: 25%;
+    height: 70%;
+}
+
+.item_quizz p, .theme_quizz p, .quizz_like p {
+    font-size: 30px;
+}
+
+.quizz_like p {
+    font-size: 70px;
+
+}
+
+.btn_quizz{
+    width : 20%;
+    height: 70%;
+    background-color: white;
+    color : black;
+}
+
+.btn_quizz:hover{
+    background-color: #C3D9FF;
+    color : white;
+}
+
+.img_coeur{
+    width : auto;
+    height : 50%;
+}
+
+h1 {
+    margin : 1%;
+}
