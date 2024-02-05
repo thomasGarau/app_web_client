@@ -12,7 +12,7 @@ function Study(){
 
 
     return (
-        <div className='background'>
+        <div className='background-study'>
             <Header></Header>
             <div className='text-part'>
                 <h1>{cours}</h1>

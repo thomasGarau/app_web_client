@@ -20,8 +20,9 @@
     background-color: #C3D9FF;
     height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 @media (min-width: 1250px) {   
