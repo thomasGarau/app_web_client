@@ -4,9 +4,9 @@ import Header from '../composent/Header';
 
 function Forum(){
 
-    
+    const {state} = useLocation()
 
-    const [discussions, setDiscussions] = useState([{}])
+    const [discussions, setDiscussions] = useState([{question: state, }])
 
     return (
         <div>
