@@ -52,7 +52,7 @@
         font-size: 3vw;
     }
     
-    button {
+    .button-connection {
         font-family: 'Nanum Pen Script';
         font-size: 3vw;
         border: none;

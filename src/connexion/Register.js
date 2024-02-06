@@ -91,13 +91,13 @@ function Register() {
                 <div className='buttons-container'>
                     <button 
                         style={{ fontFamily: "Nanum Pen Script"}} 
-                        className='reg-button'
+                        className='reg-button button-connection'
                         onClick={toConnection}>
                             Connexion
                     </button>
                     <button 
                         style={{ fontFamily: "Nanum Pen Script"}} 
-                        className='valid-button' 
+                        className='valid-button button-connection' 
                         onClick={handleRegister}>
                             Valider
                     </button>

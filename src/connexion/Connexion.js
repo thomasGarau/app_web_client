@@ -65,13 +65,13 @@ function Connexion() {
           />
         </div>
         <div className='buttons-container'>
-          <button
+          <button 
             style={{ fontFamily: "Nanum Pen Script"}}
-            className='reg-button'
+            className='reg-button button-connection'
             onClick={toRegister}>Inscription</button>
           <button
             style={{ fontFamily: "Nanum Pen Script" }}
-            className='valid-button'
+            className='valid-button button-connection'
             onClick={handleLogin}>Valider</button>
         </div>
 
