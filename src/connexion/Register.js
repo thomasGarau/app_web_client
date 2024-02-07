@@ -46,6 +46,7 @@ function Register() {
                 <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "6vw", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>
                     <input
+                        className='input-connexion'
                         style={{ fontFamily: "Nanum Pen Script"}}
                         type="firstName"
                         id="firstName"
@@ -55,8 +56,8 @@ function Register() {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                     />
-
                     <input
+                        className='input-connexion'
                         style={{ fontFamily: "Nanum Pen Script"}}
                         type="name"
                         id="name"
@@ -66,8 +67,8 @@ function Register() {
                         required
                         onChange={(e) => setName(e.target.value)}
                     />
-
                     <input
+                        className='input-connexion'
                         style={{ fontFamily: "Nanum Pen Script"}}
                         type="username"
                         id="username"
@@ -77,8 +78,8 @@ function Register() {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-
                     <input
+                        className='input-connexion'
                         style={{ fontFamily: "Nanum Pen Script"}}
                         type="password"
                         id="password"
