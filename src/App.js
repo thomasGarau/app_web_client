@@ -6,7 +6,7 @@ import Principal from './principal/Principal';
 import Connexion from './connexion/Connexion';
 import Register from './connexion/Register';
 import Carte_mental from './carte_mental/Carte_mental';
-import TestHeader from './test/TestHeader'
+import TestHeader from './test/testHeader'
 import SecurePage from './secure_page/securePage';
 import Profile from './profile/Profile';
 import Study from './STUDY/Study';
