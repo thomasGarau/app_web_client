@@ -15,7 +15,7 @@ function Quizz_principale () {
     <div className='background_quizz_principale'>
       <Header></Header>
         <div className='base-container_quizz_principale'>
-          <h1>Quizz de l'UE</h1>
+          <h1 className='quizz-title'>Quizz de l'UE</h1>
           <div className='container_quizzs'>
             <div className='container_quizz'>
               <div id='quizz_num' className='item_quizz'>

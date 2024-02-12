@@ -46,6 +46,7 @@ function Connexion() {
         <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "6vw", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
           <input
+            className='input-connexion'
             style={{ fontFamily: "Nanum Pen Script" }}
             type="text"
             id="username"
@@ -55,6 +56,7 @@ function Connexion() {
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
+            className='input-connexion'
             style={{ fontFamily: "Nanum Pen Script"}}
             type="password"
             id="password"
@@ -65,13 +67,13 @@ function Connexion() {
           />
         </div>
         <div className='buttons-container'>
-          <button
+          <button 
             style={{ fontFamily: "Nanum Pen Script"}}
-            className='reg-button'
+            className='reg-button button-connection'
             onClick={toRegister}>Inscription</button>
           <button
             style={{ fontFamily: "Nanum Pen Script" }}
-            className='valid-button'
+            className='valid-button button-connection'
             onClick={handleLogin}>Valider</button>
         </div>
 
