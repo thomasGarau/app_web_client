@@ -12,16 +12,27 @@
     display: flex;
     flex-direction: column;
     padding: 0px 3vw;
+    margin-bottom: 25px;
 }
 
+
 .question{
-    background-color: #133D56;
+
     border-radius: 25px;
-    color: white;
+    
     padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.blue {
+    background-color: #133D56;
+    color: white;
+}
+
+.grey{
+    background-color: #d9d9d9;
+    color: black;
 }
 
 .answer-button{
@@ -42,19 +53,19 @@
 }
 
 .forum-title{
-    font-size: 5em;
-}
-
-.title-date{
     font-size: 3em;
 }
 
+.title-date{
+    font-size: 2em;
+}
+
 .who-when{
-    font-size: 2.5em;
+    font-size: 2em;
 }
 
 .question-text{
-    font-size: 2.5em;
+    font-size: 2em;
     margin-left: 20px;
 }
 
@@ -63,14 +74,14 @@
     flex-direction: row;
     justify-content: space-between;
     margin-right: 2vw;
+    height: 40px;
 }
 
 .button-container-hide{
-    display: none;
+    display: none !important;
 }
 
 .button-container-show{
-    display: flex;
     flex-direction: row; 
 }
 
@@ -88,12 +99,28 @@
 
 .input-forum{
     width: 80%;
-    height: 100px;
-    font-size: 2.5em;
+    height: 4rem;
+    font-size: 2em;
     border-radius: 50px;
     border: 4px solid;
-    position: absolute;
+    
     bottom: 20px;
     left: 10%;
     padding-left: 50px;
+}
+
+.comment-footer {
+    display: flex;
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    position: fixed;
+    bottom: 0px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px -2px 8px 5px #00000080;
+}
+
+.question-container{
+    margin-bottom: 125px;
 }
