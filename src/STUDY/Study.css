@@ -3,7 +3,7 @@
 }
 
 p {
-    font-size: 2.5em;
+    font-size: 2em;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
@@ -33,7 +33,7 @@ p {
     background-color: white;
 }
 
-li{
+.list-button{
     color: black;
     font-size: 2.5em;
     border-bottom: 4px solid #d9d9d9; 
@@ -43,7 +43,12 @@ li{
     justify-content: space-between;
 }
 
-ul {
+.button-ul {
     list-style-type: none;
     padding: 0;
+}
+
+.forum-component-title{
+    margin-left: 2rem;
+    font-size: xxx-large;
 }
