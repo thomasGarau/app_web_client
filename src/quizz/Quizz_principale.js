@@ -59,7 +59,7 @@ function Quizz_principale () {
             <button onClick={() => navigate('/')} className='btn_quizz'>Commencer</button>
           </div>
           )}
-          <button onClick={() => navigate('/createQuizz')} className='btn_quizz_creer'>Creer un quizz</button>
+          <button onClick={() => navigate('/create_quizz')} className='btn_quizz_creer'>Creer un quizz</button>
         </div>
       </div>
     </div>
