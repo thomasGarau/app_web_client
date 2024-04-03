@@ -11,6 +11,7 @@ import Profile from './profile/Profile';
 import Study from './STUDY/Study';
 import Forum from './question/Forum';
 import Quizz_principale from './quizz/Quizz_principale';
+import CreateQuizz from './quizz/CreateQuizz';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
         <Route path="/etude" element={/* <PrivateRoute> */<Study/>/* </PrivateRoute> */}/>
         <Route path="/forum" element={/* <PrivateRoute> */<Forum/>/* </PrivateRoute> */}/>
+        <Route path="/create_quizz" element={/* <PrivateRoute> */<CreateQuizz/>/* </PrivateRoute> */}/>
         <Route path="/secure_page" element={/* <PrivateRoute> */<SecurePage />/* <PrivateRoute> */} />
         <Route path='/secure_page2' element={<PrivateRoute2><SecurePage /></PrivateRoute2>} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
