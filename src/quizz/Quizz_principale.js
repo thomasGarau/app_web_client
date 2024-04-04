@@ -41,7 +41,7 @@ function Quizz_principale () {
                 <p>2 </p>
                 <img className='img_coeur' src={stars_yellow} alt='like'/>
               </div>
-              <button onClick={() => navigate('/')} className='btn_quizz'>Commencer</button>
+              <button onClick={() => navigate('/')} className='btn_quizz button-connection'>Commencer</button>
             </div>
           )}
           {activeTab === 'eleve' && (
@@ -56,10 +56,10 @@ function Quizz_principale () {
               <p>4 </p>
               <img className='img_coeur' src={stars_yellow} alt='like'/>
             </div>
-            <button onClick={() => navigate('/')} className='btn_quizz'>Commencer</button>
+            <button onClick={() => navigate('/')} className='btn_quizz button-connection'>Commencer</button>
           </div>
           )}
-          <button onClick={() => navigate('/create_quizz')} className='btn_quizz_creer'>Creer un quizz</button>
+          <button onClick={() => navigate('/create_quizz')} className='btn_quizz_creer button-connection'>Creer un quizz</button>
         </div>
       </div>
     </div>

@@ -55,6 +55,7 @@
 
 .reponse:hover {
     cursor: pointer;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
 }
 
 
@@ -83,15 +84,11 @@
     color: black;
 }
 
-.btn_valider:hover {
-    background-color: #C3D9FF;
-    color: black;
+.btn_valider:hover, .btn_retour:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
 }
 
-.btn_retour:hover {
-    background-color: #133D56;
-    color: white;
-}
+
 
 .Question_titre{
   font-size: 50px;

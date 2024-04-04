@@ -60,8 +60,8 @@ function Question() {
                     </div>
                 </div>
                 <div className='button-container'>
-                    <button onClick={()=> navigate('/')} className='btn_retour'>Retour</button>
-                    <button onClick={()=> navigate('/')} className='btn_valider'>Valider</button>
+                    <button onClick={()=> navigate('/')} className='btn_retour button-connection'>Retour</button>
+                    <button onClick={()=> navigate('/')} className='btn_valider button-connection'>Valider</button>
                 </div>
             </div>
         </div>
