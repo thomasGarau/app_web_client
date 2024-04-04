@@ -49,12 +49,12 @@
         border-radius: 20px;
         height: 16%;
         padding: 0px 10px;
-        font-size: 3vw;
+        font-size: 1.5vw;
     }
     
     .button-connection {
         font-family: 'Nanum Pen Script';
-        font-size: 3vw;
+        font-size: 2vw;
         border: none;
         color: white;
         padding: 15px 0px;

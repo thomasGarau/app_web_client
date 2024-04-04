@@ -3,17 +3,17 @@ import axios from 'axios';
 export const Authenticate = async (user, password) => {
     console.log("authenticate")
     return axios.post('http://localhost:3001/api/user/login', {
-        username:user,
+        num_etudiant:user,
         password
     })
     .then(response => {console.log(response.data);return response.data})
     .catch(error => {console.log(error); throw error;})
 }
 
-export const Registry = async (user, password) => {
+export const Registry = async (email, password) => {
     console.log("registry")
     return axios.post('http://localhost:3001/api/user/register', {
-            'username':user,
+            'email':email,
             'password':password
     })
     .then(response => {return response.data})
