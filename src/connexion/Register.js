@@ -48,10 +48,10 @@ function Register() {
                     <input
                         className='input-connexion'
                         style={{ fontFamily: "Nanum Pen Script"}}
-                        type="firstName"
-                        id="firstName"
-                        name="firstName"
-                        placeholder='Prenom'
+                        type="user"
+                        id="user"
+                        name="user"
+                        placeholder='email...'
                         required
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}

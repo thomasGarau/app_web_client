@@ -10,13 +10,11 @@ export const Authenticate = async (user, password) => {
     .catch(error => {console.log(error); throw error;})
 }
 
-export const Registry = async (user, password, name, firstName) => {
+export const Registry = async (user, password) => {
     console.log("registry")
     return axios.post('http://localhost:3001/api/user/register', {
             'username':user,
-            'password':password,
-            'name':name,
-            'firstname':firstName
+            'password':password
     })
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
