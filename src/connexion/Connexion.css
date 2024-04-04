@@ -131,7 +131,22 @@
         border-radius: 20px;
         height: 16%;
         padding: 0px 10px;
-        font-size: 4vw;
+        font-size: 1.5vw;
+    }
+
+    .button-connection {
+        font-family: 'Nanum Pen Script';
+        font-size: 2vw;
+        border: none;
+        color: white;
+        padding: 15px 0px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 50px;
+        width: 43%;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        transition-duration: 0.4s;
     }
     
     .valid-button {
