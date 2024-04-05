@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { testSecure } from "./securePageAPI.js";
 import { logout } from "../connexion/UserAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
+
 import "./securePage.css";
 import Header from "../composent/Header.js";
+import IconButton from "@mui/material/IconButton";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 function SecurePage() {
@@ -45,6 +48,9 @@ function SecurePage() {
         <h1>Espace Eleve</h1><br></br>
         {isSecure}
         <button onClick={handleDisconnection}>Deconnexion</button>
+        <IconButton>
+          <LogoutIcon className="disconnect_style" onClick={handleDisconnection}/>
+        </IconButton>
       </div>
     </div>
   );
