@@ -3,9 +3,9 @@
     position: relative;
     width: -webkit-fill-available;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 
@@ -15,15 +15,19 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    width: 350px;
+    max-width: 240px;
 }
 
 #title-input {
-    color: white;
+    color: black;
+    background-color: rgb(255, 255, 255);
     height: 50px;
-    border-bottom: solid;
     border-radius: 0px;
     font-size: xx-large;
     padding: 10px;
+    text-align: center;
+    width: inherit;
     font-family: "Nanum Pen Script";
 }
 
@@ -45,4 +49,12 @@
     max-width: 700px;
     border-radius: 20px;
     align-items: center;
+}
+
+.button-question {
+    color: white;
+}
+
+.button-question:hover {
+    color: black;
 }
