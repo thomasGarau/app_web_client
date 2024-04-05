@@ -1,0 +1,12 @@
+.container2_style{
+    display: flex;
+    align-items: center;
+    margin-top: 125px;
+    padding: 1%;
+    width: 80%;
+    height: 70%;
+    border-radius: 20px;
+    background-color: #F5F5F5;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
