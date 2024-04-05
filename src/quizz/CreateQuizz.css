@@ -21,7 +21,7 @@
 
 #title-input {
     color: black;
-    background-color: rgb(255, 255, 255);
+    background-color: #F5F5F5;
     height: 50px;
     border-radius: 0px;
     font-size: xx-large;
@@ -52,7 +52,7 @@
 }
 
 .button-question {
-    color: white;
+    color: #F5F5F5;
 }
 
 .button-question:hover {

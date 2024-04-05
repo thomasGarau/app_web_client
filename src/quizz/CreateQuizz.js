@@ -171,8 +171,8 @@ function CreateQuizz() {
                         </Button>
                     ))}
                     <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
-                        <IconButton onClick={addQuestion}><AddIcon style={{ fill: "white" }} /></IconButton>
-                        <Typography style={{ color: "white", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>ajouter une question</Typography>
+                        <IconButton onClick={addQuestion}><AddIcon style={{ fill: "#F5F5F5" }} /></IconButton>
+                        <Typography style={{ color: "#F5F5F5", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>ajouter une question</Typography>
                     </Box>
                 </nav>
                 <div className="background-create-quizz">
@@ -201,7 +201,7 @@ function CreateQuizz() {
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px" }}>
                                     <Input
                                         placeholder={"Reponse " + (index + 1)}
-                                        style={{ color: "black", fontFamily: "Nanum Pen Script", fontSize: "x-large", backgroundColor: "white", padding: "5px", borderRadius: "10px", width: "100%" }}
+                                        style={{ color: "black", fontFamily: "Nanum Pen Script", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
                                             const updatedReponses = [...selected.reponses];
                                             updatedReponses[index] = event.target.value;
@@ -226,7 +226,7 @@ function CreateQuizz() {
                                         <Checkbox
                                             onChange={() => handleCheckboxChange(index)}
                                             checked={checkedAnswers[index] ? checkedAnswers[index] : false}
-                                            style={{ color: "white" }}
+                                            style={{ color: "#F5F5F5" }}
                                         /> :
                                         <Radio
                                             checked={radioCheck === index}
@@ -239,8 +239,8 @@ function CreateQuizz() {
                             {type !== 2 ?
                                 selected.reponses.length < 6 && (
                                     <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
-                                        <IconButton onClick={addReponse}><AddIcon style={{ fill: "white" }} /></IconButton>
-                                        <Typography style={{ color: "white", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>ajouter une reponse</Typography>
+                                        <IconButton onClick={addReponse}><AddIcon style={{ fill: "#F5F5F5" }} /></IconButton>
+                                        <Typography style={{ color: "#F5F5F5", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>ajouter une reponse</Typography>
                                     </Box>
                                 ) : null}
                         </div>
