@@ -16,11 +16,13 @@ function Study() {
     return (
         <div className='background-study'>
             <Header></Header>
+            <div className='sub_container_text_question'>
             <div className='text-part'>
                 <h1 className='study-title'>{cours}</h1>
-                <p>{texte}</p>
+                <p className='paragraphe'>{texte}</p>
             </div>
             <QuestionForum></QuestionForum>
+            </div>
         </div>
     )
 } export default Study;
