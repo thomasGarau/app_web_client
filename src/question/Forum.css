@@ -1,14 +1,14 @@
-.background-forum{
+.background-forum {
     background-color: white;
     height: 100%;
 
 }
 
-.forum-container{
+.forum-container {
     margin-top: 125px;
 }
 
-.forum-question{
+.forum-question {
     display: flex;
     flex-direction: column;
     padding: 0px 3vw;
@@ -16,26 +16,27 @@
 }
 
 
-.question{
+.question {
 
     border-radius: 25px;
-    
+
     padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .blue {
     background-color: #133D56;
     color: white;
 }
 
-.grey{
+.grey {
     background-color: #d9d9d9;
     color: black;
 }
 
-.answer-button{
+.answer-button {
     font-size: 2vw;
     border: none;
     color: black;
@@ -47,29 +48,29 @@
     width: 10vw;
 }
 
-.title-container{
+.title-container {
     margin: 2vh 2vw;
     border-bottom: 4px solid #d9d9d9;
 }
 
-.forum-title{
+.forum-title {
     font-size: 3em;
 }
 
-.title-date{
+.title-date {
     font-size: 2em;
 }
 
-.who-when{
+.who-when {
     font-size: 2em;
 }
 
-.question-text{
+.question-text {
     font-size: 2em;
     margin-left: 20px;
 }
 
-.question-head{
+.question-head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -77,15 +78,15 @@
     height: 40px;
 }
 
-.button-container-hide{
+.button-container-hide {
     display: none !important;
 }
 
-.button-container-show{
-    flex-direction: row; 
+.button-container-show {
+    flex-direction: row;
 }
 
-.reaction-button{
+.reaction-button {
     border-radius: 5px;
     background-color: #C3D9FF;
     border: none;
@@ -93,17 +94,16 @@
     height: 100%;
 }
 
-.reaction-button:hover{
+.reaction-button:hover {
     background-color: #a8c2ef;
 }
 
-.input-forum{
+.input-forum {
     width: 80%;
     height: 4rem;
     font-size: 2em;
     border-radius: 50px;
     border: 4px solid;
-    
     bottom: 20px;
     left: 10%;
     padding-left: 50px;
@@ -118,9 +118,23 @@
     bottom: 0px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px -2px 8px 5px #00000080;
+    box-shadow: 0px -3px 12px 6px #0000003d;
 }
 
-.question-container{
+.forum-question-container {
     margin-bottom: 125px;
+}
+
+@media (max-width: 600px) {
+    .forum-title {
+        font-size: 2em;
+    }
+
+    .question-text {
+        font-size: 1.5em;
+    }
+
+    .input-forum {
+        font-size: 1.5em;
+    }
 }

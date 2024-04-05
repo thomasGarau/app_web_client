@@ -57,7 +57,7 @@ function Forum() {
                     <h1 className='forum-title'>{discussions[0][0]}</h1>
                     <span className='title-date'>{discussions[0][2]}</span>
                 </div>
-                <div className='question-container'>
+                <div className='forum-question-container'>
                     {discussions.map(poste =>
                         <div className="forum-question"
                             key={poste[0]}

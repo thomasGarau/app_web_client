@@ -46,7 +46,7 @@ function Register() {
         <div className='background'>
             <Header></Header>
             <div className='base-container'>
-                <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4.5vw", margin: "0px" }}>Inscription</h1>
+                <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>
                     <input
                         className='input-connexion'
