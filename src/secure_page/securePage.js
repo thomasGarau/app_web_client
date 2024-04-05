@@ -64,7 +64,7 @@ function SecurePage() {
         <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
         <div style={{ display: "flex", width: "100%" }}>
           <div style={{ display: "flex", width: "50%", height: "80%", backgroundColor: "#133D56", borderRadius: "20px", flexDirection: "column" }}>
-            <h2 style={{ marginLeft: "10px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
+            <h2 style={{ marginLeft: "20px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
             <TextField
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ width: "90%", alignSelf: "center", borderRadius: "50px" }}
