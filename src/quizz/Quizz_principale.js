@@ -4,13 +4,14 @@ import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz } from './QuizzAPI.js';
 import './Quizz.css';
 
 function Quizz_principale() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('prof');
-  const [quizzes, setQuizzes] = useState(null);
+  const [quizzes, setQuizzes] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const { id } = useParams();
   console.log("id : ", id);
 
@@ -20,20 +21,46 @@ function Quizz_principale() {
     cursor: 'pointer'
   });
 
-  useEffect(() => {
-    const fetchUeData = async () => {
-      try {
-        const {token, role} = getTokenAndRole();
-        const quizzs = await getQuizzParChap(id);
-        setQuizzes(quizzs);
-        console.log(quizzes);
-      } catch (error) {
-          console.error('Erreur lors de la récupération des UE:', error);
+  const fetchUeData = async () => {
+    try {
+      const quizzsResponse = await getQuizzParChap(id);
+      let quizzProfesseurs = [];
+      let quizzEleves = []
+      console.log("quizzsResponse : ", quizzsResponse);
+      
+      if (quizzsResponse && Array.isArray(quizzsResponse[0])) {
+        // Ajouter une propriété pour indiquer le type de chaque quizz
+        quizzProfesseurs = quizzsResponse[0].map((quiz, index) => ({ ...quiz, createur: 'prof', number: index + 1 }));
       }
-    };
+      if (quizzsResponse && Array.isArray(quizzsResponse[1])) {
+        // Ajouter une propriété pour indiquer le type de chaque quizz et un quizz_num qui correspond à son ordre dans la liste
+        quizzEleves = quizzsResponse[1].map((quiz, index) => ({
+          ...quiz, 
+          createur: 'eleve',
+          number: index + 1 // Commence à 1 pour le premier élément
+        }));
+      }
 
+      // Fusionner les deux listes de quizz dans un seul tableau
+      const combinedQuizzes = [...quizzProfesseurs, ...quizzEleves];
+      setQuizzes(combinedQuizzes);
+      
+    } catch (error) {
+      console.error('Erreur lors de la récupération des quizz:', error);
+    }
+};
+
+
+
+
+
+  useEffect(() => {
     fetchUeData();
-  }, []);
+  }, []); 
+
+  
+
+  
 
   return (
     <div className='background_quizz_principale'>
@@ -46,19 +73,20 @@ function Quizz_principale() {
         <div className='container_quizzs'>
           {quizzes ? (
             quizzes.length > 0 ? (
-              quizzes.filter(quiz => quiz.id === activeTab).map(quiz => (
-                <div key={quiz.id} className='container_quizz'>
+              quizzes.filter(quiz => quiz.createur === activeTab).map(quiz => (
+                <div key={quiz.id_quizz} className='container_quizz'>
                   <div id='quizz_num' className='item_quizz'>
-                    <p>{quiz.number}</p>
+                    <p>QUizz n°{quiz.number}</p>
                   </div>
                   <div id='quizz_sujet' className='theme_quizz'>
-                    <p>{quiz.topic}</p>
+                    <p>{quiz.label}</p>
                   </div>
                   <div id='quizz_like' className='quizz_like'>
-                    <p>{quiz.likes} </p>
+                    <p>{quiz.note} </p>
                     <img className='img_coeur' src={stars_yellow} alt='like' />
                   </div>
-                  <button onClick={() => navigate('/')} className='btn_quizz button-connection'>Commencer</button>
+                  <button onClick={() => navigate(`/quiz/${quiz.id_quizz}/question`)} className='btn_quizz button-connection'>Commencer</button>
+
                 </div>
               ))
             ) : <p>Aucun quizz disponible.</p>
