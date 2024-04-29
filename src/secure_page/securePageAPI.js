@@ -1,12 +1,12 @@
-import axios from 'axios';
+import api from '../config/axiosConfig';
 
-export const testSecure = async (token, authorization) => {
-    return axios.get('http://localhost:3001/api/secure-page/test-secure', {
-        headers : {
-            'token': `Bearer ${token}`,
-            'authorization': `Bearer ${authorization}`
-        }
-    })
-    .then(response => {return response.data})
-    .catch(error => {console.log(error); throw error;})
+export const getUe = async () => { 
+    try {
+        const response = await api.get('/ue/ue-user');
+        console.log(response.data);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
 }

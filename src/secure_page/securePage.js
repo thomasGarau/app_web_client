@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { testSecure } from "./securePageAPI.js";
+import { getUe } from "./securePageAPI.js";
 import { logout } from "../connexion/UserAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
 import "./securePage.css";
@@ -11,12 +11,14 @@ import SearchIcon from '@mui/icons-material/Search';
 
 function SecurePage() {
   const [isSecure, setIsSecure] = useState(null);
-  const [listUE, setListUE] = useState([
-    { id: 0, icon: "python.png", prof: { nom: "Bisgambiglia", prenom: "Paul-Antoine" }, ue: "Python" },
-    { id: 1, icon: "github.png", prof: { nom: "Filippi", prenom: "Jean-Baptiste" }, ue: "Github" },
-    { id: 2, icon: "github.png", prof: { nom: "Filippi", prenom: "Jean-Baptiste" }, ue: "Github" }])
+  const [listUE, setListUE] = useState(null)
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleListItemClick = (id) => {
+    navigate(`/ue/${id}`);
+  };
+  
 
   function importAll(r) {
     let images = {};
@@ -26,17 +28,17 @@ function SecurePage() {
   const images = importAll(require.context('../ueIcons', false, /\.(png|jpe?g|svg)$/));
 
   useEffect(() => {
-    const fetchSecureData = async () => {
+    const fetchUeData = async () => {
       try {
-        const { token, role } = await getTokenAndRole();
-        const response = await testSecure(token, role);
-        setIsSecure(response);
+        const {token, role} = getTokenAndRole();
+          const ueData = await getUe();
+          setListUE(ueData);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données sécurisées:', error);
+          console.error('Erreur lors de la récupération des UE:', error);
       }
     };
 
-    fetchSecureData();
+    fetchUeData();
   }, []);
 
   async function handleDisconnection() {
@@ -52,11 +54,12 @@ function SecurePage() {
     }
   }
 
-  const filteredListUE = listUE.filter(ue =>
-    ue.prof.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ue.prof.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ue.ue.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredListUE = listUE ? listUE.filter(ue =>
+    ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    ue.label.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : [];
+  
 
   return (
     <div className='style_background_esp_ele'>
@@ -101,24 +104,26 @@ function SecurePage() {
               maxHeight: 300,
               '& ul': { padding: 0 },
             }}>
-              {filteredListUE.map(ue => (
-                <ListItem style={{ marginLeft: "10px" }} key={ue.id}>
+              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+                <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
+                  onClick={() => handleListItemClick(ue.id_ue)}>
                   <ListItemAvatar>
                     <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
                   </ListItemAvatar>
                   <div>
                     <ListItemText
-                      primary={ue.prof.nom + " " + ue.prof.prenom}
+                      primary={ue.label + " " + ue.label}
                       primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script" } }}
                     />
                     <ListItemText
-                      primary={ue.ue}
+                      primary={ue.label}
                       primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script", fontSize: "x-large" } }}
                     />
                   </div>
                 </ListItem>
               ))}
             </List>
+
           </div>
           <div>
             <h2 style={{ fontSize: "xx-large" }}>Methode des j</h2>

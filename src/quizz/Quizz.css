@@ -1,6 +1,6 @@
 .background_quizz_principale {
     background-color: #C3D9FF;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -127,11 +127,7 @@
     height : 50%;
 }
 
-.quizz-title {
-    margin : 1%;
-    font-size: 70px;
-    font-weight: lighter;
-}
+
 
 .Nom_Quizz{
     font-size: 50px;

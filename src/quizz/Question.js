@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
@@ -44,14 +44,13 @@ function Question() {
     };
 
     return (
-        <div className='background_quizz_principale'>
-            <div className='base-container_quizz_question'>
+        <div className='background-question'>
+            <div className='base_container_quizz_question'>
                 <h1 className='quizz-title'>Quizz</h1>
-                <div className='question-container'>
+                <div className='question-quest-container'>
                     <h3 className='Question_titre'>1. Quel est la couleur de la pomme ?</h3>
                     <p className='indication'>{getIndicationText()}</p>
                     <div className='reponse-container'>
-                        {/* Mettez à jour la logique pour vérifier si l'id est dans selectedAnswers */}
                         <button id='1' className={`reponse ${selectedAnswers.includes('1') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('1')}>Rouge</button>
                         <button id='2' className={`reponse ${selectedAnswers.includes('2') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('2')}>Vert</button>
                         <button id='3' className={`reponse ${selectedAnswers.includes('3') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('3')}>Bleu</button>

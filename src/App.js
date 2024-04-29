@@ -14,6 +14,7 @@ import Quizz_principale from './quizz/Quizz_principale';
 import CreateQuizz from './quizz/CreateQuizz';
 import Question from './quizz/Question';
 import Layout from './composent/Layout';
+import Ue from './ue/Ue';
 
 function App() {
   return (
@@ -21,9 +22,10 @@ function App() {
       <Routes> {/* Utilisez la composante "Routes" au lieu de "Switch" */}
         <Route path="/connexion" element={<Layout><Connexion /></Layout>} />
         <Route path="/register" element={<Layout><Register /></Layout>} />
-        <Route path="/quizz" element={/*<PrivateRoute> */<Layout><Quizz_principale /> </Layout>/*</PrivateRoute>*/} />
+        <Route path="/ue/:id" element={<PrivateRoute><Layout><Ue /></Layout></PrivateRoute>} />
+        <Route path="/quizz/:id" element={/*<PrivateRoute> */<Layout><Quizz_principale /> </Layout>/*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={/* <PrivateRoute> */<Layout><Carte_mental /></Layout>/* </PrivateRoute> */} />
-        <Route path="/etude" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
+        <Route path="/etude/:id" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
         <Route path="/forum" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>
         <Route path="/create_quizz" element={/* <PrivateRoute> */<Layout><CreateQuizz/></Layout>/* </PrivateRoute> */}/>
         <Route path="/question" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>
