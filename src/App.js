@@ -13,6 +13,7 @@ import Forum from './question/Forum';
 import Quizz_principale from './quizz/Quizz_principale';
 import CreateQuizz from './quizz/CreateQuizz';
 import Question from './quizz/Question';
+import Ue from './ue/Ue';
 
 function App() {
   return (
@@ -20,9 +21,10 @@ function App() {
       <Routes> {/* Utilisez la composante "Routes" au lieu de "Switch" */}
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/quizz" element={/*<PrivateRoute> */<Quizz_principale /> /*</PrivateRoute>*/} />
+        <Route path="/ue/:id" element={<PrivateRoute><Ue /></PrivateRoute>} />
+        <Route path="/quizz/:id" element={/*<PrivateRoute> */<Quizz_principale /> /*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
-        <Route path="/etude" element={/* <PrivateRoute> */<Study/>/* </PrivateRoute> */}/>
+        <Route path="/etude/:id" element={/* <PrivateRoute> */<Study/>/* </PrivateRoute> */}/>
         <Route path="/forum" element={/* <PrivateRoute> */<Forum/>/* </PrivateRoute> */}/>
         <Route path="/create_quizz" element={/* <PrivateRoute> */<CreateQuizz/>/* </PrivateRoute> */}/>
         <Route path="/question" element={/* <PrivateRoute> */<Question />/* </PrivateRoute> */}/>

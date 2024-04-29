@@ -1,0 +1,40 @@
+.chapters-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-top: 150px;
+}
+
+.chapter {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chapter h2 {
+    font-family: 'Nanum Pen Script', cursive;
+    color: #333;
+}
+
+.chapter p {
+    font-family: 'Arial', sans-serif;
+    color: #666;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
