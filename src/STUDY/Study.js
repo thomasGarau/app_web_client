@@ -15,7 +15,6 @@ function Study() {
 
     return (
         <div className='background-study'>
-            <Header></Header>
             <div className='sub_container_text_question'>
             <div className='text-part'>
                 <h1 className='study-title'>{cours}</h1>

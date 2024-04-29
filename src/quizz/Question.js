@@ -45,7 +45,6 @@ function Question() {
 
     return (
         <div className='background_quizz_principale'>
-            <Header></Header>
             <div className='base-container_quizz_question'>
                 <h1 className='quizz-title'>Quizz</h1>
                 <div className='question-container'>

@@ -28,7 +28,6 @@ function Accueil() {
 
   })
 
-
   const handleRegisterClick = () => {
     navigate('/register');
   };
@@ -43,7 +42,6 @@ function Accueil() {
 
   return (
     <div className='style_background'>
-      <Header></Header>
       <div className='container1_style'>
         <Button style={window.visualViewport.width <= 600? buttonLowResStyle : buttonHighResStyle} variant='contained' onClick={handlePresentationClick}>Presentation</Button>
         <Button style={window.visualViewport.width <= 600? buttonLowResStyle : buttonHighResStyle} variant='contained' onClick={handleRegisterClick}>Inscription</Button>

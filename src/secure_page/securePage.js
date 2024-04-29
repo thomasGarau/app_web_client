@@ -60,7 +60,6 @@ function SecurePage() {
 
   return (
     <div className='style_background_esp_ele'>
-      <Header></Header>
       <div className='container2_style'>
         <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
         <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>

@@ -10,7 +10,7 @@ import './Connexion.css';
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // Nouvel état pour la confirmation du mot de passe
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const navigate = useNavigate();
 
@@ -44,7 +44,6 @@ function Register() {
 
     return (
         <div className='background'>
-            <Header></Header>
             <div className='base-container'>
                 <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>

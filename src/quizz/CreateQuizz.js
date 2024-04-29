@@ -175,8 +175,6 @@ function CreateQuizz() {
 
     return (
         <div className="quizz-background" style={{ backgroundColor: "#C3D9FF", overflow:"auto" }}>
-            <Header />
-
             <div className="container-create-quizz" style={{ display: "flex" }}>
                 <Drawer PaperProps={{
                     style: {

@@ -19,7 +19,6 @@ function Quizz_principale () {
 
   return (
     <div className='background_quizz_principale'>
-      <Header></Header>
       <div className='base-container_quizz_principale'>
         <h1 className='quizz-title'>Quizz de l'UE</h1>
         <div className='quizz_type'>

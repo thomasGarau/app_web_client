@@ -41,7 +41,6 @@ function Connexion() {
 
   return (
     <div className='background'>
-      <Header></Header>
       <div className='base-container'>
         <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
@@ -51,7 +50,7 @@ function Connexion() {
             type="text"
             id="username"
             name="username"
-            placeholder="Nom d'utilisateur"
+            placeholder="N° Etudiant"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />

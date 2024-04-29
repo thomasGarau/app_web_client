@@ -9,13 +9,16 @@ function Header() {
 
     const navigate = useNavigate();
 
-    const versPagePrincipale = () => {
+    const versPagePrincipale = (e) => {
+        e.preventDefault();
         navigate('/secure_page2');
     }
 
-    const VersProfile = () => {
+    const VersProfile = (e) => {
+        e.preventDefault();
         navigate('/profile');
     }
+
     return (
         <div className="head">
             <img 
