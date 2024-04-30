@@ -4,18 +4,23 @@ import './Header.css'
 import ppImage from './img/pp.png';
 import logo from './img/logo_rond.png';
 import "@fontsource/nanum-pen-script";
+import "@fontsource/caveat"
+import "@fontsource/shadows-into-light"
 
 function Header() {
 
     const navigate = useNavigate();
 
-    const versPagePrincipale = () => {
-        navigate('/secure_page2');
+    const versPagePrincipale = (e) => {
+        e.preventDefault();
+        navigate('/secure_page');
     }
 
-    const VersProfile = () => {
+    const VersProfile = (e) => {
+        e.preventDefault();
         navigate('/profile');
     }
+
     return (
         <div className="head">
             <img 

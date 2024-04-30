@@ -8,6 +8,7 @@ import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
+import StyledButton from '../composent/StyledBouton.js';
 
 
 function Connexion() {
@@ -41,9 +42,8 @@ function Connexion() {
 
   return (
     <div className='background'>
-      <Header></Header>
       <div className='base-container'>
-        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "6vw", margin: "0px" }}>Connexion</h1>
+        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
           <input
             className='input-connexion'
@@ -51,13 +51,13 @@ function Connexion() {
             type="text"
             id="username"
             name="username"
-            placeholder="Nom d'utilisateur"
+            placeholder="N° Etudiant"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className='input-connexion'
-            style={{ fontFamily: "Nanum Pen Script"}}
+            style={{ fontFamily: "Nanum Pen Script" }}
             type="password"
             id="password"
             name="password"
@@ -67,14 +67,15 @@ function Connexion() {
           />
         </div>
         <div className='buttons-container'>
-          <button 
-            style={{ fontFamily: "Nanum Pen Script"}}
-            className='reg-button button-connection'
-            onClick={toRegister}>Inscription</button>
-          <button
-            style={{ fontFamily: "Nanum Pen Script" }}
-            className='valid-button button-connection'
-            onClick={handleLogin}>Valider</button>
+          <StyledButton
+            color={"secondary"}
+            content={"Inscription"}
+            onClick={toRegister}>Inscription</StyledButton>
+          <StyledButton
+            color={"primary"}
+            content={"Valider"}
+            onClick={handleLogin}>Valider
+          </StyledButton>
         </div>
 
       </div>

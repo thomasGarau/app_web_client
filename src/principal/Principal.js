@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './principal.css';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
+import { Button } from "@mui/material";
+import StyledButton from '../composent/StyledBouton.js';
 
 function Accueil() {
   const navigate = useNavigate();
@@ -15,12 +17,16 @@ function Accueil() {
     navigate('/connexion');
   };
 
+  const handlePresentationClick = () => {
+
+  }
+
   return (
     <div className='style_background'>
-      <Header></Header>
       <div className='container1_style'>
-        <button className='button1' onClick={handleRegisterClick}>Inscription</button><br></br>
-        <button className='button2' onClick={handleConnexionClick}>Connexion</button>
+        <StyledButton color="primary" width="400px" content={"PRÉSENTATION"} onClick={handlePresentationClick}/>
+        <StyledButton color="primary" width="400px" content={"INSCRIPTION"} onClick={handleRegisterClick}/>
+        <StyledButton color="primary" width="400px" content={"CONNEXION"} onClick={handleConnexionClick}/>
       </div>
     </div>
   );
