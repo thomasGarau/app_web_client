@@ -72,6 +72,7 @@ export default function Profile() {
                 <StyledButton
                     width={'200px'}
                     content={"Modifier"}
+                    color={"primary"}
                     onClick={handleUpload}
                 />
             </div>
@@ -98,7 +99,8 @@ export default function Profile() {
 
                 <StyledButton
                     content={"Selectionner"}
-                    width={"60%"} />
+                    width={"60%"}
+                    color={"primary"} />
             </FormControl>
             <FormControl className="profile-select" sx={{ m: 1, alignItems: "center", width: "60%" }}>
                 <InputLabel id="label-qcm">Gestion des QCM</InputLabel>
@@ -122,7 +124,8 @@ export default function Profile() {
                 </Select>
                 <StyledButton
                     content={"Selectionner"}
-                    width={"60%"} />
+                    width={"60%"}
+                    color={"primary"} />
             </FormControl>
         </div>
     )

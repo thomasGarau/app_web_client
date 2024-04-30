@@ -5,6 +5,7 @@ import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 
 import './Question.css';
+import StyledButton from '../composent/StyledBouton.js';
 
 function Question() {
     const navigate = useNavigate();
@@ -58,8 +59,8 @@ function Question() {
                     </div>
                 </div>
                 <div className='button-container'>
-                    <button onClick={()=> navigate('/')} className='btn_retour button-connection'>Retour</button>
-                    <button onClick={()=> navigate('/')} className='btn_valider button-connection'>Valider</button>
+                    <StyledButton onClick={()=> navigate('/')} color={"secondary"} content={"Retour"} className='btn_retour button-connection'></StyledButton>
+                    <StyledButton onClick={()=> navigate('/')} color={"primary"} content={"Valider"} className='btn_valider button-connection'></StyledButton>
                 </div>
             </div>
         </div>
