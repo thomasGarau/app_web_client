@@ -1,22 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getQuestionParQUizz, getReponsesPourQuestion } from './QuizzAPI';
+import { useQuiz } from './QuizContext';
 
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 
 import './Question.css';
+import { all } from 'axios';
 
 function Question() {
     const navigate = useNavigate();
-    const [questionType, setQuestionType] = useState('qcm2');
-    // Modifiez pour utiliser un tableau afin de gérer plusieurs sélections
+    const { handleSelectAnswer, allSelectedAnswers } = useQuiz();
+    const { quizId, questionId } = useParams(); // Ajouter questionId pour gérer la question actuelle
+    const [questionType, setQuestionType] = useState(null);
+    const [questions, setQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const data = await getQuestionParQUizz(quizId);
+                if (data && data.length > 0) {
+                    setQuestions(data);
+                    const current = data.find(q => q.id_question.toString() === questionId) || data[0];
+                    setCurrentQuestion(current);
+                    setQuestionType(current.type || 'seul'); // Fournir une valeur par défaut pour type
+                    const answers = await getReponsesPourQuestion(current.id_question);
+                    setCurrentQuestion(prev => ({ ...prev, answers: answers || [] })); // Assurez-vous de définir un tableau vide si aucune réponse n'est trouvée
+                } else {
+                    // Définir currentQuestion comme null ou comme objet vide pour indiquer qu'il n'y a pas de questions
+                    setCurrentQuestion(null);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des questions :", error);
+                setCurrentQuestion(null);
+            }
+        };
+    
+        fetchQuestions();
+    }, [quizId, questionId]);
+    
+
+    const navigateToNextQuestion = () => {
+        const currentIndex = questions.findIndex(q => q.id_question.toString() === questionId);
+        if (currentIndex !== -1 && currentIndex + 1 < questions.length) {
+            const nextQuestion = questions[currentIndex + 1];
+            navigate(`/quiz/${quizId}/question/${nextQuestion.id_question}`);
+        } else {
+            navigate(`/quiz-completed/${quizId}`);
+        }
+    };
+
+    const navigateToPreviousQuestion = () => {
+        const currentIndex = questions.findIndex(q => q.id_question.toString() === questionId);
+        if (currentIndex > 0) { // Vérifier si c'est pas la première question
+            const previousQuestion = questions[currentIndex - 1];
+            navigate(`/quiz/${quizId}/question/${previousQuestion.id_question}`);
+        } else {
+            navigate(`/quizz/${quizId}`);
+        }
+    };
+    
+ 
+    
+
+    const handleAnswerSelect = (answerId) => {
+        let updatedAnswers = selectedAnswers.includes(answerId) ?
+            selectedAnswers.filter(id => id !== answerId) : [...selectedAnswers, answerId];
+    
+        setSelectedAnswers(updatedAnswers);
+
+        // Update global state for all selected answers
+        handleSelectAnswer(answerId, questionType);
+    };
+    
 
     const getIndicationText = () => {
         switch (questionType) {
-            case 'qcm1':
+            case 'seul':
                 return 'Choisissez la bonne réponse';
-            case 'qcm2':
+            case 'multi':
                 return 'Choisissez les bonnes réponses';
             case 'vrai':
                 return 'Selectionner la réponse vraie';
@@ -27,42 +92,33 @@ function Question() {
         }
     };
 
-    const handleAnswerSelect = (answerId) => {
-        if (questionType === 'qcm2') {
-            // Pour 'qcm2', permettez la sélection de plusieurs réponses
-            if (selectedAnswers.includes(answerId)) {
-                // Si la réponse est déjà sélectionnée, retirez-la
-                setSelectedAnswers(selectedAnswers.filter(id => id !== answerId));
-            } else {
-                // Sinon, ajoutez la réponse au tableau
-                setSelectedAnswers([...selectedAnswers, answerId]);
-            }
-        } else {
-            // Pour les autres types, gardez une seule sélection
-            setSelectedAnswers([answerId]);
-        }
-    };
+    if (!currentQuestion || !currentQuestion.answers) return <div>Aucune question disponible</div>;
 
     return (
         <div className='background-question'>
+            <Header />
             <div className='base_container_quizz_question'>
-                <h1 className='quizz-title'>Quizz</h1>
+                <h1 className='quizz-title'>{currentQuestion.title || 'Titre non disponible'}</h1>
                 <div className='question-quest-container'>
-                    <h3 className='Question_titre'>1. Quel est la couleur de la pomme ?</h3>
+                    <h3 className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</h3>
                     <p className='indication'>{getIndicationText()}</p>
                     <div className='reponse-container'>
-                        <button id='1' className={`reponse ${selectedAnswers.includes('1') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('1')}>Rouge</button>
-                        <button id='2' className={`reponse ${selectedAnswers.includes('2') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('2')}>Vert</button>
-                        <button id='3' className={`reponse ${selectedAnswers.includes('3') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('3')}>Bleu</button>
-                        <button id='4' className={`reponse ${selectedAnswers.includes('4') ? 'selected' : ''}`} onClick={() => handleAnswerSelect('4')}>Jaune</button>
+                        {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
+                            <button key={answer.id_reponse}
+                                    className={`reponse ${selectedAnswers.includes(answer.id_reponse) ? 'selected' : ''}`}
+                                    onClick={() => handleAnswerSelect(answer.id_reponse)}>
+                                {answer.contenu}
+                            </button>
+                        )) : <p>Pas de réponses disponibles</p>}
                     </div>
                 </div>
                 <div className='button-container'>
-                    <button onClick={()=> navigate('/')} className='btn_retour button-connection'>Retour</button>
-                    <button onClick={()=> navigate('/')} className='btn_valider button-connection'>Valider</button>
+                <button onClick={navigateToPreviousQuestion} className='btn_retour button-connection'>Retour</button>
+                    <button onClick={navigateToNextQuestion} className='btn_valider button-connection'>Suivant</button>
                 </div>
             </div>
         </div>
+    
     );
 }
 

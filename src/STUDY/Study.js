@@ -43,7 +43,7 @@ function Study() {
                     <p>Aucun cours disponible pour ce chapitre.</p>
                 )}
             </div>
-           {/* <QuestionForum courseId={id} /> */}
+           <QuestionForum courseId={id} />
             </div>
         </div>
     )
