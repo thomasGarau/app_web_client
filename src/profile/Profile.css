@@ -35,8 +35,14 @@
     }
 
     .pp-change-profile{
+        border-radius: 50%;
         height: 110px;
+        width: 110px;
         margin-right: 20px;
+    }
+
+    .profile-select{
+        flex: 1;
     }
 }
 
@@ -77,8 +83,11 @@
 
     
     .pp-change-profile{
+        border-radius: 50%;
         height: 110px;
         margin-right: 20px;
+        width: 110px;
     }
+    
 }
 

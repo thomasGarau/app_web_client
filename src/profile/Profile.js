@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "../composent/Header";
 import './Profile.css'
-import { Select, InputLabel, FormControl, MenuItem, Button } from "@mui/material";
+import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography } from "@mui/material";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import ppImage from '../composent/img/pp.png';
@@ -13,14 +13,36 @@ export default function Profile() {
     const [listQCM, setListQCM] = useState(["QCM1", "QCM2", "QCM3"])
     const [quizz, setQuizz] = useState("")
     const [QCM, setQCM] = useState("")
+    const [profilePic, setProfilePic] = useState(ppImage)
+    const [imagePreviewUrl, setImagePreviewUrl] = useState(ppImage)
+
+    const fileInputRef = useRef(null);
 
     const handleChangeQuizz = (event) => {
         setQuizz(event.target.value);
     };
 
+    const handleUpload = () => {
+        fileInputRef.current.click();
+    };
+
     const handleChangeQCM = (event) => {
         setQCM(event.target.value);
     };
+
+    const photoUpload = (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfilePic(file);
+                setImagePreviewUrl(reader.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
 
     return (
         <div className='style-background-profile'>
@@ -36,16 +58,24 @@ export default function Profile() {
                 </div>
             </div>
             <div className="change-profile">
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={photoUpload}
+                />
                 <img
                     className="pp-change-profile"
-                    src={ppImage}
+                    src={imagePreviewUrl}
                     alt="pp"
                 />
                 <StyledButton
                     width={'200px'}
-                    content={"Modifier"} />
+                    content={"Modifier"}
+                    onClick={handleUpload}
+                />
             </div>
-            <FormControl sx={{ m: 1, width: "60%", alignItems: "center", flex:"1" }}>
+            <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
                 <InputLabel id="label-quizz">Statistiques des quizz</InputLabel>
                 <Select
                     sx={{
@@ -56,7 +86,7 @@ export default function Profile() {
                     labelId="label-quizz"
                     id="demo-simple-select"
                     value={quizz}
-                    label="aaaaaaaaaaaaaaaaaaaaaaaaaa "
+                    label="aaaaaaaaaaaaaaaaaaaaaaaaaa"
                     onChange={handleChangeQuizz}
                 >
                     {listQuizz.map((quizz, index) => (
@@ -70,7 +100,7 @@ export default function Profile() {
                     content={"Selectionner"}
                     width={"60%"} />
             </FormControl>
-            <FormControl sx={{ m: 1, alignItems: "center", width: "60%", flex:"1" }}>
+            <FormControl className="profile-select" sx={{ m: 1, alignItems: "center", width: "60%" }}>
                 <InputLabel id="label-qcm">Gestion des QCM</InputLabel>
                 <Select
                     sx={{
