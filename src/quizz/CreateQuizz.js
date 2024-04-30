@@ -25,9 +25,9 @@ function CreateQuizz() {
         titre: "Premiere question",
         type: 0,
         reponses: [
-            { contenu: "un truc", est_bonne_reponse: false },
-            { contenu: "un machin", est_bonne_reponse: false },
-            { contenu: "une chose", est_bonne_reponse: false }]
+            { contenu: "un truc", est_bonne_reponse: 0 },
+            { contenu: "un machin", est_bonne_reponse: 0 },
+            { contenu: "une chose", est_bonne_reponse: 0 }]
     }]);
     const [selected, setSelected] = useState(questions[0])
     const [estNegatif, setEstNegatif] = useState(false)
@@ -52,9 +52,9 @@ function CreateQuizz() {
             titre: "",
             type: 0,
             reponses: [
-                { contenu: "", est_bonne_reponse: false },
-                { contenu: "", est_bonne_reponse: false },
-                { contenu: "", est_bonne_reponse: false }
+                { contenu: "", est_bonne_reponse: 0 },
+                { contenu: "", est_bonne_reponse: 0 },
+                { contenu: "", est_bonne_reponse: 0 }
             ]
         }]);
     };
@@ -63,7 +63,7 @@ function CreateQuizz() {
     const addReponse = () => {
         const newReponses = [
             ...selected.reponses,
-            { contenu: "", est_bonne_reponse: false }
+            { contenu: "", est_bonne_reponse: 0 }
         ];
         setReponses(newReponses);
 
@@ -104,7 +104,7 @@ function CreateQuizz() {
         e.preventDefault();
         let nombre_bonne_reponse = 0;
         const questionsFormatEnvoi = questions.map((question, index) => {
-            const bonnesReponses = question.reponses.filter(reponse => reponse.est_bonne_reponse);
+            const bonnesReponses = question.reponses.filter(reponse => reponse.est_bonne_reponse == 1);
             nombre_bonne_reponse += bonnesReponses.length;
             return {
                 label: question.titre,
@@ -113,10 +113,9 @@ function CreateQuizz() {
                 reponses: question.reponses
             };
         });
-        console.log(title, estNegatif ? "point negatif" : "normal", chapitre, questionsFormatEnvoi);
-
+        console.log(chapitre.id_chapitre)
         try {
-            await createQuizz(title, estNegatif ? "point negatif" : "normal", chapitre, questionsFormatEnvoi);
+            await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsFormatEnvoi);
             navigate("/secure_page");
         } catch (error) {
             console.error('Erreur lors de la création du Quizz :', error);
@@ -125,14 +124,14 @@ function CreateQuizz() {
 
 
     const handleChangeChapitre = (event) => {
-        setChapitre(event.target.value);
-    }
+        setChapitre({ id_chapitre: event.target.value.id_chapitre, label:event.target.value.label });
+    };
 
     const validateReponse = (indexReponse) => {
         setSelected(prevSelected => {
             const updatedReponses = prevSelected.reponses.map((reponse, index) => {
                 if (index === indexReponse) {
-                    return { ...reponse, est_bonne_reponse: !reponse.est_bonne_reponse };
+                    return { ...reponse, est_bonne_reponse: reponse.est_bonne_reponse == 0 ? 1 : 0 };
                 }
                 return reponse;
             });
@@ -145,12 +144,16 @@ function CreateQuizz() {
         console.log(questions)
     }, [questions])
 
+    useEffect(() => {
+        console.log(chapitre)
+    }, [chapitre])
+
 
     const handleRadioChange = (event) => {
         setRadioCheck(parseInt(event.target.value));
         setSelected(prevSelected => {
             const updatedReponses = prevSelected.reponses.map((reponse, index) => {
-                return { ...reponse, est_bonne_reponse: false };
+                return { ...reponse, est_bonne_reponse: 0 };
             });
             return { ...prevSelected, reponses: updatedReponses };
         });
@@ -173,7 +176,7 @@ function CreateQuizz() {
             return prevQuestions.map(question => {
                 if (question.index === selected.index) {
                     if (type === 2) {
-                        return { ...question, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: false }, { contenu: "Faux", est_bonne_reponse: false }] };
+                        return { ...question, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: 1 }, { contenu: "Faux", est_bonne_reponse: 0 }] };
                     } else {
                         return { ...question, type: type, reponses: [...selected.reponses] };
                     }
@@ -187,7 +190,7 @@ function CreateQuizz() {
         setSelected(prevSelected => {
             if (prevSelected) {
                 if (type === 2) {
-                    return { ...prevSelected, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: false }, { contenu: "Faux", est_bonne_reponse: false }] };
+                    return { ...prevSelected, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: 1 }, { contenu: "Faux", est_bonne_reponse: 0 }] };
                 } else {
                     return { ...prevSelected, type: type, reponses: [...reponses] };
                 }
@@ -295,9 +298,10 @@ function CreateQuizz() {
                             onChange={handleChangeChapitre}
                         >
                             {listChapitre && listChapitre.map((chapitre, index) => (
-                                <MenuItem key={index} value={chapitre.label}>{chapitre.label}</MenuItem>
+                                <MenuItem key={index} value={chapitre}>{chapitre.label}</MenuItem>
                             ))}
                         </Select>
+
                     </FormControl>
 
                     <Textarea
@@ -342,7 +346,7 @@ function CreateQuizz() {
                                     {type === 0 ?
                                         <Checkbox
                                             onChange={() => validateReponse(index)}
-                                            checked={reponse.est_bonne_reponse ? true : false}
+                                            checked={reponse.est_bonne_reponse == 1 ? true : false}
                                             style={{ color: "#F5F5F5" }}
                                         /> :
                                         <Radio

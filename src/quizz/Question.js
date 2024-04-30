@@ -7,6 +7,7 @@ import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 
 import './Question.css';
+import StyledButton from '../composent/StyledBouton.js';
 import { all } from 'axios';
 
 function Question() {
@@ -113,8 +114,8 @@ function Question() {
                     </div>
                 </div>
                 <div className='button-container'>
-                <button onClick={navigateToPreviousQuestion} className='btn_retour button-connection'>Retour</button>
-                    <button onClick={navigateToNextQuestion} className='btn_valider button-connection'>Suivant</button>
+                    <StyledButton onClick={navigateToPreviousQuestion} color={"secondary"} content={"Retour"} className='btn_retour button-connection'></StyledButton>
+                    <StyledButton onClick={navigateToNextQuestion} color={"primary"} content={"Valider"} className='btn_valider button-connection'></StyledButton>
                 </div>
             </div>
         </div>

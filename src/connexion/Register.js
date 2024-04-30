@@ -6,6 +6,7 @@ import Header from '../composent/Header.js';
 import { Registry } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
+import StyledButton from '../composent/StyledBouton.js';
 
 function Register() {
     const [email, setEmail] = useState('');
@@ -79,16 +80,17 @@ function Register() {
                     />
                 </div>
                 <div className='buttons-container'>
-                    <button 
-                        className='reg-button button-connection'
-                        onClick={toConnection}>
-                            Connexion
-                    </button>
-                    <button 
-                        className='valid-button button-connection' 
+                    <StyledButton
+                        color={"secondary"}
+                        onClick={toConnection}
+                        content={"Connexion"}>
+                    </StyledButton>
+                    <StyledButton
+                        className='valid-button button-connection'
+                        color={"primary"}
+                        content={"Valider"}
                         onClick={handleRegister}>
-                            Valider
-                    </button>
+                    </StyledButton>
                 </div>
             </div>
         </div>
