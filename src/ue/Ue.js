@@ -4,8 +4,9 @@ import { getChapParUE } from './UeAPI.js';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 import './Ue.css';
+import StyledButton from '../composent/StyledBouton.js';
 
-function Ue() {
+export default function Ue() {
     const [chapters, setChapters] = useState([]);
     const [selectedChapter, setSelectedChapter] = useState(null);
     const { id } = useParams();
@@ -36,14 +37,13 @@ function Ue() {
     }
 
     return (
-        <div>
-            <Header />
+        <div className='ue-container'>
             <div className="chapters-container">
                 <h1>Programme de l'UE n°{id}</h1>
                 {chapters.length > 0 ? (
                     chapters.map((chapter) => (
-                        <div key={chapter.id_chapitre} className="chapter" onClick={() => handleChapterClick(chapter.id_chapitre)}>
-                            <h2>{chapter.label}</h2>
+                        <div key={chapter.id_chapitre} className={selectedChapter == chapter.id_chapitre ? "chapter-selected" : "chapter"} onClick={() => handleChapterClick(chapter.id_chapitre)}>
+                            <h2 className='chapter-title'>{chapter.label}</h2>
                         </div>
                     ))
                 ) : (
@@ -51,14 +51,12 @@ function Ue() {
                 )}
             </div>
             {selectedChapter && (
-                <div className="buttons-container">
-                    <button onClick={handleCourseClick}>Cours</button>
-                    <button onClick={handleQuizzClick}>Quizz</button>
-                    <button onClick={() => console.log('Create')}>Create</button>
+                <div className="buttons-container-ue">
+                    <StyledButton content={"Cours"} color={"primary"} onClick={handleCourseClick}/>
+                    <StyledButton content={"Quizz"} color={"primary"} onClick={handleQuizzClick}/>
+                    <StyledButton content={"Create"} color={"primary"} onClick={() => console.log('Create')}/>
                 </div>
             )}
         </div>
     );
 }
-
-export default Ue;
