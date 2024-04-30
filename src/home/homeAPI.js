@@ -38,8 +38,8 @@ export const getUe = async () => {
             ]
         }
     ]
-        console.log("ue et prof : ",response.data);
-        return response.data;
+        console.log("ue et prof : ",response);
+        return response;
     }
     catch (error) {
         throw error;
