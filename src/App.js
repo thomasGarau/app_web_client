@@ -10,7 +10,7 @@ import Carte_mental from './carte_mental/Carte_mental';
 import SecurePage from './secure_page/securePage';
 import Profile from './profile/Profile';
 import Study from './STUDY/Study';
-import Forum from './question/Forum';
+import Forum from './forum/Forum';
 import Quizz_principale from './quizz/Quizz_principale';
 import CreateQuizz from './quizz/CreateQuizz';
 import Question from './quizz/Question';
@@ -32,7 +32,7 @@ function App() {
         <Route path="/quizz/:id" element={/*<PrivateRoute> */<Layout><Quizz_principale /> </Layout>/*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={/* <PrivateRoute> */<Layout><Carte_mental /></Layout>/* </PrivateRoute> */} />
         <Route path="/etude/:id" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
-        <Route path="/forum" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>
+        <Route path="/forum/:id" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz-completed/:quizId" element={<PrivateRoute><Layout><QuizzFin /></Layout></PrivateRoute>} />
         <Route path="/create_quizz" element={/* <PrivateRoute> */<Layout><CreateQuizz/></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz/:quizId/question/:questionId" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>

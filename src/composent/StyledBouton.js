@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 export default function StyledButton({ content, width, onClick, color, height }) {
     const [styledButtonHigh] = useState({
-        fontFamily: 'Nanum Pen Script',
+        fontFamily: 'Shadows Into Light',
         fontSize: '2em',
         border: 'none',
         color: color == "primary" ? 'white' : 'black',
@@ -28,7 +28,7 @@ export default function StyledButton({ content, width, onClick, color, height })
     });
 
     const [styledButtonLow] = useState({
-        fontFamily: 'Nanum Pen Script',
+        fontFamily: 'Caveat',
         fontSize: '1.2em',
         border: 'none',
         color: color == "primary" ? 'white' : 'black',

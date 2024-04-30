@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getUe } from "./securePageAPI.js";
 import { logout } from "../connexion/UserAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
+
 import "./securePage.css";
 import Header from "../composent/Header.js";
 import { Button, IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar } from "@mui/material";
@@ -97,32 +98,33 @@ function SecurePage() {
                 ),
               }}
             />
-            <List sx={{
-              width: '100%',
-              position: 'relative',
-              overflow: 'auto',
-              maxHeight: 300,
-              '& ul': { padding: 0 },
-            }}>
-              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
-                <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
-                  onClick={() => handleListItemClick(ue.id_ue)}>
-                  <ListItemAvatar>
-                    <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
-                  </ListItemAvatar>
-                  <div>
-                    <ListItemText
-                      primary={ue.label + " " + ue.label}
-                      primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script" } }}
-                    />
-                    <ListItemText
-                      primary={ue.label}
-                      primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script", fontSize: "x-large" } }}
-                    />
-                  </div>
-                </ListItem>
-              ))}
-            </List>
+           <List sx={{
+  width: '100%',
+  position: 'relative',
+  overflow: 'auto',
+  maxHeight: 300,
+  '& ul': { padding: 0 },
+}}>
+  {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+    <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
+      onClick={() => handleListItemClick(ue.id_ue)}>
+      <ListItemAvatar>
+        <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
+      </ListItemAvatar>
+      <div>
+        <ListItemText
+          primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
+          primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script" } }}
+        />
+        <ListItemText
+          primary={ue.label}
+          primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script", fontSize: "x-large" } }}
+        />
+      </div>
+    </ListItem>
+  ))}
+</List>
+
 
           </div>
           <div>
@@ -131,7 +133,7 @@ function SecurePage() {
           </div>
         </div>
         {isSecure}
-        <Button variant="contained" onClick={handleDisconnection}>Deconnexion</Button>
+        <button onClick={handleDisconnection}>Deconnexion</button>
       </div>
     </div>
 

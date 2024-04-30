@@ -4,6 +4,8 @@ import './Header.css'
 import ppImage from './img/pp.png';
 import logo from './img/logo_rond.png';
 import "@fontsource/nanum-pen-script";
+import "@fontsource/caveat"
+import "@fontsource/shadows-into-light"
 
 function Header() {
 
