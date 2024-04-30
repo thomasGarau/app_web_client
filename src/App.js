@@ -28,7 +28,7 @@ function App() {
         <Route path="/etude/:id" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
         <Route path="/forum" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>
         <Route path="/create_quizz" element={/* <PrivateRoute> */<Layout><CreateQuizz/></Layout>/* </PrivateRoute> */}/>
-        <Route path="/question" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>
+        <Route path="/question/:id" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>
         <Route path="/secure_page" element={/* <PrivateRoute> */<Layout><SecurePage /></Layout>/* <PrivateRoute> */} />
         <Route path='/secure_page2' element={<PrivateRoute2><Layout><SecurePage /></Layout></PrivateRoute2>} />
         <Route path="/profile" element={/*<PrivateRoute>*/<Layout><Profile /></Layout>/*</PrivateRoute> />*/}/>

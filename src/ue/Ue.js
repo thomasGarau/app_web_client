@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getChapParUE } from './UeAPI.js';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
 import './Ue.css';
 
 function Ue() {
-    const [chapters, setChapters] = useState([
-        { id: 1, title: 'Introduction à React', description: 'Découvrez les bases de React.' },
-        { id: 2, title: 'Les composants', description: 'Apprenez à créer et utiliser des composants.' },
-        { id: 3, title: 'Gestion de l\'état', description: 'Techniques pour gérer l\'état dans vos applications.' }
-    ]);
+    const [chapters, setChapters] = useState([]);
     const [selectedChapter, setSelectedChapter] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchChapters = async () => {
+            try {
+                const chaptersData = await getChapParUE(id);
+                setChapters(chaptersData);
+            } catch (error) {
+                console.error("Failed to fetch chapters:", error);
+            }
+        };
+        fetchChapters();
+    }, [id]);
 
     function handleChapterClick(chapterId) {
         setSelectedChapter(chapterId);
@@ -31,12 +40,15 @@ function Ue() {
             <Header />
             <div className="chapters-container">
                 <h1>Programme de l'UE n°{id}</h1>
-                {chapters.map((chapter) => (
-                    <div key={chapter.id} className="chapter" onClick={() => handleChapterClick(chapter.id)}>
-                        <h2>{chapter.title}</h2>
-                        <p>{chapter.description}</p>
-                    </div>
-                ))}
+                {chapters.length > 0 ? (
+                    chapters.map((chapter) => (
+                        <div key={chapter.id_chapitre} className="chapter" onClick={() => handleChapterClick(chapter.id_chapitre)}>
+                            <h2>{chapter.label}</h2>
+                        </div>
+                    ))
+                ) : (
+                    <p>Aucun chapitre disponible pour cette UE.</p>
+                )}
             </div>
             {selectedChapter && (
                 <div className="buttons-container">
