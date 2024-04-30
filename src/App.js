@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Remplacez "Switch" par "Routes"
+import './App.css';
 import PrivateRoute from './services/PrivateRoutes';
 import PrivateRoute2 from './services/PrivateRoutes2';
 import Principal from './principal/Principal';
@@ -27,7 +28,7 @@ function App() {
       <Routes> {/* Utilisez la composante "Routes" au lieu de "Switch" */}
         <Route path="/connexion" element={<Layout><Connexion /></Layout>} />
         <Route path="/register" element={<Layout><Register /></Layout>} />
-        <Route path="/ue/:id" element={<PrivateRoute><Layout><Ue /></Layout></PrivateRoute>} />
+        <Route path="/ue/:id" element={/*<PrivateRoute>*/<Layout><Ue /></Layout>/*</PrivateRoute>*/} />
         <Route path="/quizz/:id" element={/*<PrivateRoute> */<Layout><Quizz_principale /> </Layout>/*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={/* <PrivateRoute> */<Layout><Carte_mental /></Layout>/* </PrivateRoute> */} />
         <Route path="/etude/:id" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
