@@ -2,8 +2,9 @@ import { Button, List, ListItem, ListItemText, Typography } from "@mui/material"
 import React, { useState, useEffect } from "react";
 import {getForumByCours } from "../composent/QuestionAPI.js";
 import { useNavigate } from 'react-router-dom';
-function QuestionForum({ courseId }) {  // Utilisation de la destructuration pour extraire courseId du prop
-    const [questions, setQuestions] = useState([])
+
+function QuestionForum({ courseId }) {
+    const [forums, setForums] = useState([]);  // Renommé pour clarifier qu'il s'agit de forums
     const style = {
         fontFamily: "Nanum Pen Script",
         fontSize: "1em",
@@ -11,47 +12,44 @@ function QuestionForum({ courseId }) {  // Utilisation de la destructuration pou
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchQuestions = async () => {
+        const fetchForums = async () => {
             try {
                 const data = await getForumByCours(courseId);
-                setQuestions(data);
-                console.log("qiu : ", questions);
+                const flattenedForums = data.flatMap(item => item.forum); // Aplatit le tableau de forums
+                setForums(flattenedForums);
             } catch (error) {
-                console.error("Erreur lors de la récupération des questions :", error);
+                console.error("Erreur lors de la récupération des forums :", error);
             }
         };
 
         if (courseId) {
-            fetchQuestions();
+            fetchForums();
         }
     }, [courseId]);
 
-    const toForum = (question) => {
-        navigate(`/forum?question=${question[0]}&pseudo=${question[1]}&date=${question[2]}&etat=${question[3]}`);
+    const toForum = (forumId) => {
+        navigate(`/forum/${forumId}`);
     }
-    console.log(window.visualViewport)
 
     return (
         <div className='question-part'>
             <span className="forum-component-title">Forum</span>
             <List className='button-ul'>
-                {questions.map(question => (
-                    <Button key={question[0]} style={{ width: "100%" }} onClick={() => toForum(question)}>
+                {forums.map(forum => (
+                    <Button key={forum.id_forum} style={{ width: "100%" }} onClick={() => toForum(forum.id_forum)}>
                         {window.visualViewport.width <= 600 ? 
                             <ListItem className="list-button" style={{ width: "100%" }}>
-                                <Typography style={style}>{question[0]}</Typography>
+                                <Typography style={style}>{forum.label}</Typography>
                             </ListItem> : 
                             <ListItem className="list-button" style={{ width: "100%" }}>
-                                <ListItemText primaryTypographyProps={{ style: style }} primary={question[0]} />
-                                <ListItemText primaryTypographyProps={{ style: style }} primary={question[1]} />
-                                <ListItemText primaryTypographyProps={{ style: style }} primary={question[2]} />
-                                <ListItemText primaryTypographyProps={{ style: style }} primary={question[3]} />
+                                <ListItemText primaryTypographyProps={{ style: style }} primary={forum.label} />
                             </ListItem>
                         }
                     </Button>
                 ))}
             </List>
         </div>
-    )
+    );
 }
+
 export default QuestionForum;

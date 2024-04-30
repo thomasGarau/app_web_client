@@ -16,8 +16,7 @@ function Study() {
         const fetchCours = async () => {
             try {
                 const data = await getCoursParChap(id);
-                setCours(data); // Assurez-vous que la réponse est le format attendu
-                console.log("data : ",data);
+                setCours(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération des cours :", error);
             }
