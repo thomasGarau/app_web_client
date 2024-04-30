@@ -7,7 +7,7 @@ import Principal from './principal/Principal';
 import Connexion from './connexion/Connexion';
 import Register from './connexion/Register';
 import Carte_mental from './carte_mental/Carte_mental';
-import SecurePage from './secure_page/securePage';
+import Home from './home/home';
 import Profile from './profile/Profile';
 import Study from './STUDY/Study';
 import Forum from './forum/Forum';
@@ -37,7 +37,7 @@ function App() {
         <Route path="/create_quizz" element={/* <PrivateRoute> */<Layout><CreateQuizz/></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz/:quizId/question/:questionId" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz/:quizId/question-handler" element={<QuestionHandler />} />
-        <Route path="/secure_page" element={/* <PrivateRoute> */<Layout><SecurePage /></Layout>/* <PrivateRoute> */} />
+        <Route path="/home" element={/* <PrivateRoute> */<Layout><Home /></Layout>/* <PrivateRoute> */} />
         <Route path="/profile" element={/*<PrivateRoute>*/<Layout><Profile /></Layout>/*</PrivateRoute> />*/}/>
         <Route path="/" element={<Layout><Principal /></Layout>} /> 
       </Routes>

@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getUe } from "./securePageAPI.js";
+import { getUe } from "./homeAPI.js";
 import { logout } from "../connexion/UserAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
 
-import "./securePage.css";
+import "./home.css";
 import Header from "../composent/Header.js";
 import { Button, IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 
-function SecurePage() {
+function Home() {
   const [isSecure, setIsSecure] = useState(null);
   const [listUE, setListUE] = useState(null)
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function SecurePage() {
   const handleListItemClick = (id) => {
     navigate(`/ue/${id}`);
   };
-  
+
 
   function importAll(r) {
     let images = {};
@@ -31,11 +32,11 @@ function SecurePage() {
   useEffect(() => {
     const fetchUeData = async () => {
       try {
-        const {token, role} = getTokenAndRole();
-          const ueData = await getUe();
-          setListUE(ueData);
+        const { token, role } = getTokenAndRole();
+        const ueData = await getUe();
+        setListUE(ueData);
       } catch (error) {
-          console.error('Erreur lors de la récupération des UE:', error);
+        console.error('Erreur lors de la récupération des UE:', error);
       }
     };
 
@@ -60,7 +61,7 @@ function SecurePage() {
     ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ue.label.toLowerCase().includes(searchQuery.toLowerCase())
   ) : [];
-  
+
 
   return (
     <div className='style_background_esp_ele'>
@@ -97,32 +98,32 @@ function SecurePage() {
                 ),
               }}
             />
-           <List sx={{
-  width: '100%',
-  position: 'relative',
-  overflow: 'auto',
-  maxHeight: 300,
-  '& ul': { padding: 0 },
-}}>
-  {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
-    <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
-      onClick={() => handleListItemClick(ue.id_ue)}>
-      <ListItemAvatar>
-        <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
-      </ListItemAvatar>
-      <div>
-        <ListItemText
-          primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
-          primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
-        />
-        <ListItemText
-          primary={ue.label}
-          primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
-        />
-      </div>
-    </ListItem>
-  ))}
-</List>
+            <List sx={{
+              width: '100%',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 300,
+              '& ul': { padding: 0 },
+            }}>
+              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+                <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
+                  onClick={() => handleListItemClick(ue.id_ue)}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
+                  </ListItemAvatar>
+                  <div>
+                    <ListItemText
+                      primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
+                      primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
+                    />
+                    <ListItemText
+                      primary={ue.label}
+                      primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
+                    />
+                  </div>
+                </ListItem>
+              ))}
+            </List>
 
 
           </div>
@@ -139,4 +140,4 @@ function SecurePage() {
   );
 }
 
-export default SecurePage;
+export default Home;
