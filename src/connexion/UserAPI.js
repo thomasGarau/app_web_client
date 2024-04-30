@@ -38,5 +38,5 @@ export const logout = async (token) => {
         }
     })
     .then(response => {return response.data})
-    .catch(error => {console.log(error); throw error;})
+    .catch(error => {console.log(error);})
 }
