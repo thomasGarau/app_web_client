@@ -28,7 +28,7 @@ export default function StyledButton({ content, width, onClick, color, height })
     });
 
     const [styledButtonLow] = useState({
-        fontFamily: 'Caveat',
+        fontFamily: 'Shadows Into Light',
         fontSize: '1.2em',
         border: 'none',
         color: color == "primary" ? 'white' : 'black',

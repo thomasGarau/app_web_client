@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuiz } from './QuizContext';
-import { handleSubmit } from './QuizzAPI'; // Assurez-vous que le chemin d'importation est correct
+import { handleSubmit, getQuizzInfo } from './QuizzAPI';
 import Header from '../composent/Header.js';
 
 function QuizzFin() {
-    const { quizId } = useParams(); // Assumant que le quizId est passé via les paramètres d'URL
-    const { allSelectedAnswers } = useQuiz();
+    const { quizId } = useParams();
+    const navigate = useNavigate();
+    const { allSelectedAnswers, resetSelectedAnswers } = useQuiz();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [finalScore, setFinalScore] = useState('');  // Ajouter cet état pour stocker la note finale
+    const info = getQuizzInfo(quizId);
 
     useEffect(() => {
-        // Vérifiez si la soumission a déjà été faite ou non, et si des réponses sont disponibles
         if (allSelectedAnswers.length > 0 && !isSubmitted) {
             handleSubmit(quizId, allSelectedAnswers)
                 .then(response => {
                     console.log('Réponse du serveur:', response);
-                    setIsSubmitted(true);  // Marquer comme soumis pour éviter de réexécuter
+                    setIsSubmitted(true);
+                    setFinalScore(response.resultat.noteFinale);  // Stocker la note finale obtenue dans l'état
+                    resetSelectedAnswers();  
                 })
                 .catch(error => {
                     console.error('Erreur lors de la soumission:', error);
                 });
         }
-    }, [quizId, allSelectedAnswers, isSubmitted]); // Incluez quizId et allSelectedAnswers
-    
-    
+
+    }, [quizId, allSelectedAnswers, isSubmitted, resetSelectedAnswers]); // Incluez resetSelectedAnswers dans les dépendances
+
     return (
         <div className='quiz-summary'>
             <Header />
             <h1 style={{ marginTop: "140px" }}>Résumé du Quiz</h1>
-            {allSelectedAnswers.length > 0 ? (
-                <ul>
-                    {allSelectedAnswers.map(answerId => (
-                        <li key={answerId}>Réponse sélectionnée ID: {answerId}</li>
-                    ))}
-                </ul>
-            ) : (
-                <p>Aucune réponse sélectionnée ou données non disponibles.</p>
-            )}
+            <button onClick={() => navigate(`/quizz/${info.id_ue}`)}>Menu Quizz</button>
+            <p>Merci d'avoir participé au quiz. Vous avez terminé avec succès le quiz.</p>
+            <p>Score final: {finalScore}</p>  {/* Afficher la note finale ici */}
         </div>
     );
 }

@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 function QuestionForum({ courseId }) {
     const [forums, setForums] = useState([]);  // Renommé pour clarifier qu'il s'agit de forums
     const style = {
-        fontFamily: "Nanum Pen Script",
         fontSize: "1em",
     };
     const navigate = useNavigate();

@@ -82,7 +82,6 @@ function SecurePage() {
                 alignSelf: "center",
                 borderRadius: "50px",
                 color: '#f5f5f5',
-                fontFamily: "Nanum Pen Script",
                 fontSize: "x-large",
                 '& .MuiOutlinedInput-root': {
                   borderRadius: "50px",
@@ -114,11 +113,11 @@ function SecurePage() {
       <div>
         <ListItemText
           primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
-          primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script" } }}
+          primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
         />
         <ListItemText
           primary={ue.label}
-          primaryTypographyProps={{ style: { color: '#f5f5f5', fontFamily: "Nanum Pen Script", fontSize: "x-large" } }}
+          primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
         />
       </div>
     </ListItem>

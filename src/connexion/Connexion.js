@@ -43,11 +43,10 @@ function Connexion() {
   return (
     <div className='background'>
       <div className='base-container'>
-        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Connexion</h1>
+        <h1 style={{ fontSize: "4em", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
           <input
             className='input-connexion'
-            style={{ fontFamily: "Nanum Pen Script" }}
             type="text"
             id="username"
             name="username"
@@ -57,7 +56,6 @@ function Connexion() {
           />
           <input
             className='input-connexion'
-            style={{ fontFamily: "Nanum Pen Script" }}
             type="password"
             id="password"
             name="password"

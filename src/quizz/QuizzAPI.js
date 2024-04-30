@@ -63,3 +63,19 @@ export const handleSubmit = async (quizId, selectedAnswers) => {
     }
         
 }
+
+export const getQuizzInfo = async (quizId) => {
+    try {
+        const body = {
+            quizz: quizId
+        };
+        console.log("body info : ",body);
+
+        const response = await api.post(`/quizz/getQuizzInfo`);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

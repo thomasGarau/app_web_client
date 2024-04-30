@@ -16,11 +16,17 @@ export const QuizProvider = ({ children }) => {
                 return prev.includes(answerId) ? [] : [...prev, answerId];
             }
         });
+        
+    };
+    const resetSelectedAnswers = () => {
+        setSelectedAnswers([]);
     };
 
     return (
-        <QuizContext.Provider value={{ allSelectedAnswers, handleSelectAnswer }}>
+        <QuizContext.Provider value={{ allSelectedAnswers, handleSelectAnswer, resetSelectedAnswers }}>
             {children}
         </QuizContext.Provider>
     );
 };
+
+

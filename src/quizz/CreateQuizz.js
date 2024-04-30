@@ -261,7 +261,6 @@ function CreateQuizz() {
                                     maxWidth: "100%",
                                     textAlign: "left",
                                     paddingLeft: "10px",
-                                    fontFamily: "Nanum Pen Script",
                                     fontSize: "x-large",
                                     overflow: "hidden",
                                 }}>{question.titre === "" ? "Cliquer ici" : question.titre}</span>
@@ -271,7 +270,7 @@ function CreateQuizz() {
                             <IconButton className="icon-add" style={{ transition: "0.2s" }} onClick={addQuestion}>
                                 <AddIcon style={{ fill: "#F5F5F5" }} />
                             </IconButton>
-                            <Typography style={{ color: "#F5F5F5", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>ajouter une question</Typography>
+                            <Typography style={{ color: "#F5F5F5",  fontSize: "x-large" }}>ajouter une question</Typography>
                         </Box>
                     </div>
                 </Drawer>
@@ -307,7 +306,7 @@ function CreateQuizz() {
                     <Textarea
                         variant="plain"
                         value={selected.titre}
-                        style={{ color: "black", fontFamily: "Nanum Pen Script", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
+                        style={{ color: "black",  fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             const updatedQuestions = [...questions];
@@ -322,7 +321,7 @@ function CreateQuizz() {
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px", justifyContent: "space-between" }}>
                                     <Input
                                         placeholder={"Reponse " + (index + 1)}
-                                        style={{ color: "black", fontFamily: "Nanum Pen Script", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
+                                        style={{ color: "black",  fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
                                             const updatedReponses = [...selected.reponses];
                                             updatedReponses[index].contenu = event.target.value;
@@ -366,7 +365,7 @@ function CreateQuizz() {
                                         <IconButton onClick={addReponse} className="icon-add" style={{ transition: "0.2s" }}>
                                             <AddIcon style={{ fill: "#F5F5F5" }} />
                                         </IconButton>
-                                        <Typography style={{ color: "#F5F5F5", fontFamily: "Nanum Pen Script", fontSize: "x-large" }}>
+                                        <Typography style={{ color: "#F5F5F5",  fontSize: "x-large" }}>
                                             ajouter une reponse
                                         </Typography>
                                     </Box>
@@ -408,7 +407,6 @@ function CreateQuizz() {
                                 onClick={validateQuizz}
                                 style={{
                                     color: "black",
-                                    fontFamily: "Nanum Pen Script",
                                     fontSize: "large",
                                     backgroundColor: "rgb(245 245 245)",
                                     padding: "10px",
@@ -424,7 +422,6 @@ function CreateQuizz() {
                                 left: "3%",
                                 bottom: "5%",
                                 color: "black",
-                                fontFamily: "Nanum Pen Script",
                                 fontSize: "large",
                                 backgroundColor: "rgb(245 245 245)",
                                 padding: "10px",
@@ -434,7 +431,6 @@ function CreateQuizz() {
                                 <QuizIcon /></IconButton>
                             <IconButton sx={{
                                 color: "black",
-                                fontFamily: "Nanum Pen Script",
                                 fontSize: "large",
                                 backgroundColor: "rgb(245 245 245)",
                                 padding: "10px",
@@ -476,7 +472,6 @@ function CreateQuizz() {
                                 onClick={validateQuizz}
                                 sx={{
                                     color: "black",
-                                    fontFamily: "Nanum Pen Script",
                                     fontSize: "large",
                                     backgroundColor: "rgb(245 245 245)",
                                     padding: "10px",
@@ -498,7 +493,6 @@ function CreateQuizz() {
                                 left: "10px",
                                 bottom: "20%",
                                 color: "black",
-                                fontFamily: "Nanum Pen Script",
                                 fontSize: "large",
                                 backgroundColor: "rgb(245 245 245)",
                                 padding: "10px",
@@ -513,7 +507,6 @@ function CreateQuizz() {
                             <Button
                                 sx={{
                                     color: "black",
-                                    fontFamily: "Nanum Pen Script",
                                     fontSize: "large",
                                     backgroundColor: "rgb(245, 245, 245)",
                                     padding: "10px",
