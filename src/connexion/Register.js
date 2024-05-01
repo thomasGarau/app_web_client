@@ -6,11 +6,12 @@ import Header from '../composent/Header.js';
 import { Registry } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
+import StyledButton from '../composent/StyledBouton.js';
 
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // Nouvel état pour la confirmation du mot de passe
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const navigate = useNavigate();
 
@@ -27,7 +28,7 @@ function Register() {
                 const { token, days } = data;
                 if (token) {
                     createCookie(token, days);
-                    navigate('/secure_page');
+                    navigate('/home');
                 } else {
                     console.log("Erreur lors de l'inscription");
                 }
@@ -44,9 +45,8 @@ function Register() {
 
     return (
         <div className='background'>
-            <Header></Header>
             <div className='base-container'>
-                <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Inscription</h1>
+                <h1 style={{ fontSize: "4em", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>
                     <input
                         className='input-connexion'
@@ -80,16 +80,17 @@ function Register() {
                     />
                 </div>
                 <div className='buttons-container'>
-                    <button 
-                        className='reg-button button-connection'
-                        onClick={toConnection}>
-                            Connexion
-                    </button>
-                    <button 
-                        className='valid-button button-connection' 
+                    <StyledButton
+                        color={"secondary"}
+                        onClick={toConnection}
+                        content={"Connexion"}>
+                    </StyledButton>
+                    <StyledButton
+                        className='valid-button button-connection'
+                        color={"primary"}
+                        content={"Valider"}
                         onClick={handleRegister}>
-                            Valider
-                    </button>
+                    </StyledButton>
                 </div>
             </div>
         </div>

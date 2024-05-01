@@ -1,3 +1,4 @@
+import api from '../config/axiosConfig.js'
 import axios from 'axios';
 
 export const Authenticate = async (user, password) => {
@@ -22,21 +23,13 @@ export const Registry = async (email, password) => {
 
 export const verifyToken = async (token) => {
     console.log("verifyToken")
-    return axios.get('http://localhost:3001/api/user/verify-token',  {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+    return api.get('/user/verify-token',  {})
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
 }
 
 export const logout = async (token) => {
-    return axios.post('http://localhost:3001/api/user/logout', {}, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+    return api.post('/user/logout', {})
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
 }

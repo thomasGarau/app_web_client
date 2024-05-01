@@ -26,6 +26,7 @@
     height: 100%;
 }
 
+
 @media (max-width: 600px) {
     .container2_style{
         height: 90%;

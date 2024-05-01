@@ -9,6 +9,7 @@ import {Link, Box} from '@mui/material';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
+import StyledButton from '../composent/StyledBouton.js';
 
 
 
@@ -25,7 +26,7 @@ function Connexion() {
         const { username, token, days, role } = data;
         if (token) {
           createCookie(token, days, role);
-          navigate('/secure_page');
+          navigate('/home');
         } else {
           console.log("Erreur de connexion");
         }
@@ -43,23 +44,20 @@ function Connexion() {
 
   return (
     <div className='background'>
-      <Header></Header>
       <div className='base-container'>
-        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Connexion</h1>
+        <h1 style={{ fontSize: "4em", margin: "0px" }}>Connexion</h1>
         <div className='sub-container'>
           <input
             className='input-connexion'
-            style={{ fontFamily: "Nanum Pen Script" }}
             type="text"
             id="username"
             name="username"
-            placeholder="Nom d'utilisateur"
+            placeholder="N° Etudiant"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className='input-connexion'
-            style={{ fontFamily: "Nanum Pen Script"}}
             type="password"
             id="password"
             name="password"
@@ -70,14 +68,15 @@ function Connexion() {
           <Link style={{fontSize:"2em"}} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublie?</Link>
         </div>
         <div className='buttons-container'>
-          <button 
-            style={{ fontFamily: "Nanum Pen Script"}}
-            className='reg-button button-connection'
-            onClick={toRegister}>Inscription</button>
-          <button
-            style={{ fontFamily: "Nanum Pen Script" }}
-            className='valid-button button-connection'
-            onClick={handleLogin}>Valider</button>
+          <StyledButton
+            color={"secondary"}
+            content={"Inscription"}
+            onClick={toRegister}>Inscription</StyledButton>
+          <StyledButton
+            color={"primary"}
+            content={"Valider"}
+            onClick={handleLogin}>Valider
+          </StyledButton>
         </div>
 
       </div>

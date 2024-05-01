@@ -10,7 +10,7 @@ export const createCookie = (token, days, role) => {
     }
 };
 
-export const getTokenAndRole = () => { 
+export const getTokenAndRole = async () => { 
     try {
         const authDataValue = getCookieValue("authData");
         if (authDataValue) {

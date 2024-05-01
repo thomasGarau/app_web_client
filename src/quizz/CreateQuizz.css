@@ -23,7 +23,6 @@
     padding: 10px;
     text-align: center;
     width: inherit;
-    font-family: "Nanum Pen Script";
 }
 
 .container-create-quizz {
@@ -54,6 +53,7 @@
 .icon-add:hover > * {
     fill: black !important;
 }
+
 
 @media (max-width: 600px) {
     #title-input {
