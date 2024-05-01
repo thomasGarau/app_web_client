@@ -24,7 +24,7 @@ function Connexion() {
         const { username, token, days, role } = data;
         if (token) {
           createCookie(token, days, role);
-          navigate('/secure_page');
+          navigate('/home');
         } else {
           console.log("Erreur de connexion");
         }

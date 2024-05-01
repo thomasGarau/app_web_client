@@ -28,7 +28,7 @@ function Register() {
                 const { token, days } = data;
                 if (token) {
                     createCookie(token, days);
-                    navigate('/secure_page');
+                    navigate('/home');
                 } else {
                     console.log("Erreur lors de l'inscription");
                 }
