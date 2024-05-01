@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router-dom';
 //modules
 import { Authenticate } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
+import {Link, Box} from '@mui/material';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
 import Header from '../composent/Header.js';
+
 
 
 function Connexion() {
@@ -65,6 +67,7 @@ function Connexion() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Link style={{fontSize:"2em"}} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublie?</Link>
         </div>
         <div className='buttons-container'>
           <button 

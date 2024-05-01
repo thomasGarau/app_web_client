@@ -13,6 +13,8 @@ import Forum from './question/Forum';
 import Quizz_principale from './quizz/Quizz_principale';
 import CreateQuizz from './quizz/CreateQuizz';
 import Question from './quizz/Question';
+import Forgot from './connexion/Forgot';
+import Reset from './connexion/Reset';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
       <Routes> {/* Utilisez la composante "Routes" au lieu de "Switch" */}
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot_password" element={<Forgot />} />
+        <Route path="/reset_password" element={<Reset />} />
         <Route path="/quizz" element={/*<PrivateRoute> */<Quizz_principale /> /*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={<PrivateRoute><Carte_mental /></PrivateRoute>} />
         <Route path="/etude" element={/* <PrivateRoute> */<Study/>/* </PrivateRoute> */}/>
