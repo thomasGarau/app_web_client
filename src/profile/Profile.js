@@ -87,7 +87,7 @@ export default function Profile() {
                     labelId="label-quizz"
                     id="demo-simple-select"
                     value={quizz}
-                    label="aaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    label="aaaaaaaaaaaaaaaaaaaaaa"
                     onChange={handleChangeQuizz}
                 >
                     {listQuizz.map((quizz, index) => (
@@ -113,7 +113,7 @@ export default function Profile() {
                     labelId="label-qcm"
                     id="demo-simple-select"
                     value={QCM}
-                    label="aaaaaaaaaaaaaaaaaaaaa"
+                    label="aaaaaaaaaaaaaaaaa"
                     onChange={handleChangeQCM}
                 >
                     {listQCM.map((qcm, index) => (

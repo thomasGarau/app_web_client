@@ -62,7 +62,6 @@ export const getJMethod = async () => {
             }
 
         ]
-        console.log("ue et prof : ", response);
         return response;
     }
     catch (error) {

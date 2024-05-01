@@ -70,7 +70,7 @@ function ServerDay(props) {
 
 function Home() {
   const requestAbortController = useRef(null);
-  const [isSecure, setIsSecure] = useState(null);
+  const [isSecure] = useState(null);
   const [listUE, setListUE] = useState(null)
   const [listJMethod, setListJMethod] = useState([]);
   const navigate = useNavigate();
@@ -96,7 +96,6 @@ function Home() {
     setIsLoading(true);
     const controller = new AbortController();
     try {
-      const { token, role } = getTokenAndRole();
       const JMethod = await getJMethod();
       setListJMethod(JMethod);
       requestAbortController.current = controller;
@@ -114,7 +113,6 @@ function Home() {
 
     const days = filteredDates.map(date => date.getDate());
     setHighlightedDays(days);
-    console.log(days);
 
     return () => {
       requestAbortController.current?.abort();
@@ -126,7 +124,6 @@ function Home() {
   useEffect(() => {
     const fetchUeData = async () => {
       try {
-        const { token, role } = getTokenAndRole();
         const ueData = await getUe();
         setListUE(ueData);
       } catch (error) {
@@ -135,12 +132,12 @@ function Home() {
     };
     fetchJMethod(month);
     fetchUeData();
-  }, []);
+  }, [month]);
 
   useEffect(() => {
     fetchJMethod(month);
     return () => requestAbortController.current?.abort();
-  }, []);
+  }, [month]);
 
   const handleMonthChange = (date) => {
     setMonth(date.$M)

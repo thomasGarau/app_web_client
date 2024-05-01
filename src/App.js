@@ -19,7 +19,7 @@ import Ue from './ue/Ue';
 import QuestionHandler from './quizz/QuestionHandler';
 import QuizzFin from './quizz/QuizzFin';
 import { QuizProvider } from './quizz/QuizContext';
-
+;
 
 function App() {
   return (

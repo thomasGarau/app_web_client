@@ -13,7 +13,7 @@ function Header() {
 
     const versPagePrincipale = (e) => {
         e.preventDefault();
-        navigate('/secure_page');
+        navigate('/home');
     }
 
     const VersProfile = (e) => {
