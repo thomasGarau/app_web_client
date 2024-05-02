@@ -9,11 +9,8 @@ function Layout({ children }) {
 
   return (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-
         <Header />
         <div>{children}</div>
-
-
       </LocalizationProvider>
   );
 }

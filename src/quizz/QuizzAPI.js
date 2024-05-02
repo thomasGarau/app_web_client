@@ -79,3 +79,34 @@ export const getQuizzInfo = async (quizId) => {
         throw error;
     }
 }
+
+export const getStatQuestions = async (quizId) => {
+    try {
+        const body = {
+            quizz: quizId
+        };
+        console.log("body info : ",body);
+
+        const response = await api.post(`/quizz/questionsPourQuizz`, body);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getReponsesUtilisateurPourQuestion = async (question_id, quiz_id) => {
+    try {
+        const body = {
+            question: question_id,
+            quizz: quiz_id
+        };
+        //const response = await api.post(`/quizz/reponsesUtilisateurPourQuestion`, body);
+        //console.log("réponse reponse : ",response);
+        //return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
