@@ -36,6 +36,7 @@ export const getReponsesPourQuestion = async (question_id) => {
         const body = {
             question: question_id
         };
+        console.log(body)
         const response = await api.post(`/quizz/reponsesPourQuestion`, body);
         console.log("réponse reponse : ",response);
         return response.data;
@@ -87,7 +88,7 @@ export const getStatQuestions = async (quizId) => {
         };
         console.log("body info : ",body);
 
-        const response = await api.post(`/quizz/questionsPourQuizz`, body);
+        const response = await api.post(`/quizz/getNoteQuizzInfo`, body);
         console.log("réponse info : ",response);
         return response.data;
     }

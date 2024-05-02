@@ -10,7 +10,7 @@ function Layout({ children }) {
   return (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Header />
-        <div>{children}</div>
+        <div style={{height: "100%"}}>{children}</div>
       </LocalizationProvider>
   );
 }

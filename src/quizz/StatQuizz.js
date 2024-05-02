@@ -1,6 +1,7 @@
 //dependances
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useJwt } from "react-jwt";
 
 //modules
 import { getStatQuestions } from './QuizzAPI.js';
@@ -8,12 +9,14 @@ import { Link, Box, Typography, Avatar } from '@mui/material';
 import './StatQuizz.css';
 import "@fontsource/nanum-pen-script";
 import { green, red } from '@mui/material/colors';
+import { getTokenAndRole } from '../services/Cookie.js';
 
 
 
 function StatQuizz() {
-    const { id } = useParams();
-
+    const { quizId, noteQuizId } = useParams();
+    const {token, role} = getTokenAndRole();
+    const { decodedToken, isExpired } = useJwt(token)
     const [listQuestions, setListQuestions] = useState([])
 
     const navigate = useNavigate();
@@ -21,21 +24,22 @@ function StatQuizz() {
     useEffect(() => {
         const fetchStatQuestions = async () => {
             try {
-                const questions = await getStatQuestions(id);
-                setListQuestions(questions);
+                const questions = await getStatQuestions(noteQuizId);
+                setListQuestions(questions.resultat);
             } catch (error) {
                 console.error('Erreur lors de la récupération des questions:', error);
             }
         };
         fetchStatQuestions();
-    }, [id]);
+    }, [noteQuizId]);
 
     useEffect(() => {
         console.log(listQuestions)
     }, [listQuestions])
 
     const handleQuestionClick = (id_question) => {
-        navigate(`/quizz/${id}/stat/${id_question}`);
+        console.log(decodedToken)
+        navigate(`/statQuizz/${quizId}/${noteQuizId}/${id_question}`);
     }
 
 
@@ -44,7 +48,7 @@ function StatQuizz() {
             <div className='questions-list-container'>
                 <Typography className="question-list-title" style={{ fontSize: "4em", margin: "0px" }}>Liste des questions</Typography>
                 <div className='questions-list-subcontainer'>
-                    {listQuestions.length > 0 ? (
+                    {listQuestions && listQuestions.length > 0 ? (
                         listQuestions.map((question, index) => (
                             <div key={question.id_question} className="question-container" onClick={() => handleQuestionClick(question.id_question)}>
                                 <Typography sx={{flex:1}} className='question-title'>{question.label}</Typography>

@@ -31,7 +31,7 @@ function CreateQuizz() {
     }]);
     const [selected, setSelected] = useState(questions[0])
     const [estNegatif, setEstNegatif] = useState(false)
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState('');
     const [listChapitre, setListChapitre] = useState([])
     const [chapitre, setChapitre] = useState({ id_chapitre: 0, label: "" })
     const [reponses, setReponses] = useState(questions[0].reponses);
