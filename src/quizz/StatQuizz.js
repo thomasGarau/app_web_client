@@ -65,7 +65,7 @@ function StatQuizz() {
                                     Reponse de l'élève: {question.reponsesUtilisateur.every((value, index) => value === question.bonnesReponses[index]) ? "juste" : "fausse"}
                                 </Typography>
 
-                                {question.reponseUtilisateur === question.bonneReponses ? <Avatar sx={{ bgcolor: green[500], marginLeft: "10px" }}> </Avatar> : <Avatar sx={{ bgcolor: red[500], marginLeft: "10px" }}> </Avatar>}
+                                {question.reponsesUtilisateur.every((value, index) => value === question.bonnesReponses[index]) ? <Avatar sx={{ bgcolor: green[500], marginLeft: "10px" }}> </Avatar> : <Avatar sx={{ bgcolor: red[500], marginLeft: "10px" }}> </Avatar>}
                             </div>
                         ))
                     ) : (
