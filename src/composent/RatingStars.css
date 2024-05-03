@@ -1,0 +1,17 @@
+.star {
+    color: black;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .gold {
+    color: gold;
+  }
+
+  .rating-stars {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  

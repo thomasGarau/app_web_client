@@ -75,9 +75,6 @@ function Quizz_principale() {
             quizzes.length > 0 ? (
               quizzes.filter(quiz => quiz.createur === activeTab).map(quiz => (
                 <div key={quiz.id_quizz} className='container_quizz'>
-                  <div id='quizz_num' className='item_quizz'>
-                    <p>QUizz n°{quiz.number}</p>
-                  </div>
                   <div id='quizz_sujet' className='theme_quizz'>
                     <p>{quiz.label}</p>
                   </div>

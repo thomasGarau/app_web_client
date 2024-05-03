@@ -148,3 +148,91 @@
 }
 
 
+.quiz-final-summary {
+    display: flex ;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: #C3D9FF;
+    padding-top : 150px;
+}
+
+.quiz-final-button-top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100dvw;
+    height: 10dvh;
+    margin-top: 10px;
+}
+
+.quiz-final-sujet-quizz{
+    background-color: white;
+}
+
+.theme_quiz-final{
+    width: 20%;
+    height: 80px;
+    background-color: white;
+    border-radius: 38px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5em;
+    margin : 2%;
+    
+}
+
+.btn_quiz-final{
+    width : 20%;
+    height: 80px;
+    background-color: white;
+    color : black;
+    border-radius: 38px;
+    border: none;
+    font-weight: lighter;
+}
+
+.btn_quiz-final:hover{
+    color : black;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
+}
+
+.quiz-final-score{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 63dvh;
+}
+
+.quiz-final-demi-cercle {
+    width: 400px;            /* Largeur du demi-cercle */
+    height: 300px;            /* Hauteur du demi-cercle */
+    background: white;         /* Couleur de fond */
+    border-top-left-radius: 200px;   /* Arrondir le coin supérieur gauche */
+    border-top-right-radius: 200px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .quiz-final-demi-cercle-vide {
+    width: 300px;            /* Largeur du demi-cercle */
+    height: 175px;            /* Hauteur du demi-cercle */
+    background: white;         /* Couleur de fond */
+    border-top-left-radius: 150px;   /* Arrondir le coin supérieur gauche */
+    border-top-right-radius: 150px; 
+    border: 5px solid #133D56;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .quiz-final-demi-cercle-vide p{
+    font-size: 5em;
+  }

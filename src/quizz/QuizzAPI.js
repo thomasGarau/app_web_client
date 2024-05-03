@@ -71,7 +71,7 @@ export const getQuizzInfo = async (quizId) => {
         };
         console.log("body info : ",body);
 
-        const response = await api.post(`/quizz/getQuizzInfo`);
+        const response = await api.post(`/quizz/getQuizzInfo`, body);
         console.log("réponse info : ",response);
         return response.data;
     }
@@ -89,6 +89,23 @@ export const getStatQuestions = async (quizId) => {
 
         const response = await api.post(`/quizz/questionsPourQuizz`, body);
         console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+
+export const getLastNoteQuizz = async (quizId) => {
+    try {
+        const body = {
+            quizz: quizId
+        };
+        console.log("body info note : ",body);
+
+        const response = await api.post(`/quizz/getLastNoteForQuizz`, body);
+        console.log("réponse info note : ",response);
         return response.data;
     }
     catch (error) {
