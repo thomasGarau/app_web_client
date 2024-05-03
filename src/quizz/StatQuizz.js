@@ -15,7 +15,6 @@ import { getTokenAndRole } from '../services/Cookie.js';
 function StatQuizz() {
     const { quizId, noteQuizId } = useParams();
     const [listQuestions, setListQuestions] = useState([])
-    const [listQuestionsBis, setListQuestionsBis] = useState([])
     const [infos, setInfos] = useState({})
 
     const navigate = useNavigate();
