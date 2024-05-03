@@ -35,6 +35,7 @@
     transition: 0.4s;
     width: 50%;
     justify-content: space-between;
+    align-items: center;
 }
 
 .questions-list-subcontainer{
@@ -60,6 +61,6 @@
     align-self: flex-start;
     position: relative;
     width: 90%;
-    margin: 0px 5%;
+    margin: 0px 5% !important;
     justify-self: initial;
 }

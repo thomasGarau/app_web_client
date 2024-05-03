@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "../composent/Header";
 import './Profile.css'
 import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography } from "@mui/material";
@@ -6,16 +6,19 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import ppImage from '../composent/img/pp.png';
 import StyledButton from "../composent/StyledBouton";
+import { getListQuizzCreateForUser, getListQuizzStatForUser } from "./ProfileAPI";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const [user, setUser] = useState({ nom: "Garau", prenom: "Thomas", formation: "Master 1 DFS a Corte", anniversaire: "01/06/2001" })
-    const [listQuizz, setListQuizz] = useState(["Quizz1", "Quizz2", "Quizz3"])
-    const [listQCM, setListQCM] = useState(["QCM1", "QCM2", "QCM3"])
-    const [quizz, setQuizz] = useState("")
-    const [QCM, setQCM] = useState("")
+    const [listQuizz, setListQuizz] = useState([])
+    const [listQCM, setListQCM] = useState([])
+    const [quizz, setQuizz] = useState('')
+    const [QCM, setQCM] = useState('')
     const [profilePic, setProfilePic] = useState(ppImage)
     const [imagePreviewUrl, setImagePreviewUrl] = useState(ppImage)
 
+    const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
     const handleChangeQuizz = (event) => {
@@ -42,6 +45,41 @@ export default function Profile() {
             reader.readAsDataURL(file);
         }
     }
+
+    const toStatQuizz = () => {
+        console.log(quizz)
+        navigate(`/statQuizz/${quizz.id_quizz}/${quizz.id_note_quizz}`);
+
+    }
+
+    const toUpdateQuizz = () => {
+        console.log(QCM)
+        // navigate(`/gestionQuizz`);
+
+    }
+
+    useEffect(() => {
+        const fetchListQuizz = async () => {
+            try {
+                const quizzs = await getListQuizzStatForUser();
+                setListQuizz(quizzs);
+                console.log(quizzs)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des quizz:', error);
+            }
+        };
+        const fetchListQCM = async () => {
+            try {
+                const qcm = await getListQuizzCreateForUser();
+                setListQCM(qcm);
+                console.log(qcm)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des quizz:', error);
+            }
+        };
+        fetchListQuizz();
+        fetchListQCM();
+    }, [])
 
 
     return (
@@ -76,32 +114,35 @@ export default function Profile() {
                     onClick={handleUpload}
                 />
             </div>
-            <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                <InputLabel id="label-quizz">Statistiques des quizz</InputLabel>
-                <Select
-                    sx={{
-                        width: "100%",
-                        borderRadius: "10px",
-                        backgroundColor: "#f0f0f0"
-                    }}
-                    labelId="label-quizz"
-                    id="demo-simple-select"
-                    value={quizz}
-                    label="aaaaaaaaaaaaaaaaaaaaaa"
-                    onChange={handleChangeQuizz}
-                >
-                    {listQuizz.map((quizz, index) => (
-                        <MenuItem key={index} value={quizz}>
-                            {quizz}
-                        </MenuItem>
-                    ))}
-                </Select>
+            {listQuizz.length > 0 && (
+                <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
+                    <InputLabel id="label-quizz">Statistiques des quizz</InputLabel>
+                    <Select
+                        sx={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            backgroundColor: "#f0f0f0"
+                        }}
+                        labelId="label-quizz"
+                        id="demo-simple-select"
+                        value={quizz}
+                        label="aaaaaaaaaaaaaaaaaaaaaa"
+                        onChange={handleChangeQuizz}
+                    >
+                        {listQuizz.map((quizz, index) => (
+                            <MenuItem key={index} value={quizz}>
+                                {quizz.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
 
-                <StyledButton
-                    content={"Selectionner"}
-                    width={"60%"}
-                    color={"primary"} />
-            </FormControl>
+                    <StyledButton
+                        content={"Selectionner"}
+                        width={"60%"}
+                        color={"primary"}
+                        onClick={toStatQuizz} />
+                </FormControl>
+            )}
             <FormControl className="profile-select" sx={{ m: 1, alignItems: "center", width: "60%" }}>
                 <InputLabel id="label-qcm">Gestion des QCM</InputLabel>
                 <Select
@@ -118,7 +159,7 @@ export default function Profile() {
                 >
                     {listQCM.map((qcm, index) => (
                         <MenuItem key={index} value={qcm}>
-                            {qcm}
+                            {qcm.label}
                         </MenuItem>
                     ))}
                 </Select>

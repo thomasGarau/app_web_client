@@ -22,6 +22,7 @@ import QuestionHandler from './quizz/QuestionHandler';
 import QuizzFin from './quizz/QuizzFin';
 import { QuizProvider } from './quizz/QuizContext';
 import StatQuizz from './quizz/StatQuizz';
+import StatQuestion from './quizz/statQuestion';
 ;
 
 function App() {
@@ -35,7 +36,8 @@ function App() {
         <Route path="/reset_password" element={<Layout><Reset /></Layout>} />
         <Route path="/ue/:id" element={/*<PrivateRoute>*/<Layout><Ue /></Layout>/*</PrivateRoute>*/} />
         <Route path="/quizz/:id" element={/*<PrivateRoute> */<Layout><Quizz_principale /> </Layout>/*</PrivateRoute>*/} />
-        <Route path="/statQuizz/:id" element={/*<PrivateRoute> */<Layout><StatQuizz /> </Layout>/*</PrivateRoute>*/} />
+        <Route path="/statQuizz/:quizId/:noteQuizId" element={/*<PrivateRoute> */<Layout><StatQuizz /> </Layout>/*</PrivateRoute>*/} />
+        <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={/*<PrivateRoute> */<Layout><StatQuestion /> </Layout>/*</PrivateRoute>*/} />
         <Route path="/carte_mental" element={/* <PrivateRoute> */<Layout><Carte_mental /></Layout>/* </PrivateRoute> */} />
         <Route path="/etude/:id" element={/* <PrivateRoute> */<Layout><Study/></Layout>/* </PrivateRoute> */}/>
         <Route path="/forum/:id" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>

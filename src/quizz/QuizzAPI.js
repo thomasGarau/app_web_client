@@ -31,11 +31,14 @@ export const getQuestionParQUizz = async (quizz_id) => {
 }
 
 
+
+
 export const getReponsesPourQuestion = async (question_id) => {
     try {
         const body = {
             question: question_id
         };
+        console.log(body)
         const response = await api.post(`/quizz/reponsesPourQuestion`, body);
         console.log("réponse reponse : ",response);
         return response.data;
@@ -80,14 +83,30 @@ export const getQuizzInfo = async (quizId) => {
     }
 }
 
-export const getStatQuestions = async (quizId) => {
+export const getQuizzInfos = async (noteQuizId) => {
     try {
         const body = {
-            quizz: quizId
+            note_quizz: noteQuizId
         };
         console.log("body info : ",body);
 
-        const response = await api.post(`/quizz/questionsPourQuizz`, body);
+        const response = await api.post(`/quizz/getNoteQuizzInfo`, body);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getStatQuestions = async (noteQuizId) => {
+    try {
+        const body = {
+            note_quizz: noteQuizId
+        };
+        console.log("body info : ",body);
+
+        const response = await api.post(`/quizz/resultatUtilisateurQuizz`, body);
         console.log("réponse info : ",response);
         return response.data;
     }
