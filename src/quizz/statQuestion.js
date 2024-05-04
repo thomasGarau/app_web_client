@@ -4,7 +4,6 @@ import { getNoteQuizzInfo, getQuestionParQUizz, getReponsesPourQuestion } from '
 import { useQuiz } from './QuizContext';
 
 import "@fontsource/nanum-pen-script";
-import Header from '../composent/Header.js';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 

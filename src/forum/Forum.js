@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import Icon from '@mdi/react';
+import { useParams } from 'react-router-dom';
 import { mdiCommentPlus, mdiAlert } from '@mdi/js';
-import Header from '../composent/Header';
 import './Forum.css';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
 
 function Forum() {
 
     const { search } = useLocation();
-    const params = new URLSearchParams(search);
-    const question = params.get('question');
-    const pseudo = params.get('pseudo');
-    const date_nav = params.get('date');
-    const etat = params.get('etat');
+    const {id_forum} = useParams();
 
-    // Vérifiez si les paramètres existent avant de les ajouter à l'état
-    const initialDiscussion = question && pseudo && date_nav && etat ? [[question, pseudo, date_nav, etat]] : [];
 
     const [overQuestion, setOverQuestion] = useState(false);
     const [message, setMessage] = useState('');
-    const [discussions, setDiscussions] = useState(initialDiscussion);
+    const [discussions, setDiscussions] = useState();
     const [lastQuestion, setLastQuestion] = useState()
     console.log(discussions)
 
@@ -51,11 +45,10 @@ function Forum() {
 
     return (
         <div className='background-forum'>
-            <Header></Header>
             <div className='forum-container'>
                 <div className='title-container'>
-                    <h1 className='forum-title'>{discussions[0][0]}</h1>
-                    <span className='title-date'>{discussions[0][2]}</span>
+                    <h1 className='forum-title'>Forum</h1>
+                    <span className='title-date'></span>
                 </div>
                 <div className='forum-question-container'>
                     {discussions.map(poste =>

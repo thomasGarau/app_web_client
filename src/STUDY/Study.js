@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Header from '../composent/Header';
 import { getCoursParChap } from './StudyAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
@@ -30,7 +29,6 @@ function Study() {
 
     return (
         <div className='background-study'>
-            <Header />
             <div className='sub_container_text_question'>
                 <div className='text-part'>
                     <h1 className='study-title'>Cours du chapitre</h1>

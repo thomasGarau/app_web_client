@@ -4,7 +4,6 @@ import { getQuestionParQUizz, getReponsesPourQuestion } from './QuizzAPI';
 import { useQuiz } from './QuizContext';
 
 import "@fontsource/nanum-pen-script";
-import Header from '../composent/Header.js';
 
 import './Question.css';
 import StyledButton from '../composent/StyledBouton.js';
@@ -97,7 +96,6 @@ function Question() {
 
     return (
         <div className='background-question'>
-            <Header />
             <div className='base_container_quizz_question'>
                 <h1 className='quizz-title'>{currentQuestion.title || 'Titre non disponible'}</h1>
                 <div className='question-quest-container'>

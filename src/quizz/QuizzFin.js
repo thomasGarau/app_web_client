@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuiz } from './QuizContext';
 import { handleSubmit, getQuizzInfo, getLastNoteQuizz } from './QuizzAPI';
-import Header from '../composent/Header.js';
 import RatingStars from '../composent/RatingStars.js';
 import StyledButton from '../composent/StyledBouton.js';
 
@@ -52,8 +51,6 @@ function QuizzFin() {
 
     return (
         <div className='quiz-final-summary'>
-            <Header />
-
             <div className='quiz-final-button-top'>
                 <button className='btn_quiz-final button-connection' onClick={() => navigate(`/quizz/${chap_id}`)}>Menu Quizz</button>
                 <p className='theme_quiz-final'>{label}</p>

@@ -138,3 +138,10 @@
         font-size: 1.5em;
     }
 }
+
+
+.create-forum-container{
+    width: 100dvw;
+    height: 100dvh;
+    margin-top: 150px;
+}

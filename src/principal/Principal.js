@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './principal.css';
 import "@fontsource/nanum-pen-script";
-import Header from '../composent/Header.js';
 import { Button } from "@mui/material";
 import StyledButton from '../composent/StyledBouton.js';
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import Header from '../composent/Header.js';
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
 import { getQuizzParChap, getQuestionParQUizz } from './QuizzAPI.js';

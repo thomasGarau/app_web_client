@@ -8,7 +8,6 @@ import { createCookie } from '../services/Cookie.js';
 import {Link, Box} from '@mui/material';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
-import Header from '../composent/Header.js';
 import StyledButton from '../composent/StyledBouton.js';
 
 
