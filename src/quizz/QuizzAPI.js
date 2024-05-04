@@ -91,7 +91,7 @@ export const getQuizzInfos = async (noteQuizId) => {
         console.log("body info : ",body);
 
         const response = await api.post(`/quizz/getNoteQuizzInfo`, body);
-        console.log("réponse info : ",response);
+        console.log("réponse info note : ",response);
         return response.data;
     }
     catch (error) {
