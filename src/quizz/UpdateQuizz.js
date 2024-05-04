@@ -108,7 +108,6 @@ function UpdateQuizz() {
 
     const validateQuizz = async (e) => {
         try {
-            console.log(quizId);
             await updateQuizz(parseInt(quizId), title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre);
             navigate("/home");
         } catch (error) {
@@ -123,7 +122,6 @@ function UpdateQuizz() {
           ];
           
         try {
-            console.log(delAnswer);
             await updateQuestionduQuizz(selected.label, selected.nombre_bonne_reponse, type, updatedAnswers, delAnswer, selected.id_question);
 
         } catch (error) {
@@ -132,7 +130,6 @@ function UpdateQuizz() {
     };
 
     const handleChangeChapitre = (event) => {
-        console.log(event.target.value);
         setChapitre(event.target.value);
     };
 
@@ -194,9 +191,7 @@ function UpdateQuizz() {
 
 
     useEffect(() => {
-
         setType(selected.type);
-        console.log(selected);
     }, [selected]);
 
 
@@ -206,7 +201,6 @@ function UpdateQuizz() {
                 if (idUe != null) {
                     const data = await getChapitreUE(idUe);
                     setListChapitre(data);
-                    console.log(data);
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des chapitres:', error);
@@ -216,16 +210,13 @@ function UpdateQuizz() {
         fetchChapitres();
     }, [idUe])
 
-    useEffect(() => {
-        console.log(questions);
-    }, [questions]);
-
 
     useEffect(() => {
         const fetchStatQuestions = async () => {
             try {
                 const data = await getQuizzInfo(quizId);
                 const dataBis = await getQuestionParQUizz(quizId);
+                console.log(data, dataBis);
                 if (data && dataBis && dataBis.length > 0) {
                     const combinedQuestions = dataBis.map(questionBis => {
                         const matchingQuestion = dataBis.find(questionDetail => questionDetail.id_question === questionBis.id_question);

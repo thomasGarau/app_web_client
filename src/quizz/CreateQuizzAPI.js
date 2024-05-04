@@ -32,7 +32,6 @@ export const updateQuizz = async (quizId, label, type, chapitre) => {
             }
 
         };
-        console.log(body)
         const response = await api.put('/quizz/updateQuizz', body);
         console.log("réponse : ", response.data);
         return response.data;
@@ -63,7 +62,6 @@ export const updateQuestionduQuizz = async (label, nombre_bonne_reponse, type, r
             }
 
         };
-        console.log(body)
         const response = await api.put('/quizz/updateQuestion', body);
         console.log("réponse : ", response.data);
         return response.data;
