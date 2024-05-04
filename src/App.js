@@ -23,6 +23,7 @@ import QuizzFin from './quizz/QuizzFin';
 import { QuizProvider } from './quizz/QuizContext';
 import StatQuizz from './quizz/StatQuizz';
 import StatQuestion from './quizz/statQuestion';
+import UpdateQuizz from './quizz/UpdateQuizz';
 ;
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route path="/forum/:id" element={/* <PrivateRoute> */<Layout><Forum/></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz-completed/:quizId" element={<PrivateRoute><Layout><QuizzFin /></Layout></PrivateRoute>} />
         <Route path="/create_quizz" element={/* <PrivateRoute> */<Layout><CreateQuizz/></Layout>/* </PrivateRoute> */}/>
+        <Route path="/update_quizz/:quizId" element={/* <PrivateRoute> */<Layout><UpdateQuizz/></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz/:quizId/question/:questionId" element={/* <PrivateRoute> */<Layout><Question /></Layout>/* </PrivateRoute> */}/>
         <Route path="/quiz/:quizId/question-handler" element={<QuestionHandler />} />
         <Route path="/home" element={/* <PrivateRoute> */<Layout><Home /></Layout>/* <PrivateRoute> */} />

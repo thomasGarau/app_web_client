@@ -72,9 +72,7 @@ export const getQuizzInfo = async (quizId) => {
         const body = {
             quizz: quizId
         };
-        console.log("body info : ",body);
-
-        const response = await api.post(`/quizz/getQuizzInfo`);
+        const response = await api.post(`/quizz/getQuizzInfo`, body);
         console.log("réponse info : ",response);
         return response.data;
     }
@@ -83,7 +81,7 @@ export const getQuizzInfo = async (quizId) => {
     }
 }
 
-export const getQuizzInfos = async (noteQuizId) => {
+export const getNoteQuizzInfo = async (noteQuizId) => {
     try {
         const body = {
             note_quizz: noteQuizId

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 //modules
-import { getQuestionParQUizz, getQuizzInfos, getReponsesPourQuestion, getStatQuestions } from './QuizzAPI.js';
+import { getNoteQuizzInfo, getQuestionParQUizz, getReponsesPourQuestion, getStatQuestions } from './QuizzAPI.js';
 import { Link, Box, Typography, Avatar } from '@mui/material';
 import './StatQuizz.css';
 import "@fontsource/nanum-pen-script";
@@ -22,7 +22,7 @@ function StatQuizz() {
     useEffect(() => {
         const fetchStatQuestions = async () => {
             try {
-                const questions = await getQuizzInfos(noteQuizId);
+                const questions = await getNoteQuizzInfo(noteQuizId);
                 const questionsBis = await getQuestionParQUizz(quizId);
                 setListQuestions(questions.details.map(question1 => {
                     const matchingQuestion2 = questionsBis.find(question2 => question2.id_question === question1.id_question);
