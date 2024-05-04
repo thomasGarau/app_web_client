@@ -49,7 +49,7 @@ const CreateForum = () => {
                             {cours.map(cour => (
                                 <MenuItem key={cour.id_cours} value={cour.id_cours}>{cour.label}</MenuItem>
                             ))}
-                        </Select> {/* Select */}
+                        </Select> 
                     </Box>
                     <Box display="flex" alignItems="center">
                         <Typography sx={{ mr: 1, width: "30%" }}>Sujet :</Typography>

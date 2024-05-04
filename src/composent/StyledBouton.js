@@ -2,10 +2,10 @@ import { styled } from '@mui/system';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 
-export default function StyledButton({ content, width, onClick, color, height }) {
+export default function StyledButton({ content, width, onClick, color, height, fontSize }) {
     const [styledButtonHigh] = useState({
         fontFamily: 'Shadows Into Light',
-        fontSize: '2em',
+        fontSize: fontSize || '2em',
         border: 'none',
         color: color == "primary" ? 'white' : 'black',
         textAlign: 'center',
