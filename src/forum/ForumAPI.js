@@ -57,3 +57,20 @@ export const cloturerForum = async (id_forum) => {
     }
 }
 
+export const addForum = async (label, contenu, id_cours) => {
+    try {
+        const body = {
+            label: label,
+            id_cours: id_cours,
+            contenu: contenu
+            
+        };
+        console.log("body : ",body);
+        const response = await api.post(`/chat/add-forum-cours`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
