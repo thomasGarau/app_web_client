@@ -212,7 +212,7 @@ function Home() {
                 <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
                   onClick={() => handleListItemClick(ue.id_ue)}>
                   <ListItemAvatar>
-                    <Avatar sx={{ width: 56, height: 56 }} src={images[ue.icon]} />
+                    <Avatar sx={{ width: 56, height: 56 }} src={ue.path} />
                   </ListItemAvatar>
                   <div>
                     <ListItemText

@@ -2,8 +2,8 @@ import api from '../config/axiosConfig';
 
 export const getUe = async () => {
     try {
-        // const response = await api.get('/ue/ue-user');
-        const response = [
+        const response = await api.get('/ue/ue-user');
+        /*const response = [
             {
                 "id_ue": 1,
                 "label": "Votre_valeur_pour_ue",
@@ -37,9 +37,9 @@ export const getUe = async () => {
                     }
                 ]
             }
-        ]
+        ] */
         console.log("ue et prof : ", response);
-        return response;
+        return response.data;
     }
     catch (error) {
         throw error;
