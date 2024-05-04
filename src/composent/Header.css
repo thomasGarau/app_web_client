@@ -6,7 +6,7 @@
 .head{
     background-color: #F5F5F5;
     height: 125px;
-    width: 100%;
+    width: 100dvw;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

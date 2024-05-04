@@ -13,6 +13,7 @@ function QuizzFin() {
     const { allSelectedAnswers, resetSelectedAnswers } = useQuiz();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [finalScore, setFinalScore] = useState('');  
+    const [label, setLabel] = useState('');
 
     useEffect(() => {
         
@@ -33,6 +34,7 @@ function QuizzFin() {
             .then(response => {
                 console.log('Réponse de getQuizzInfo:', response);
                 setChapId(response.id_chapitre);  
+                setLabel(response.label);
             })
             .catch(error => {
                 console.error('Erreur lors de la récupération des informations du quiz:', error);
@@ -51,16 +53,10 @@ function QuizzFin() {
     return (
         <div className='quiz-final-summary'>
             <Header />
-            {/* 
-            <h1 style={{ marginTop: "140px" }}>Résumé du Quiz</h1>
-            <button onClick={() => navigate(`/quizz/${chap_id}`)}>Menu Quizz</button>
-            <p>Merci d'avoir participé au quiz. Vous avez terminé avec succès le quiz.</p>
-            <p>Score final: {finalScore}</p>  
-            */}
 
             <div className='quiz-final-button-top'>
                 <button className='btn_quiz-final button-connection' onClick={() => navigate(`/quizz/${chap_id}`)}>Menu Quizz</button>
-                <p className='theme_quiz-final'>Info sujet quizz</p>
+                <p className='theme_quiz-final'>{label}</p>
             </div>
             <div className='quiz-final-score'>
                 <div className='quiz-final-demi-cercle'>
@@ -68,7 +64,7 @@ function QuizzFin() {
                         <p>{finalScore}%</p>
                     </div>
                 </div>
-                <RatingStars />
+                <RatingStars quizId={quizId} />
                 <h2>Bravo !</h2>
                 <StyledButton content={"Relire les questions"} color={"primary"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
             </div>
