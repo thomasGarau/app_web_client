@@ -6,7 +6,7 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import ppImage from '../composent/img/pp.png';
 import StyledButton from "../composent/StyledBouton";
-import { getListQuizzCreateForUser, getListQuizzStatForUser } from "./ProfileAPI";
+import { getListQuizzCreateForUser, getListQuizzStatForUser, getUserInfo } from "./ProfileAPI";
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
@@ -21,8 +21,9 @@ export default function Profile() {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
-    const handleChangeQuizz = (event) => {
+    const handleChangeQuizz = (event) => {  
         setQuizz(event.target.value);
+        console.log(quizz)
     };
 
     const handleUpload = () => {
@@ -31,6 +32,7 @@ export default function Profile() {
 
     const handleChangeQCM = (event) => {
         setQCM(event.target.value);
+        console.log(QCM)
     };
 
     const photoUpload = (e) => {
@@ -47,14 +49,14 @@ export default function Profile() {
     }
 
     const toStatQuizz = () => {
-        console.log(quizz)
+        
         navigate(`/statQuizz/${quizz.id_quizz}/${quizz.id_note_quizz}`);
 
     }
 
     const toUpdateQuizz = () => {
-        console.log(QCM)
-        // navigate(`/gestionQuizz`);
+        
+        navigate(`/update_quizz/${QCM.id_quizz}`);
 
     }
 
@@ -74,11 +76,21 @@ export default function Profile() {
                 setListQCM(qcm);
                 console.log(qcm)
             } catch (error) {
-                console.error('Erreur lors de la récupération des quizz:', error);
+                console.error('Erreur lors de la récupération des quizz créés:', error);
+            }
+        };
+        const fetchUserInfo = async () => {
+            try {
+                const user = await getUserInfo();
+                setUser(user);
+                console.log(user)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations utilisateurs:', error);
             }
         };
         fetchListQuizz();
         fetchListQCM();
+        fetchUserInfo();
     }, [])
 
 
@@ -166,7 +178,8 @@ export default function Profile() {
                 <StyledButton
                     content={"Selectionner"}
                     width={"60%"}
-                    color={"primary"} />
+                    color={"primary"}
+                    onClick={toUpdateQuizz} />
             </FormControl>
         </div>
     )

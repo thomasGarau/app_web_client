@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getQuestionParQUizz, getQuizzInfos, getReponsesPourQuestion } from './QuizzAPI';
+import { getNoteQuizzInfo, getQuestionParQUizz, getReponsesPourQuestion } from './QuizzAPI';
 import { useQuiz } from './QuizContext';
 
 import "@fontsource/nanum-pen-script";
@@ -23,7 +23,7 @@ function StatQuestion() {
     useEffect(() => {
         const fetchStatQuestions = async () => {
             try {
-                const questions = await getQuizzInfos(noteQuizId);
+                const questions = await getNoteQuizzInfo(noteQuizId);
                 const questionsBis = await getQuestionParQUizz(quizId);
                 if (questions && questionsBis && questions.details.length > 0 && questionsBis.length > 0) {
                     const combinedQuestions = questions.details.map(question1 => {
@@ -63,7 +63,7 @@ function StatQuestion() {
             const nextQuestion = listQuestions[currentIndex + 1];
             navigate(`/statQuizz/${quizId}/${noteQuizId}/${nextQuestion.id_question}`);
         } else {
-            navigate(`/quiz-completed/${quizId}/${noteQuizId}`);
+            navigate(`/quiz-completed/${quizId}/`);
         }
     };
 
@@ -73,7 +73,7 @@ function StatQuestion() {
             const previousQuestion = listQuestions[currentIndex - 1];
             navigate(`/statQuizz/${quizId}/${noteQuizId}/${previousQuestion.id_question}`);
         } else {
-            navigate(`/statQuizz/${quizId}/${noteQuizId}`);
+            navigate(`/statQuizz/${quizId}/`);
         }
     };
 

@@ -31,3 +31,18 @@ export const getListQuizzCreateForUser = async () => {
         throw error;
     }
 }
+
+export const getUserInfo = async () => {
+    const body = {
+
+    }
+    try {
+        const response = await api.get(`/user/getUserInfo`, body);
+        console.log("réponse : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+

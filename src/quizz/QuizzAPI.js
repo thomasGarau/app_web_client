@@ -83,7 +83,7 @@ export const getQuizzInfo = async (quizId) => {
     }
 }
 
-export const getQuizzInfos = async (noteQuizId) => {
+export const getNoteQuizzInfo = async (noteQuizId) => {
     try {
         const body = {
             note_quizz: noteQuizId
