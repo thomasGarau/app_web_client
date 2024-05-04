@@ -13,28 +13,29 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IsoIcon from '@mui/icons-material/Iso';
 import ExposureIcon from '@mui/icons-material/Exposure';
 import "./CreateQuizz.css";
-import { createQuizz, getChapitreUE, getIdUtilisateur } from "./CreateQuizzAPI";
-import { getTokenAndRole } from "../services/Cookie";
+import { ajouterQuestionAuQuizz, createQuizz, getChapitreUE, getIdUtilisateur, updateQuestionduQuizz, updateQuizz } from "./CreateQuizzAPI";
 import { useNavigate, useParams } from "react-router-dom";
 
-function CreateQuizz() {
-    const { idUE } = useParams();
+function UpdateQuizz() {
+    const { idUe } = useParams();
     const [questions, setQuestions] = useState([{
-        index: 0,
-        titre: "Premiere question",
-        type: 0,
+        id_question: 0,
+        label: '',
+        type: 'multiple',
+        nombre_bonne_reponse: 0,
         reponses: [
-            { contenu: "un truc", est_bonne_reponse: 0 },
-            { contenu: "un machin", est_bonne_reponse: 0 },
-            { contenu: "une chose", est_bonne_reponse: 0 }]
+            { contenu: "", est_bonne_reponse: 0 },
+            { contenu: "", est_bonne_reponse: 0 },
+            { contenu: "", est_bonne_reponse: 0 }
+        ]
     }]);
     const [selected, setSelected] = useState(questions[0])
     const [estNegatif, setEstNegatif] = useState(false)
     const [title, setTitle] = useState('');
     const [listChapitre, setListChapitre] = useState([])
-    const [chapitre, setChapitre] = useState({ id_chapitre: 0, label: "" })
-    const [reponses, setReponses] = useState(questions[0].reponses);
-    const [type, setType] = useState(selected.type)
+    const [chapitre, setChapitre] = useState('')
+    const [reponses, setReponses] = useState([]);
+    const [type, setType] = useState('')
     const [radioCheck, setRadioCheck] = useState(0)
     const [open, setOpen] = useState(false);
 
@@ -47,9 +48,10 @@ function CreateQuizz() {
 
     const addQuestion = () => {
         setQuestions(prevQuestions => [...prevQuestions, {
-            index: questions.length,
-            titre: "",
-            type: 0,
+            id_question: questions.length,
+            label: '',
+            type: 'multiple',
+            nombre_bonne_reponse: 0,
             reponses: [
                 { contenu: "", est_bonne_reponse: 0 },
                 { contenu: "", est_bonne_reponse: 0 },
@@ -64,8 +66,7 @@ function CreateQuizz() {
             ...selected.reponses,
             { contenu: "", est_bonne_reponse: 0 }
         ];
-        setReponses(newReponses);
-
+        setSelected(prevSelected => ({ ...prevSelected, reponses: newReponses }));
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
                 if (question.index === selected.index) {
@@ -75,18 +76,23 @@ function CreateQuizz() {
             });
         });
 
-        setSelected(prevSelected => {
-            return { ...prevSelected, reponses: newReponses };
-        });
     };
 
-    const removeReponse = (indexToRemove) => {
-        const newReponses = [...reponses.slice(0, indexToRemove), ...reponses.slice(indexToRemove + 1)];
-        setReponses(newReponses);
+    const changeQuestion = (question) => {
+        setSelected(question);
 
+    };
+
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value);
+    };
+
+
+    const removeReponse = (indexToRemove) => {
+        const newReponses = [...selected.reponses.slice(0, indexToRemove), ...selected.reponses.slice(indexToRemove + 1)];
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
-                if (question.index === selected.index) {
+                if (question.id_question === selected.id_question) {
                     return { ...question, reponses: newReponses };
                 }
                 return question;
@@ -100,52 +106,41 @@ function CreateQuizz() {
 
 
     const validateQuizz = async (e) => {
-        e.preventDefault();
-        let nombre_bonne_reponse = 0;
-        const questionsFormatEnvoi = questions.map((question, index) => {
-            const bonnesReponses = question.reponses.filter(reponse => reponse.est_bonne_reponse == 1);
-            nombre_bonne_reponse += bonnesReponses.length;
-            return {
-                label: question.titre,
-                nombre_bonne_reponse: bonnesReponses.length,
-                type: question.type === 0 ? "Choix multiple" : question.type === 1 ? "Choix unique" : "Vrai Faux",
-                reponses: question.reponses
-            };
-        });
-        console.log(chapitre.id_chapitre)
         try {
-            await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsFormatEnvoi);
-            navigate("/secure_page");
+            const questionsWithoutId = questions.map(({ id_question, ...rest }) => rest);
+    
+            console.log(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
+            await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
+            navigate("/home");
         } catch (error) {
             console.error('Erreur lors de la création du Quizz :', error);
         }
     };
+    
 
 
     const handleChangeChapitre = (event) => {
-        setChapitre({ id_chapitre: event.target.value.id_chapitre, label:event.target.value.label });
+        setChapitre(event.target.value);
     };
+
 
     const validateReponse = (indexReponse) => {
         setSelected(prevSelected => {
-            const updatedReponses = prevSelected.reponses.map((reponse, index) => {
+            const updatedAnswers = prevSelected.reponses.map((reponse, index) => {
                 if (index === indexReponse) {
-                    return { ...reponse, est_bonne_reponse: reponse.est_bonne_reponse == 0 ? 1 : 0 };
+                    return { ...reponse, est_bonne_reponse: reponse.est_bonne_reponse === 0 ? 1 : 0 };
                 }
                 return reponse;
             });
-            return { ...prevSelected, reponses: updatedReponses };
+            const updatedNombreBonneReponse = updatedAnswers.reduce((total, answer) => total + answer.est_bonne_reponse, 0);
+            return {
+                ...prevSelected,
+                reponses: updatedAnswers,
+                nombre_bonne_reponse: updatedNombreBonneReponse
+            };
         });
-
+        console.log(selected);
     };
-
-    useEffect(() => {
-        console.log(questions)
-    }, [questions])
-
-    useEffect(() => {
-        console.log(chapitre)
-    }, [chapitre])
 
 
     const handleRadioChange = (event) => {
@@ -159,74 +154,56 @@ function CreateQuizz() {
         validateReponse(radioCheck)
     };
 
-
-    useEffect(() => {
-        console.log(radioCheck)
-    }, [radioCheck]);
-
     const handleTypeChange = (typeQuestion) => {
-        setType(typeQuestion);
-        console.log(type);
+        setSelected(prevSelected => {
+            if (prevSelected) {
+                return { ...prevSelected, type: typeQuestion, reponses: [...selected.reponses] };
+            }
+            return prevSelected;
+        });
     };
 
 
     useEffect(() => {
-        setQuestions(prevQuestions => {
-            return prevQuestions.map(question => {
-                if (question.index === selected.index) {
-                    if (type === 2) {
-                        return { ...question, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: 1 }, { contenu: "Faux", est_bonne_reponse: 0 }] };
-                    } else {
+        if (selected && selected.reponses && Array.isArray(selected.reponses)) {
+            setQuestions(prevQuestions => {
+                return prevQuestions.map(question => {
+                    if (question.id_question === selected.id_question) {
+                        console.log(selected);
+                        console.log(type);
                         return { ...question, type: type, reponses: [...selected.reponses] };
                     }
-                }
-                return question;
-            });
-        });
-    }, [type, selected]);
 
-    useEffect(() => {
-        setSelected(prevSelected => {
-            if (prevSelected) {
-                if (type === 2) {
-                    return { ...prevSelected, type: type, reponses: [{ contenu: "Vrai", est_bonne_reponse: 1 }, { contenu: "Faux", est_bonne_reponse: 0 }] };
-                } else {
-                    return { ...prevSelected, type: type, reponses: [...reponses] };
-                }
-            }
-            return prevSelected;
-        });
+                    return question;
+                });
+            });
+        }
     }, [type]);
 
 
     useEffect(() => {
-        console.log(listChapitre);
-    }, [listChapitre]);
+        setType(selected.type);
+        console.log(selected);
+    }, [selected]);
+
 
     useEffect(() => {
         const fetchChapitres = async () => {
             try {
-                const chapitres = await getChapitreUE(1);
-                setListChapitre(chapitres);
+                console.log(parseInt(idUe));
+                const data = await getChapitreUE(parseInt(idUe));
+                console.log(data);
+                setListChapitre(data);
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des chapitres:', error);
             }
         };
 
         fetchChapitres();
-    }, [])
-
-    useEffect(() => {
-        if (selected) {
-            setType(selected.type);
-        }
-        console.log(selected)
-    }, [selected]);
+    }, []);
 
 
-    useEffect(() => {
-
-    }, [estNegatif])
 
 
     return (
@@ -239,8 +216,9 @@ function CreateQuizz() {
                     },
                 }} open={open} onClose={toggleDrawer(false)}>
                     <div style={{ backgroundColor: "#133D56" }}>
-                        {questions.map(question => (
+                        {questions.map((question, index) => (
                             <Button
+                                key={index} // Utilise "index" plutôt que "question.index"
                                 style={{
                                     borderBottom: "solid",
                                     borderRadius: "0px",
@@ -250,9 +228,8 @@ function CreateQuizz() {
                                     width: "100%"
                                 }}
                                 className="button-question"
-                                key={question.index}
                                 variant="plain"
-                                onClick={() => { setSelected(question); setReponses(question.reponses); }}
+                                onClick={() => { changeQuestion(question); }}
                             >
                                 <span style={{
                                     textOverflow: "ellipsis",
@@ -262,24 +239,26 @@ function CreateQuizz() {
                                     paddingLeft: "10px",
                                     fontSize: "x-large",
                                     overflow: "hidden",
-                                }}>{question.titre === "" ? "Cliquer ici" : question.titre}</span>
+                                }}>{question.label === '' ? "Cliquer ici" : question.label}</span>
                             </Button>
                         ))}
                         <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
                             <IconButton className="icon-add" style={{ transition: "0.2s" }} onClick={addQuestion}>
                                 <AddIcon style={{ fill: "#F5F5F5" }} />
                             </IconButton>
-                            <Typography style={{ color: "#F5F5F5",  fontSize: "x-large" }}>ajouter une question</Typography>
+                            <Typography style={{ color: "#F5F5F5", fontSize: "x-large" }}>ajouter une question</Typography>
                         </Box>
                     </div>
                 </Drawer>
                 <div className="background-create-quizz">
                     <Input
-                        onChange={(event) => setTitle(event.target.value)}
+                        onChange={handleTitleChange}
                         style={{ width: "80%", borderRadius: "0px", borderRadius: "0px 0px 10px 10px", backgroundColor: "#f5f5f5" }}
                         id="title-input"
-                        placeholder="Titre du quizz" variant="plain"
+                        placeholder="Titre du quizz"
+                        variant="plain"
                         required
+                        value={title}
                         sx={{ '--Input-focusedThickness': '0rem', }} />
                     <FormControl sx={{ width: "300px" }}>
                         <InputLabel id="demo-simple-select-label">Chapitre</InputLabel>
@@ -295,32 +274,31 @@ function CreateQuizz() {
                             label="Chapitrem"
                             onChange={handleChangeChapitre}
                         >
-                            {listChapitre && listChapitre.map((chapitre, index) => (
-                                <MenuItem key={index} value={chapitre}>{chapitre.label}</MenuItem>
+                            {listChapitre.length > 0 && listChapitre.map((chap, index) => (
+                                <MenuItem key={index} value={chap}>{chap.label}</MenuItem>
                             ))}
                         </Select>
-
                     </FormControl>
-
                     <Textarea
                         variant="plain"
-                        value={selected.titre}
-                        style={{ color: "black",  fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
+                        value={selected ? selected.label : ''}
+                        style={{ color: "black", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             const updatedQuestions = [...questions];
-                            updatedQuestions[selected.index] = { ...selected, titre: event.target.value };
+                            console.log(updatedQuestions);
+                            updatedQuestions[selected.id_question] = { ...selected, label: event.target.value };
                             setQuestions(updatedQuestions);
-                            setSelected(prevSelected => ({ ...prevSelected, titre: event.target.value }));
+                            setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
                         }}
                     />
-                    <div className="answer-container" style={{ height: `${selected.reponses.length * 83 + 75}px`, overflowY: "auto", maxHeight: "350px" }}>
+                    <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
                         <div style={{ display: "flex", flexDirection: "column", width: "70%", padding: "10px 0px" }}>
-                            {selected.reponses.map((reponse, index) => (
+                            {selected.reponses && selected.reponses.map((reponse, index) => (
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px", justifyContent: "space-between" }}>
                                     <Input
                                         placeholder={"Reponse " + (index + 1)}
-                                        style={{ color: "black",  fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
+                                        style={{ color: "black", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
                                             const updatedReponses = [...selected.reponses];
                                             updatedReponses[index].contenu = event.target.value;
@@ -341,10 +319,11 @@ function CreateQuizz() {
                                         disabled={type !== 2 ? false : true}
                                         value={reponse.contenu}
                                     />
-                                    {type === 0 ?
+
+                                    {type === 'multiple' ?
                                         <Checkbox
                                             onChange={() => validateReponse(index)}
-                                            checked={reponse.est_bonne_reponse == 1 ? true : false}
+                                            checked={reponse.est_bonne_reponse === 1 ? true : false}
                                             style={{ color: "#F5F5F5" }}
                                         /> :
                                         <Radio
@@ -358,13 +337,13 @@ function CreateQuizz() {
                                     </IconButton>
                                 </div>
                             ))}
-                            {type !== 2 ?
+                            {type !== 2 && selected.reponses ?
                                 selected.reponses.length < 6 && (
                                     <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
                                         <IconButton onClick={addReponse} className="icon-add" style={{ transition: "0.2s" }}>
                                             <AddIcon style={{ fill: "#F5F5F5" }} />
                                         </IconButton>
-                                        <Typography style={{ color: "#F5F5F5",  fontSize: "x-large" }}>
+                                        <Typography style={{ color: "#F5F5F5", fontSize: "x-large" }}>
                                             ajouter une reponse
                                         </Typography>
                                     </Box>
@@ -378,27 +357,33 @@ function CreateQuizz() {
                             <RadioGroup
                                 name="radio-buttons-group"
                                 value={type}
-                                onChange={(event) => handleTypeChange(parseInt(event.target.value))}
+                                onChange={(event) => handleTypeChange(event.target.value)}
                                 style={{ position: "fixed", left: "3%", bottom: "12.5%" }}
                             >
                                 <Radio
                                     size="lg"
-                                    value={0}
+                                    value={'multiple'}
 
                                     label="CM"
-                                    checked={type === 0}
+                                    checked={type === 'multiple'}
                                 />
                                 <Radio
                                     size="lg"
-                                    value={1}
+                                    value={'seul'}
                                     label="CU"
-                                    checked={type === 1}
+                                    checked={type === 'seul'}
                                 />
                                 <Radio
                                     size="lg"
-                                    value={2}
-                                    label="VF"
-                                    checked={type === 2}
+                                    value={'vrais'}
+                                    label="V"
+                                    checked={type === 'vrais'}
+                                />
+                                <Radio
+                                    size="lg"
+                                    value={'faux'}
+                                    label="F"
+                                    checked={type === 'faux'}
                                 />
                             </RadioGroup>
 
@@ -444,26 +429,33 @@ function CreateQuizz() {
                             <RadioGroup
                                 name="radio-buttons-group"
                                 value={type}
-                                onChange={(event) => handleTypeChange(parseInt(event.target.value))}
+                                onChange={(event) => handleTypeChange(event.target.value)}
                                 style={{ position: "fixed", left: "10px", bottom: "5%" }}
                             >
                                 <Radio
                                     size="lg"
-                                    value={0}
-                                    label="Choix multiple"
-                                    checked={type === 0}
+                                    value={'multiple'}
+
+                                    label="Choix Multiple"
+                                    checked={type === 'multiple'}
                                 />
                                 <Radio
                                     size="lg"
-                                    value={1}
-                                    label="Choix unique"
-                                    checked={type === 1}
+                                    value={'seul'}
+                                    label="Choix Unique"
+                                    checked={type === 'seul'}
                                 />
                                 <Radio
                                     size="lg"
-                                    value={2}
-                                    label="Vrai Faux"
-                                    checked={type === 2}
+                                    value={'vrais'}
+                                    label="Vrai"
+                                    checked={type === 'vrais'}
+                                />
+                                <Radio
+                                    size="lg"
+                                    value={'faux'}
+                                    label="Faux"
+                                    checked={type === 'faux'}
                                 />
                             </RadioGroup>
 
@@ -477,7 +469,7 @@ function CreateQuizz() {
                                     borderRadius: "20px",
                                     position: "fixed",
                                     bottom: "5%",
-                                    right: "5%",
+                                    right: "1%",
                                     transitionDuration: '0.4s',
                                     '&:hover': {
                                         boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
@@ -489,7 +481,7 @@ function CreateQuizz() {
                             </Button>
                             <Button sx={{
                                 position: "fixed",
-                                left: "10px",
+                                left: "1%",
                                 bottom: "20%",
                                 color: "black",
                                 fontSize: "large",
@@ -512,7 +504,7 @@ function CreateQuizz() {
                                     borderRadius: "20px",
                                     position: "fixed",
                                     bottom: "12.5%",
-                                    right: "5%",
+                                    right: "1%",
                                     transitionDuration: '0.4s',
                                     '&:hover': {
                                         boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
@@ -532,4 +524,4 @@ function CreateQuizz() {
     );
 }
 
-export default CreateQuizz;
+export default UpdateQuizz;

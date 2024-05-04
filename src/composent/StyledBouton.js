@@ -16,7 +16,7 @@ export default function StyledButton({ content, width, onClick, color, height })
         boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)',
         transitionDuration: '0.4s',
         backgroundColor: color == "primary" ? '#133D56' : color == "secondary" ? "#c3d9ff" : 'rgb(245, 245, 245)',
-        margin: '20px 0px',
+        margin: '20px 10px',
         height: height || '75px',
         textTransform: 'none',
         padding: '0px',

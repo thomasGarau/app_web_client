@@ -29,11 +29,6 @@ export default function Profile() {
         fileInputRef.current.click();
     };
 
-    const handleChangeQCM = (event) => {
-        setQCM(event.target.value);
-        console.log(QCM)
-    };
-
     const photoUpload = (e) => {
         e.preventDefault();
         const file = e.target.files[0];
@@ -53,9 +48,9 @@ export default function Profile() {
 
     }
 
-    const toUpdateQuizz = () => {
+    const toGestionQuizz = () => {
         
-        navigate(`/update_quizz/${QCM.id_quizz}`);
+        navigate(`/gestion_quizz`);
 
     }
 
@@ -69,15 +64,6 @@ export default function Profile() {
                 console.error('Erreur lors de la récupération des quizz:', error);
             }
         };
-        const fetchListQCM = async () => {
-            try {
-                const qcm = await getListQuizzCreateForUser();
-                setListQCM(qcm);
-                console.log(qcm)
-            } catch (error) {
-                console.error('Erreur lors de la récupération des quizz créés:', error);
-            }
-        };
         const fetchUserInfo = async () => {
             try {
                 const user = await getUserInfo();
@@ -88,7 +74,6 @@ export default function Profile() {
             }
         };
         fetchListQuizz();
-        fetchListQCM();
         fetchUserInfo();
     }, [])
 
@@ -154,32 +139,11 @@ export default function Profile() {
                         onClick={toStatQuizz} />
                 </FormControl>
             )}
-            <FormControl className="profile-select" sx={{ m: 1, alignItems: "center", width: "60%" }}>
-                <InputLabel id="label-qcm">Gestion des QCM</InputLabel>
-                <Select
-                    sx={{
-                        width: "100%",
-                        borderRadius: "10px",
-                        backgroundColor: "#f0f0f0"
-                    }}
-                    labelId="label-qcm"
-                    id="demo-simple-select"
-                    value={QCM}
-                    label="aaaaaaaaaaaaaaaaa"
-                    onChange={handleChangeQCM}
-                >
-                    {listQCM.map((qcm, index) => (
-                        <MenuItem key={index} value={qcm}>
-                            {qcm.label}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <StyledButton
-                    content={"Selectionner"}
-                    width={"60%"}
-                    color={"primary"}
-                    onClick={toUpdateQuizz} />
-            </FormControl>
+            <StyledButton
+                        content={"Gestion de vos quizz"}
+                        width={"60%"}
+                        color={"primary"}
+                        onClick={toGestionQuizz} />
         </div>
     )
 

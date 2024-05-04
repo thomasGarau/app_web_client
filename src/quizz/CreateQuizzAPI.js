@@ -74,16 +74,14 @@ export const updateQuestionduQuizz = async (label, nombre_bonne_reponse, type, r
 export const ajouterQuestionAuQuizz = async (label, nombre_bonne_reponse, type, reponses, quizzId) => {
     try {
         const body = {
-            quizzId: quizzId,
-            data: {
-                label: label,
-                type: type,
-                nombre_bonne_reponse: nombre_bonne_reponse,
-                reponses: reponses
-            }
+            quizz: quizzId,
+            label: label,
+            nombre_bonne_reponse: nombre_bonne_reponse,
+            type: type,           
+            reponses: reponses
 
         };
-        console.log(body)
+        console.log("body :", body)
         const response = await api.post('/quizz/ajouterQuestionAuQuizz', body);
         console.log("réponse : ", response.data);
         return response.data;

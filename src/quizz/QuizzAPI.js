@@ -146,3 +146,45 @@ export const getReponsesUtilisateurPourQuestion = async (question_id, quiz_id) =
         throw error;
     }
 }
+
+export const getListQuizzCreateForUser = async () => {
+    const body = {
+
+    }
+    try {
+        const response = await api.get(`/quizz/listQuizzCreer`, body);
+        console.log("réponse : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const deleteQuizz = async (quizId) => {
+    const body = {
+        quizz: quizId
+    }
+    try {
+        const response = await api.get(`/quizz/deleteQuizz`, body);
+        console.log("réponse : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getChapitreById = async (chapitreId) => {
+    const body = {
+        id_chapitre: chapitreId
+    }
+    try {
+        const response = await api.post(`/cours/getChapitreById`, body);
+        console.log("réponse : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

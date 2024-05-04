@@ -18,20 +18,6 @@ export const getListQuizzStatForUser = async () => {
     }
 }
 
-export const getListQuizzCreateForUser = async () => {
-    const body = {
-
-    }
-    try {
-        const response = await api.get(`/quizz/listQuizzCreer`, body);
-        console.log("réponse : ",response);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}
-
 export const getUserInfo = async () => {
     const body = {
 

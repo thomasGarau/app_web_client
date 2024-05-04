@@ -25,6 +25,7 @@ import StatQuizz from './quizz/StatQuizz';
 import StatQuestion from './quizz/statQuestion';
 import UpdateQuizz from './quizz/UpdateQuizz';
 import CreateForum from './forum/CreateForum';
+import GestionQuizz from './quizz/GestionQuizz';
 ;
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/reset_password" element={<PublicRoute><Layout><Reset /></Layout></PublicRoute>} />
         <Route path="/ue/:id" element={<PrivateRoute><Layout><Ue /></Layout></PrivateRoute>} />
         <Route path="/quizz/:id" element={<PrivateRoute> <Layout><Quizz_principale /> </Layout></PrivateRoute>} />
+        <Route path="/gestion_quizz" element={<PrivateRoute> <Layout><GestionQuizz /> </Layout></PrivateRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId" element={<PrivateRoute> <Layout><StatQuizz /> </Layout></PrivateRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<PrivateRoute> <Layout><StatQuestion /> </Layout></PrivateRoute>} />
         <Route path="/carte_mental" element={ <PrivateRoute> <Layout><Carte_mental /></Layout> </PrivateRoute> } />
@@ -45,7 +47,7 @@ function App() {
         <Route path="/forum/:id" element={ <PrivateRoute> <Layout><Forum/></Layout> </PrivateRoute> }/>
         <Route path="/create-forum/:id_chap" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
         <Route path="/quiz-completed/:quizId" element={<PrivateRoute><Layout><QuizzFin /></Layout></PrivateRoute>} />
-        <Route path="/create_quizz" element={ <PrivateRoute> <Layout><CreateQuizz/></Layout> </PrivateRoute> }/>
+        <Route path="/create_quizz/:idUe" element={ <PrivateRoute> <Layout><CreateQuizz/></Layout> </PrivateRoute> }/>
         <Route path="/update_quizz/:quizId" element={ <PrivateRoute> <Layout><UpdateQuizz/></Layout> </PrivateRoute> }/>
         <Route path="/quiz/:quizId/question/:questionId" element={ <PrivateRoute> <Layout><Question /></Layout> </PrivateRoute> }/>
         <Route path="/quiz/:quizId/question-handler" element={<PrivateRoute> <Layout><QuestionHandler /> </Layout> </PrivateRoute> } />

@@ -5,6 +5,7 @@ import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
 import { getQuizzParChap, getQuestionParQUizz } from './QuizzAPI.js';
 import './Quizz.css';
+import StyledButton from '../composent/StyledBouton.js';
 
 function Quizz_principale() {
   const navigate = useNavigate();
@@ -81,14 +82,17 @@ function Quizz_principale() {
                     <p>{quiz.note} </p>
                     <img className='img_coeur' src={stars_yellow} alt='like' />
                   </div>
-                  <button onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)} className='btn_quizz button-connection'>Commencer</button>
+                  <StyledButton onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)} color={'primary'} content={"Commencer"}>Commencer</StyledButton>
 
                 </div>
               ))
             ) : <p>Aucun quizz disponible.</p>
           ) : <p>Aucun quizz disponible</p>}
         </div>
-        <button onClick={() => navigate('/create_quizz')} className='btn_quizz_creer button-connection'>Creer un quizz</button>
+        <StyledButton 
+        onClick={() => navigate('/create_quizz')} 
+        color={'primary'}
+        content={"Creer un quizz"} ></StyledButton>
       </div>
     </div>
   );

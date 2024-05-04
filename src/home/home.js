@@ -71,7 +71,7 @@ function ServerDay(props) {
 function Home() {
   const requestAbortController = useRef(null);
   const [isSecure] = useState(null);
-  const [listUE, setListUE] = useState(null)
+  const [listUE, setListUE] = useState([])
   const [listJMethod, setListJMethod] = useState([]);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,7 +92,7 @@ function Home() {
   const images = importAll(require.context('../ueIcons', false, /\.(png|jpe?g|svg)$/));
 
 
-  const fetchJMethod = async (month) => {
+  const fetchJMethod = async () => {
     setIsLoading(true);
     const controller = new AbortController();
     try {
@@ -122,17 +122,23 @@ function Home() {
 
 
   useEffect(() => {
-    const fetchUeData = async () => {
+    const fetchData = async () => {
       try {
         const ueData = await getUe();
+        console.log("ueData", ueData);
         setListUE(ueData);
       } catch (error) {
         console.error('Erreur lors de la récupération des UE:', error);
       }
+      fetchJMethod();
     };
-    fetchJMethod(month);
-    fetchUeData();
-  }, [month]);
+    fetchData();
+  }, []);
+  
+  useEffect(() => { 
+    console.log(listUE);  
+    console.log(filteredListUE);  
+  }, [listUE]);
 
   useEffect(() => {
     fetchJMethod(month);
@@ -165,7 +171,9 @@ function Home() {
 
 
   return (
+    
     <div className='style_background_esp_ele'>
+      
       <div className='container2_style'>
         <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
         <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
@@ -208,7 +216,7 @@ function Home() {
               maxHeight: 300,
               '& ul': { padding: 0 },
             }}>
-              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+              {listUE && listUE.length > 0 && listUE.map(ue => (
                 <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
                   onClick={() => handleListItemClick(ue.id_ue)}>
                   <ListItemAvatar>

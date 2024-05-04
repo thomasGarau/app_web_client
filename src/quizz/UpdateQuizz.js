@@ -31,7 +31,7 @@ function UpdateQuizz() {
     const [type, setType] = useState('')
     const [radioCheck, setRadioCheck] = useState(0)
     const [open, setOpen] = useState(false);
-    const [nombreOGQuestion, setNombreOGQuestion] = useState(0);
+    const [ogQuestion, setOgQuestion] = useState([]);
 
     const navigate = useNavigate()
 
@@ -46,35 +46,26 @@ function UpdateQuizz() {
             label: '',
             type: 'multiple',
             nombre_bonne_reponse: 0,
-            id_quizz: quizId,
-            answers: [
+            id_quizz: parseInt(quizId),
+            reponses: [
                 { contenu: "", est_bonne_reponse: 0 },
                 { contenu: "", est_bonne_reponse: 0 },
                 { contenu: "", est_bonne_reponse: 0 }
             ]
         }]);
-        const addQuestionToQuizz = async () => {
-            try {
-                await ajouterQuestionAuQuizz(questions[questions.length - 1].label, questions[questions.length - 1].nombre_bonne_reponse, questions[questions.length - 1].type, questions[questions.length - 1].answers, quizId);
-            } catch (error) {
-                console.error('Erreur lors de l\'ajout de la question', error);
-            }
-        };
-
-        addQuestionToQuizz();
     };
 
 
     const addReponse = () => {
         const newReponses = [
-            ...selected.answers,
+            ...selected.reponses,
             { contenu: "", est_bonne_reponse: 0 }
         ];
-        setSelected(prevSelected => ({ ...prevSelected, answers: newReponses }));
+        setSelected(prevSelected => ({ ...prevSelected, reponses: newReponses }));
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
-                if (question.index === selected.index) {
-                    return { ...question, answers: newReponses };
+                if (question.id_question === selected.id_question) {
+                    return { ...question, reponses: newReponses };
                 }
                 return question;
             });
@@ -88,19 +79,19 @@ function UpdateQuizz() {
     };
 
     const removeReponse = (indexToRemove) => {
-        const newReponses = [...selected.answers.slice(0, indexToRemove), ...selected.answers.slice(indexToRemove + 1)];
-        setDelAnswer([...delAnswer, selected.answers[indexToRemove]]);
+        const newReponses = [...selected.reponses.slice(0, indexToRemove), ...selected.reponses.slice(indexToRemove + 1)];
+        setDelAnswer([...delAnswer, selected.reponses[indexToRemove]]);
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
-                if (question.index === selected.index) {
-                    return { ...question, answers: newReponses };
+                if (question.id_question === selected.id_question) {
+                    return { ...question, reponses: newReponses };
                 }
                 return question;
             });
         });
 
         setSelected(prevSelected => {
-            return { ...prevSelected, answers: newReponses };
+            return { ...prevSelected, reponses: newReponses };
         });
     };
 
@@ -116,13 +107,20 @@ function UpdateQuizz() {
 
     const updateQuestion = async (e) => {
         const updatedAnswers = [
-            ...selected.answers.filter(answer => !delAnswer.includes(answer)),
+            ...selected.reponses.filter(answer => !delAnswer.includes(answer)),
             ...delAnswer
-          ];
-          
-        try {
-            await updateQuestionduQuizz(selected.label, selected.nombre_bonne_reponse, type, updatedAnswers, delAnswer, selected.id_question);
+        ];
 
+        try {
+            const all_id = [];
+            ogQuestion.map((question) => {
+                all_id.push(question.id_question);
+            });
+            if (all_id.includes(selected.id_question)) {
+                await updateQuestionduQuizz(selected.label, selected.nombre_bonne_reponse, type, updatedAnswers, delAnswer, selected.id_question);
+            } else {
+                await ajouterQuestionAuQuizz(selected.label, selected.nombre_bonne_reponse, type, updatedAnswers, parseInt(quizId));
+            }
         } catch (error) {
             console.error('Erreur lors de la mise à jour de la question :', error);
         }
@@ -135,29 +133,29 @@ function UpdateQuizz() {
 
     const validateReponse = (indexReponse) => {
         setSelected(prevSelected => {
-            const updatedAnswers = prevSelected.answers.map((reponse, index) => {
+            const updatedAnswers = prevSelected.reponses.map((reponse, index) => {
                 if (index === indexReponse) {
                     return { ...reponse, est_bonne_reponse: reponse.est_bonne_reponse === 0 ? 1 : 0 };
                 }
                 return reponse;
             });
             const updatedNombreBonneReponse = updatedAnswers.reduce((total, answer) => total + answer.est_bonne_reponse, 0);
-                return {
+            return {
                 ...prevSelected,
-                answers: updatedAnswers,
+                reponses: updatedAnswers,
                 nombre_bonne_reponse: updatedNombreBonneReponse
             };
-        });            
+        });
     };
-    
+
 
     const handleRadioChange = (event) => {
         setRadioCheck(parseInt(event.target.value));
         setSelected(prevSelected => {
-            const updatedReponses = prevSelected.answers.map((reponse, index) => {
+            const updatedReponses = prevSelected.reponses.map((reponse, index) => {
                 return { ...reponse, est_bonne_reponse: 0 };
             });
-            return { ...prevSelected, answers: updatedReponses };
+            return { ...prevSelected, reponses: updatedReponses };
         });
         validateReponse(radioCheck)
     };
@@ -165,7 +163,7 @@ function UpdateQuizz() {
     const handleTypeChange = (typeQuestion) => {
         setSelected(prevSelected => {
             if (prevSelected) {
-                return { ...prevSelected, type: typeQuestion, answers: [...selected.answers] };
+                return { ...prevSelected, type: typeQuestion, reponses: [...selected.reponses] };
             }
             return prevSelected;
         });
@@ -173,13 +171,11 @@ function UpdateQuizz() {
 
 
     useEffect(() => {
-        if (selected && selected.answers && Array.isArray(selected.answers)) {
+        if (selected && selected.reponses && Array.isArray(selected.reponses)) {
             setQuestions(prevQuestions => {
                 return prevQuestions.map(question => {
                     if (question.id_question === selected.id_question) {
-                        console.log(selected);
-                        console.log(type);
-                        return { ...question, type: type, answers: [...selected.answers] };
+                        return { ...question, type: type, reponses: [...selected.reponses] };
                     }
 
                     return question;
@@ -191,6 +187,8 @@ function UpdateQuizz() {
 
     useEffect(() => {
         setType(selected.type);
+        console.log(selected);
+
     }, [selected]);
 
 
@@ -213,9 +211,8 @@ function UpdateQuizz() {
     useEffect(() => {
         const fetchStatQuestions = async () => {
             try {
-                const data = await getQuizzInfo(quizId);
-                const dataBis = await getQuestionParQUizz(quizId);
-                console.log(data, dataBis);
+                const data = await getQuizzInfo(parseInt(quizId));
+                const dataBis = await getQuestionParQUizz(parseInt(quizId));
                 if (data && dataBis && dataBis.length > 0) {
                     const combinedQuestions = dataBis.map(questionBis => {
                         const matchingQuestion = dataBis.find(questionDetail => questionDetail.id_question === questionBis.id_question);
@@ -227,15 +224,21 @@ function UpdateQuizz() {
 
                     const questionsWithAnswers = await Promise.all(
                         combinedQuestions.map(async question => {
-                            const answers_data = await getReponsesPourQuestion(question.id_question);
-                            return { ...question, answers: answers_data };
+                            const reponses_data = await getReponsesPourQuestion(question.id_question);
+                            return { ...question, reponses: reponses_data };
                         })
                     );
                     setQuestions(questionsWithAnswers);
+                    setOgQuestion(questionsWithAnswers);
                     setIdUe(data.id_ue);
                     setTitle(data.label);
                     const firstQuestion = questionsWithAnswers[0];
                     setSelected(firstQuestion);
+                    selected.reponses && selected.reponses.map((reponse) => {
+                        if(reponse.est_bonne_reponse === 1) {
+                            setRadioCheck(selected.reponses.indexOf(reponse));
+                        }
+                    });
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des questions:', error);
@@ -280,7 +283,7 @@ function UpdateQuizz() {
                                     paddingLeft: "10px",
                                     fontSize: "x-large",
                                     overflow: "hidden",
-                                }}>{question.label === "" ? "Cliquer ici" : question.label}</span>
+                                }}>{question.label === '' ? "Cliquer ici" : question.label}</span>
                             </Button>
                         ))}
                         <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
@@ -325,23 +328,30 @@ function UpdateQuizz() {
                         style={{ color: "black", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
-                            const updatedQuestions = [...questions];
-                            updatedQuestions[selected.index] = { ...selected, titre: event.target.value };
-                            setQuestions(updatedQuestions);
-                            setSelected(prevSelected => ({ ...prevSelected, titre: event.target.value }));
+                            setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
+                            setQuestions(prevQuestions => {
+                                return prevQuestions.map(question => {
+                                    if (question.id_question === selected.id_question) {
+
+                                        return { ...question, label: event.target.value };
+                                    }
+                                    return question;
+                                });
+                            });
                         }}
                     />
-                    <div className="answer-container" style={{ height: `${selected.answers ? selected.answers.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
+                    <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
                         <div style={{ display: "flex", flexDirection: "column", width: "70%", padding: "10px 0px" }}>
-                            {selected.answers && selected.answers.map((reponse, index) => (
+                            {selected.reponses && selected.reponses.map((reponse, index) => (
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px", justifyContent: "space-between" }}>
                                     <Input
                                         placeholder={"Reponse " + (index + 1)}
                                         style={{ color: "black", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
-                                            const updatedReponses = [...selected.answers];
+                                            const updatedReponses = [...selected.reponses];
                                             updatedReponses[index].contenu = event.target.value;
-                                            setSelected(prevSelected => ({ ...prevSelected, answers: updatedReponses }));
+                                            setSelected(prevSelected => ({ ...prevSelected, reponses: updatedReponses }));
+
                                         }}
                                         variant="plain"
                                         sx={{
@@ -366,7 +376,7 @@ function UpdateQuizz() {
                                             style={{ color: "#F5F5F5" }}
                                         /> :
                                         <Radio
-                                            checked={radioCheck === index}
+                                            checked={reponse.est_bonne_reponse === 1 ? true : false}
                                             onChange={handleRadioChange}
                                             name="radio-buttons"
                                             value={index}
@@ -376,8 +386,8 @@ function UpdateQuizz() {
                                     </IconButton>
                                 </div>
                             ))}
-                            {type !== 2 && selected.answers ?
-                                selected.answers.length < 6 && (
+                            {type !== 2 && selected.reponses ?
+                                selected.reponses.length < 6 && (
                                     <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
                                         <IconButton onClick={addReponse} className="icon-add" style={{ transition: "0.2s" }}>
                                             <AddIcon style={{ fill: "#F5F5F5" }} />
