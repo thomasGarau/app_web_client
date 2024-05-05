@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Checkbox, Typography, Drawer, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { Box, Checkbox, Typography, Drawer, MenuItem, FormControl, InputLabel, Select, Popover } from "@mui/material";
 import IconButton from '@mui/joy/IconButton';
 import Textarea from '@mui/joy/Textarea';
 import Input from '@mui/joy/Input';
@@ -32,6 +32,10 @@ function UpdateQuizz() {
     const [radioCheck, setRadioCheck] = useState(0)
     const [open, setOpen] = useState(false);
     const [ogQuestion, setOgQuestion] = useState([]);
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [id, setId] = useState(undefined);
+    const [openAnchor, setOpenAnchor] = useState(false);
 
     const navigate = useNavigate()
 
@@ -97,6 +101,20 @@ function UpdateQuizz() {
 
 
     const validateQuizz = async (e) => {
+        if (!/[a-zA-Z0-9]/.test(title)) {
+            setErrorMessage('Veuillez saisir un titre valide pour le quizz.');
+            setErrorAnchorEl(document.getElementById('title-input'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
+        if (chapitre === '') {
+            setErrorMessage('Veuillez choisir un chapitre.');
+            setErrorAnchorEl(document.getElementById('label-chapitre'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
         try {
             await updateQuizz(parseInt(quizId), title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre);
             navigate("/home");
@@ -110,6 +128,29 @@ function UpdateQuizz() {
             ...selected.reponses.filter(answer => !delAnswer.includes(answer)),
             ...delAnswer
         ];
+        if(selected.label === '') {
+            setErrorMessage('Veuillez saisir une question.');
+            setErrorAnchorEl(document.getElementById('question-input'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
+        if(selected.nombre_bonne_reponse === 0) {
+            setErrorMessage('Veuillez choisir au moins une réponse valide.');
+            setErrorAnchorEl(document.getElementById(`reponse${selected.reponses[0].id_reponse}`));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
+        selected.reponses.map((reponse) => {
+            if (reponse.contenu === '') {
+                setErrorMessage('Veuillez siasir un texte pour la réponse.');
+                setErrorAnchorEl(document.getElementById(`reponse${reponse.id_reponse}`));
+                setId('error-popover');
+                setOpenAnchor(true);
+                return;
+            };
+        });
 
         try {
             const all_id = [];
@@ -235,7 +276,7 @@ function UpdateQuizz() {
                     const firstQuestion = questionsWithAnswers[0];
                     setSelected(firstQuestion);
                     selected.reponses && selected.reponses.map((reponse) => {
-                        if(reponse.est_bonne_reponse === 1) {
+                        if (reponse.est_bonne_reponse === 1) {
                             setRadioCheck(selected.reponses.indexOf(reponse));
                         }
                     });
@@ -247,7 +288,11 @@ function UpdateQuizz() {
         fetchStatQuestions();
     }, [quizId]);
 
-
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpenAnchor(false);
+    };
 
 
     return (
@@ -304,15 +349,15 @@ function UpdateQuizz() {
                         value={title}
                         sx={{ '--Input-focusedThickness': '0rem', }} />
                     <FormControl sx={{ width: "300px" }}>
-                        <InputLabel id="demo-simple-select-label">Chapitre</InputLabel>
+                        <InputLabel id="label-chapitre">Chapitre</InputLabel>
                         <Select
                             sx={{
                                 width: "100%",
                                 borderRadius: "10px",
                                 backgroundColor: "#f0f0f0"
                             }}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
+                            labelId="label-chapitre"
+                            id="select-chapitre"
                             value={chapitre}
                             label="Chapitrem"
                             onChange={handleChangeChapitre}
@@ -324,6 +369,7 @@ function UpdateQuizz() {
                     </FormControl>
                     <Textarea
                         variant="plain"
+                        id="question-input"
                         value={selected ? selected.label : ''}
                         style={{ color: "black", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
@@ -345,6 +391,8 @@ function UpdateQuizz() {
                             {selected.reponses && selected.reponses.map((reponse, index) => (
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px", justifyContent: "space-between" }}>
                                     <Input
+                                        aria-describedby={id}
+                                        id={"reponse" + reponse.id_reponse}
                                         placeholder={"Reponse " + (index + 1)}
                                         style={{ color: "black", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
@@ -371,9 +419,11 @@ function UpdateQuizz() {
 
                                     {type === 'multiple' ?
                                         <Checkbox
+                                            aria-describedby={id}
                                             onChange={() => validateReponse(index)}
                                             checked={reponse.est_bonne_reponse === 1 ? true : false}
                                             style={{ color: "#F5F5F5" }}
+                                            id={"checkbox-reponse" + reponse.id_reponse}
                                         /> :
                                         <Radio
                                             checked={reponse.est_bonne_reponse === 1 ? true : false}
@@ -587,6 +637,22 @@ function UpdateQuizz() {
 
                         </>
                     }
+                    <Popover
+                        id={id}
+                        open={openAnchor}
+                        anchorEl={errorAnchorEl}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                    </Popover>
                 </div>
             </div>
         </div>
