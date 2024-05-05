@@ -47,7 +47,8 @@ function App() {
         <Route path="/carte_mental" element={ <PrivateRoute> <Layout><Carte_mental /></Layout> </PrivateRoute> } />
         <Route path="/etude/:id" element={ <PrivateRoute> <Layout><Study/></Layout> </PrivateRoute> }/>
         <Route path="/forum/:id_forum" element={ <PrivateRoute> <Layout><Forum/></Layout> </PrivateRoute> }/>
-        <Route path="/create-forum/:id_chap" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
+        <Route path="/forum/chap/:id_chap" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
+        <Route path="/forum/quizz/:id_quizz" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
         <Route path="/quiz-completed/:quizId" element={<PrivateRoute><Layout><QuizzFin /></Layout></PrivateRoute>} />
         <Route path="/create_quizz/:idUe" element={ <PrivateRoute> <Layout><CreateQuizz/></Layout> </PrivateRoute> }/>
         <Route path="/update_quizz/:quizId" element={ <PrivateRoute> <Layout><UpdateQuizz/></Layout> </PrivateRoute> }/>
