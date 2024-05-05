@@ -287,7 +287,7 @@ function UpdateQuizz() {
                         value={title}
                         sx={{ '--Input-focusedThickness': '0rem', }} />
                     <FormControl sx={{ width: "300px" }}>
-                        <InputLabel id="demo-simple-select-label">Chapitre</InputLabel>
+                        <InputLabel id="chapitre-label">Chapitre</InputLabel>
                         <Select
                             aria-describedby={id}
                             sx={{
@@ -295,7 +295,7 @@ function UpdateQuizz() {
                                 borderRadius: "10px",
                                 backgroundColor: "#f0f0f0"
                             }}
-                            labelId="demo-simple-select-label"
+                            labelId="chapitre-label"
                             id="select-chapitre"
                             value={chapitre}
                             label="Chapitrem"

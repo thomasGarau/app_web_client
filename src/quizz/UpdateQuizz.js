@@ -110,7 +110,7 @@ function UpdateQuizz() {
         }
         if (chapitre === '') {
             setErrorMessage('Veuillez choisir un chapitre.');
-            setErrorAnchorEl(document.getElementById('select-chapitre'));
+            setErrorAnchorEl(document.getElementById('label-chapitre'));
             setId('error-popover');
             setOpenAnchor(true);
             return;
@@ -349,14 +349,14 @@ function UpdateQuizz() {
                         value={title}
                         sx={{ '--Input-focusedThickness': '0rem', }} />
                     <FormControl sx={{ width: "300px" }}>
-                        <InputLabel id="demo-simple-select-label">Chapitre</InputLabel>
+                        <InputLabel id="label-chapitre">Chapitre</InputLabel>
                         <Select
                             sx={{
                                 width: "100%",
                                 borderRadius: "10px",
                                 backgroundColor: "#f0f0f0"
                             }}
-                            labelId="demo-simple-select-label"
+                            labelId="label-chapitre"
                             id="select-chapitre"
                             value={chapitre}
                             label="Chapitrem"
