@@ -169,7 +169,6 @@ function Home() {
     ue.label.toLowerCase().includes(searchQuery.toLowerCase())
   ) : [];
 
-
   return (
     
     <div className='style_background_esp_ele'>

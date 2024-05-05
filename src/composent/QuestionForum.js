@@ -17,7 +17,11 @@ function QuestionForum({ id_chap }) {
             setIsLoading(true);
             try {
                 const data = await getForumByCours(id_chap);
-                setForums(data);
+                if (Array.isArray(data)) { // Vérifier si data est un tableau
+                    setForums(data);
+                } else {
+                    console.error("Les données récupérées ne sont pas un tableau.");
+                }
             } catch (error) {
                 console.error("Erreur lors de la récupération des forums :", error);
             }
@@ -29,12 +33,13 @@ function QuestionForum({ id_chap }) {
         }
     }, [id_chap]);
 
+
     const toForum = (forumId) => {
         navigate(`/forum/${forumId}`);
     }
 
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric'};
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
         return formattedDate;
     }
