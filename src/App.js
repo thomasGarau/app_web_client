@@ -26,6 +26,7 @@ import StatQuestion from './quizz/statQuestion';
 import UpdateQuizz from './quizz/UpdateQuizz';
 import CreateForum from './forum/CreateForum';
 import GestionQuizz from './quizz/GestionQuizz';
+import Presentation from './presentation/Presentation';
 ;
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
       <Routes> 
         <Route path="/connexion" element={<PublicRoute><Layout><Connexion /></Layout></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Layout><Register /></Layout></PublicRoute>} />
+        <Route path="/presentation" element={<Layout><Presentation /></Layout>} />
         <Route path="/forgot_password" element={<PublicRoute><Layout><Forgot /></Layout></PublicRoute>} />
         <Route path="/reset_password" element={<PublicRoute><Layout><Reset /></Layout></PublicRoute>} />
         <Route path="/ue/:id" element={<PrivateRoute><Layout><Ue /></Layout></PrivateRoute>} />
