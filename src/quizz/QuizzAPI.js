@@ -72,7 +72,6 @@ export const getQuizzInfo = async (quizId) => {
         const body = {
             quizz: quizId
         };
-        console.log("body info : ",body);
 
         const response = await api.post(`/quizz/getQuizzInfo`, body);
         console.log("réponse info : ",response);

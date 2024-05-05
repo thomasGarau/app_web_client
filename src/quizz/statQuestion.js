@@ -72,7 +72,7 @@ function StatQuestion() {
             const previousQuestion = listQuestions[currentIndex - 1];
             navigate(`/statQuizz/${quizId}/${noteQuizId}/${previousQuestion.id_question}`);
         } else {
-            navigate(`/statQuizz/${quizId}/`);
+            navigate(`/statQuizz/${quizId}/${noteQuizId}`);
         }
     };
 

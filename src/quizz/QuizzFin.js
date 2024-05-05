@@ -14,6 +14,7 @@ function QuizzFin() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [finalScore, setFinalScore] = useState('');  
     const [label, setLabel] = useState('');
+    const [id_quizz_note, setIdQuizzNote] = useState('');
 
     useEffect(() => {
         
@@ -43,6 +44,7 @@ function QuizzFin() {
             .then(response => {
                 console.log('Réponse de getLastNoteQuizz:', response);
                 setFinalScore(response.note);  
+                setIdQuizzNote(response.id_note_quizz);
             })
             .catch(error => {
                 console.error('Erreur lors de la récupération de la dernière note du quiz:', error);
@@ -65,7 +67,7 @@ function QuizzFin() {
                     </div>
                     <RatingStars quizId={quizId} />
                     <h2>Bravo !</h2>
-                    <StyledButton content={"Relire les questions"} color={"primary"} fontSize={"1.5em"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
+                    <StyledButton content={"Relire les questions"} color={"primary"} fontSize={"1.5em"} onClick={() => navigate(`/statQuizz/${quizId}/${id_quizz_note}`)}/>
                     
                 </div>
                 <QuestionForum id_quizz={quizId}  />

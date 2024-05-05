@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getQuestionParQUizz, getReponsesPourQuestion } from './QuizzAPI';
+import { getQuestionParQUizz, getReponsesPourQuestion, getQuizzInfo } from './QuizzAPI';
 import { useQuiz } from './QuizContext';
 
 import "@fontsource/nanum-pen-script";
@@ -17,6 +17,7 @@ function Question() {
     const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [quizzInfo , setQuizzInfo] = useState('');
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -28,7 +29,9 @@ function Question() {
                     setCurrentQuestion(current);
                     setQuestionType(current.type || 'seul'); // Fournir une valeur par défaut pour type
                     const answers = await getReponsesPourQuestion(current.id_question);
-                    setCurrentQuestion(prev => ({ ...prev, answers: answers || [] })); // Assurez-vous de définir un tableau vide si aucune réponse n'est trouvée
+                    setCurrentQuestion(prev => ({ ...prev, answers: answers || [] })); 
+                    const quizzInfo2 = await getQuizzInfo(quizId);
+                    setQuizzInfo(quizzInfo2);
                 } else {
                     // Définir currentQuestion comme null ou comme objet vide pour indiquer qu'il n'y a pas de questions
                     setCurrentQuestion(null);
@@ -59,7 +62,7 @@ function Question() {
             const previousQuestion = questions[currentIndex - 1];
             navigate(`/quiz/${quizId}/question/${previousQuestion.id_question}`);
         } else {
-            navigate(`/quizz/${quizId}`);
+            navigate(`/quizz/${quizzInfo.id_chapitre}`);
         }
     };
     
@@ -97,7 +100,7 @@ function Question() {
     return (
         <div className='background-question'>
             <div className='base_container_quizz_question'>
-                <h1 className='quizz-title'>{currentQuestion.title || 'Titre non disponible'}</h1>
+                <h1 className='quizz-title'>{quizzInfo.label || 'Titre non disponible'}</h1>
                 <div className='question-quest-container'>
                     <h3 className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</h3>
                     <p className='indication'>{getIndicationText()}</p>

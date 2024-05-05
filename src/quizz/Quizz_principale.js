@@ -82,7 +82,7 @@ function Quizz_principale() {
                     <p>{quiz.note} </p>
                     <img className='img_coeur' src={stars_yellow} alt='like' />
                   </div>
-                  <StyledButton onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)} color={'primary'} content={"Commencer"}>Commencer</StyledButton>
+                  <StyledButton onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)}  content={"Commencer"}>Commencer</StyledButton>
 
                 </div>
               ))
