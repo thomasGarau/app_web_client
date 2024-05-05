@@ -6,21 +6,45 @@ import { Registry } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import StyledButton from '../composent/StyledBouton.js';
+import { Popover, Typography } from '@mui/material';
 
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [id, setId] = useState(undefined);
+    const [open, setOpen] = useState(false);
 
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          setErrorMessage('Veuillez saisir une adresse e-mail valide.');
+          setErrorAnchorEl(document.getElementById('email'));
+          setId('error-popover');
+          setOpen(true);
+          return;
+        }
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{12,})/;
         if (password !== confirmPassword) {
-            // Affichez ici un message d'erreur ou gérez la validation
+            setErrorMessage('Mot de passe différent! Veuillez réessayer.');
+            setErrorAnchorEl(document.getElementById('confirmPassword'));
+            setId('error-popover');
+            setOpen(true);
             console.error("Les mots de passe ne correspondent pas.");
             return;
         }
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.');
+            setErrorAnchorEl(document.getElementById('password'));
+            setId('error-popover');
+            setOpen(true);
+            return;
+          }
 
         await Registry(email, password)
             .then(data => {
@@ -34,8 +58,18 @@ function Register() {
             })
             .catch(error => {
                 console.error('Erreur lors de l\'inscription :', error);
+                setErrorMessage('Vous n\'êtes pas autorisé à vous inscrire, ou un compte avec cet email existe déjà.');
+                setErrorAnchorEl(document.getElementById('email'));
+                setId('error-popover');
+                setOpen(true);
             });
     };
+
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpen(false);
+      };
 
     const toConnection = (e) => {
         e.preventDefault();
@@ -48,6 +82,7 @@ function Register() {
                 <h1 style={{ fontSize: "4em", margin: "0px" }}>Inscription</h1>
                 <div className='sub-container'>
                     <input
+                        aria-describedby='error-popover'
                         className='input-connexion'
                         type="email"
                         id="email"
@@ -58,6 +93,7 @@ function Register() {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
+                        aria-describedby='error-popover'
                         className='input-connexion'
                         type="password"
                         id="password"
@@ -68,6 +104,7 @@ function Register() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <input
+                        aria-describedby='error-popover'
                         className='input-connexion'
                         type="password"
                         id="confirmPassword"
@@ -91,6 +128,22 @@ function Register() {
                         onClick={handleRegister}>
                     </StyledButton>
                 </div>
+                <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={errorAnchorEl}
+                    onClose={handleClosePopover}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                </Popover>
             </div>
         </div>
     );
