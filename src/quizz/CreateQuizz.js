@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Checkbox, Typography, Drawer, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { Box, Checkbox, Typography, Drawer, MenuItem, FormControl, InputLabel, Select, Popover } from "@mui/material";
 import IconButton from '@mui/joy/IconButton';
 import Textarea from '@mui/joy/Textarea';
 import Input from '@mui/joy/Input';
@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IsoIcon from '@mui/icons-material/Iso';
 import ExposureIcon from '@mui/icons-material/Exposure';
 import "./CreateQuizz.css";
-import { ajouterQuestionAuQuizz, createQuizz, getChapitreUE, getIdUtilisateur, updateQuestionduQuizz, updateQuizz } from "./CreateQuizzAPI";
+import { createQuizz, getChapitreUE } from "./CreateQuizzAPI";
 import { useNavigate, useParams } from "react-router-dom";
 
 function UpdateQuizz() {
@@ -34,10 +34,13 @@ function UpdateQuizz() {
     const [title, setTitle] = useState('');
     const [listChapitre, setListChapitre] = useState([])
     const [chapitre, setChapitre] = useState('')
-    const [reponses, setReponses] = useState([]);
     const [type, setType] = useState('')
     const [radioCheck, setRadioCheck] = useState(0)
     const [open, setOpen] = useState(false);
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [id, setId] = useState(undefined);
+    const [openAnchor, setOpenAnchor] = useState(false);
 
     const navigate = useNavigate()
 
@@ -106,17 +109,35 @@ function UpdateQuizz() {
 
 
     const validateQuizz = async (e) => {
+        if (!/[a-zA-Z0-9]/.test(title)) {
+            setErrorMessage('Veuillez saisir un titre valide pour le quizz.');
+            setErrorAnchorEl(document.getElementById('title-input'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
+        if (chapitre === '') {
+            setErrorMessage('Veuillez choisir un chapitre.');
+            setErrorAnchorEl(document.getElementById('select-chapitre'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
         try {
             const questionsWithoutId = questions.map(({ id_question, ...rest }) => rest);
-    
+
             console.log(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
             await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
             navigate("/home");
         } catch (error) {
             console.error('Erreur lors de la création du Quizz :', error);
+            setErrorMessage('Erreur lors de la création du Quizz :', error);
+            setErrorAnchorEl(document.getElementById('title-input'));
+            setId('error-popover');
+            setOpenAnchor(true);
         }
     };
-    
+
 
 
     const handleChangeChapitre = (event) => {
@@ -203,7 +224,11 @@ function UpdateQuizz() {
         fetchChapitres();
     }, []);
 
-
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpenAnchor(false);
+      };
 
 
     return (
@@ -252,6 +277,7 @@ function UpdateQuizz() {
                 </Drawer>
                 <div className="background-create-quizz">
                     <Input
+                        aria-describedby={id}
                         onChange={handleTitleChange}
                         style={{ width: "80%", borderRadius: "0px", borderRadius: "0px 0px 10px 10px", backgroundColor: "#f5f5f5" }}
                         id="title-input"
@@ -263,13 +289,14 @@ function UpdateQuizz() {
                     <FormControl sx={{ width: "300px" }}>
                         <InputLabel id="demo-simple-select-label">Chapitre</InputLabel>
                         <Select
+                            aria-describedby={id}
                             sx={{
                                 width: "100%",
                                 borderRadius: "10px",
                                 backgroundColor: "#f0f0f0"
                             }}
                             labelId="demo-simple-select-label"
-                            id="demo-simple-select"
+                            id="select-chapitre"
                             value={chapitre}
                             label="Chapitrem"
                             onChange={handleChangeChapitre}
@@ -322,6 +349,7 @@ function UpdateQuizz() {
 
                                     {type === 'multiple' ?
                                         <Checkbox
+                                            aria-describedby={id}
                                             onChange={() => validateReponse(index)}
                                             checked={reponse.est_bonne_reponse === 1 ? true : false}
                                             style={{ color: "#F5F5F5" }}
@@ -518,6 +546,22 @@ function UpdateQuizz() {
 
                         </>
                     }
+                    <Popover
+                        id={id}
+                        open={openAnchor}
+                        anchorEl={errorAnchorEl}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                    </Popover>
                 </div>
             </div>
         </div>
