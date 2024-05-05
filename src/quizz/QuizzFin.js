@@ -4,6 +4,7 @@ import { useQuiz } from './QuizContext';
 import { handleSubmit, getQuizzInfo, getLastNoteQuizz } from './QuizzAPI';
 import RatingStars from '../composent/RatingStars.js';
 import StyledButton from '../composent/StyledBouton.js';
+import QuestionForum from '../composent/QuestionForum';
 
 function QuizzFin() {
     const { quizId } = useParams();
@@ -50,22 +51,26 @@ function QuizzFin() {
     }, [quizId, allSelectedAnswers, isSubmitted, resetSelectedAnswers]); // Incluez resetSelectedAnswers dans les dépendances
 
     return (
-        <div className='quiz-final-summary'>
-            <div className='quiz-final-button-top'>
-                <button className='btn_quiz-final button-connection' onClick={() => navigate(`/quizz/${chap_id}`)}>Menu Quizz</button>
-                <p className='theme_quiz-final'>{label}</p>
-            </div>
-            <div className='quiz-final-score'>
-                <div className='quiz-final-demi-cercle'>
-                    <div className='quiz-final-demi-cercle-vide'>
-                        <p>{finalScore}%</p>
-                    </div>
+        <div className='quiz-final-background'>
+            <div className='quiz-final-summary'>
+                <div className='quiz-final-button-top'>
+                    <StyledButton content={"Quizz"} width={"25%"} fontSize={"1.5em"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
+                    <p className='theme_quiz-final'>{label}</p>
                 </div>
-                <RatingStars quizId={quizId} />
-                <h2>Bravo !</h2>
-                <StyledButton content={"Relire les questions"} color={"primary"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
-            </div>
+                <div className='quiz-final-score'>
+                    <div className='quiz-final-demi-cercle'>
+                        <div className='quiz-final-demi-cercle-vide'>
+                            <p>{finalScore}%</p>
+                        </div>
+                    </div>
+                    <RatingStars quizId={quizId} />
+                    <h2>Bravo !</h2>
+                    <StyledButton content={"Relire les questions"} color={"primary"} fontSize={"1.5em"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
+                    
+                </div>
+                <QuestionForum id_quizz={quizId}  />
 
+            </div>
         </div>
     );
 }

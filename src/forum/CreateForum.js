@@ -1,35 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { Select, InputLabel, FormControl, MenuItem, Box, Typography, Popover } from "@mui/material";
-import { getCoursParChap, addForum } from './ForumAPI';
 import { useNavigate, useParams } from 'react-router-dom';
-import StyledButton from '../composent/StyledBouton.js';
+import { FormControl, MenuItem, Select, Box, Typography, Popover } from "@mui/material";
+import StyledButton from '../composent/StyledBouton';
+import { getCoursParChap, getQuizzInfo, addForumCours, addForumQuizz } from './ForumAPI';
 
 const CreateForum = () => {
     const navigate = useNavigate();
-    const { id_chap } = useParams();
+    const params = useParams();
+    const id_chap = params.id_chap;
+    const id_quizz = params.id_quizz;
     const [contenu, setContenu] = useState('');
     const [sujet, setSujet] = useState('');
-    const [idCours, setIdCours] = useState('');
-    const [cours, setCours] = useState([]);
+    const [entityId, setEntityId] = useState('');
+    const [entities, setEntities] = useState([]);
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [id, setId] = useState(undefined);
     const [open, setOpen] = useState(false);
-
+    const [chapId, setChapId] = useState('');
 
     useEffect(() => {
-        const fetchCours = async () => {
-            try {
-                const data = await getCoursParChap(id_chap);
-                setIdCours(data[0].id_cours);
-                setCours(data);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des cours :", error);
-            }
-        };
-
-        fetchCours();
-    }, [id_chap]);
+        if (id_chap) {
+            getCoursParChap(id_chap).then(data => {
+                setEntityId(data[0].id_cours);
+                setEntities(data);
+            }).catch(error => console.error("Erreur lors de la récupération des cours :", error));
+        } else if (id_quizz) {
+            getQuizzInfo(id_quizz).then(data => {
+                setEntityId(data.id_quizz);
+                setEntities([data]);
+                setChapId(data.id_chapitre);
+            }).catch(error => console.error("Erreur lors de la récupération des quiz :", error));
+        }
+    }, [id_chap, id_quizz]);
 
     const handleCreateForum = async () => {
 
@@ -54,9 +57,17 @@ const CreateForum = () => {
             return
         }
         try {
-            await addForum(sujet, contenu, idCours);
-            alert("Forum créé avec succès !");
-            navigate(`/etude/${id_chap}`);
+            if (id_chap) {
+                const response = await addForumCours(sujet, contenu, entityId);
+                const id_forum = response.id_forum;
+                navigate(`/forum/${id_forum}`);
+                
+            } else if (id_quizz) {
+                const response = await addForumQuizz(sujet, contenu, entityId);
+                const id_forum = response.id_forum;
+                navigate(`/forum/${id_forum}`);
+            }
+            
         } catch (error) {
             console.error("Erreur lors de la création du forum :", error);
             setErrorMessage('Erreur lors de la création du forum. Veuillez réessayer.');
@@ -96,35 +107,36 @@ const CreateForum = () => {
                         sx={{ m: 1, width: "80%" }} >
 
                         <Box display="flex" alignItems="center" width="100%">
-                            <Typography
-                                sx={{
-                                    mr: 1,
-                                    width: "45%",
-                                    color: 'white',
-                                    fontSize: {
-                                        xs: "1em",
-                                        sm: "1.5em",
-                                        md: "2em"
-                                    }
-                                }}>
-                                Cours concernés :
-                            </Typography>
-                            <Select
-                                id='cours_id'
-                                value={idCours}
-                                onChange={(e) => setIdCours(e.target.value)}
-                                sx={{
-                                    width: "55%",
-                                    borderRadius: "10px",
-                                    backgroundColor: "#f0f0f0"
-                                }}
-
-                            >
-                                {cours.map(cour => (
-                                    <MenuItem key={cour.id_cours} value={cour.id_cours}>{cour.label}</MenuItem>
-                                ))}
-                            </Select>
-                        </Box>
+                        <Typography
+                            sx={{
+                                mr: 1,
+                                width: "45%",
+                                color: 'white',
+                                fontSize: {
+                                    xs: "1em",
+                                    sm: "1.5em",
+                                    md: "2em"
+                                }
+                            }}>
+                            {id_quizz ? "Quiz concerné :" : "Cours concernés :"}
+                        </Typography>
+                        <Select
+                            id='entity_id'
+                            value={entityId}
+                            onChange={(e) => setEntityId(e.target.value)}
+                            sx={{
+                                width: "55%",
+                                borderRadius: "10px",
+                                backgroundColor: "#f0f0f0"
+                            }}
+                        >
+                            {entities.map(entity => (
+                                <MenuItem key={entity.id_cours || entity.id_quizz} value={entity.id_cours || entity.id_quizz}>
+                                    {entity.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
 
 
                         <Box display="flex" alignItems="center" width="100%">

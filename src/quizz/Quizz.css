@@ -147,14 +147,26 @@
     justify-content: space-evenly;
 }
 
+.quiz-final-background{
+    background-color: #C3D9FF;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+
+}
 
 .quiz-final-summary {
     display: flex ;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    width: 100dvw;
-    height: 100dvh;
+    width: 100vw;
+    height: 100vh;
+    overflow-x :hidden;
     background-color: #C3D9FF;
     padding-top : 150px;
 }
@@ -182,7 +194,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    font-size: 2.5em;
+    font-size: 1.5em;
     margin : 2%;
     
 }
@@ -209,31 +221,57 @@
     justify-content: space-evenly;
     height: 63dvh;
     width: 100dvw;
+    border-bottom: 2vh solid #d9d9d9;
 }
 
 .quiz-final-demi-cercle {
-    width: 400px;            /* Largeur du demi-cercle */
-    height: 300px;            /* Hauteur du demi-cercle */
-    background: white;         /* Couleur de fond */
-    border-top-left-radius: 200px;   /* Arrondir le coin supérieur gauche */
-    border-top-right-radius: 200px;
+    width: 50vw;               /* Utilisez viewport width pour la largeur */
+    height: 37.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
+    max-width: 400px;          /* Limite maximale pour la largeur */
+    max-height: 300px;         /* Limite maximale pour la hauteur */
+    background: white;
+    border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
+    border-top-right-radius: 25vw;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-  }
+}
 
-  .quiz-final-demi-cercle-vide {
-    width: 300px;            /* Largeur du demi-cercle */
-    height: 175px;            /* Hauteur du demi-cercle */
-    background: white;         /* Couleur de fond */
-    border-top-left-radius: 150px;   /* Arrondir le coin supérieur gauche */
-    border-top-right-radius: 150px; 
-    border: 5px solid #133D56;
+.quiz-final-demi-cercle-vide {
+    width: 37.5vw;             /* Réduisez proportionnellement la largeur */
+    height: 21.875vw;          /* Réduisez proportionnellement la hauteur */
+    max-width: 300px;          /* Limite maximale pour la largeur */
+    max-height: 175px;         /* Limite maximale pour la hauteur */
+    background: white;
+    border-top-left-radius: 18.75vw; /* Adaptez le rayon à la largeur */
+    border-top-right-radius: 18.75vw;
+    border: 5px solid #133D56; /* Adaptez la taille de la bordure */
     border-bottom: none;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
+
   .quiz-final-demi-cercle-vide p{
     font-size: 5em;
+  }
+
+@media (max-width: 600px){
+
+    .quiz-final-demi-cercle-vide p{
+        font-size: 2.5em;
+    }
+
+    .quiz-final-demi-cercle {
+        width: 50vw;               /* Utilisez viewport width pour la largeur */
+        height: 27.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
+        max-width: 400px;          /* Limite maximale pour la largeur */
+        max-height: 300px;         /* Limite maximale pour la hauteur */
+        background: white;
+        border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
+        border-top-right-radius: 25vw;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
   }

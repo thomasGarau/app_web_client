@@ -20,7 +20,7 @@ export const getMessageForum = async (id_forum) => {
             id_forum: id_forum
         };
         const response = await api.post(`/chat/forum`, body);
-        console.log("message : ",response.data);
+        console.log("response", response.data);
         return response.data;
     }
     catch (error) {
@@ -34,7 +34,6 @@ export const ajouterMessageForum = async (id_forum, contenu) => {
             contenu: contenu,
             id_forum: id_forum
         };
-        console.log("body : ",body);
         const response = await api.post(`/chat/add-message`, body);
         return response.data;
     }
@@ -43,21 +42,34 @@ export const ajouterMessageForum = async (id_forum, contenu) => {
     }
 }
 
-export const cloturerForum = async (id_forum) => {
+export const closeForum = async (id_forum) => {
     try {
         const body = {
             id_forum: id_forum
         };
-        //const response = await api.post(`/chat/close-forum`, body);
-        const response = "ok"
-        return response;
+        const response = await api.post(`/chat/forum-close`, body);
+        return response.data;
     }
     catch (error) {
         throw error;
     }
 }
 
-export const addForum = async (label, contenu, id_cours) => {
+export const getQuizzInfo = async (quizId) => {
+    try {
+        const body = {
+            quizz: quizId
+        };
+
+        const response = await api.post(`/quizz/getQuizzInfo`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const addForumCours = async (label, contenu, id_cours) => {
     try {
         const body = {
             label: label,
@@ -65,8 +77,23 @@ export const addForum = async (label, contenu, id_cours) => {
             contenu: contenu
             
         };
-        console.log("body : ",body);
         const response = await api.post(`/chat/add-forum-cours`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const addForumQuizz = async (label, contenu, id_quizz) => {
+    try {
+        const body = {
+            label: label,
+            id_quizz: id_quizz,
+            contenu: contenu
+            
+        };
+        const response = await api.post(`/chat/add-forum-quizz`, body);
         return response.data;
     }
     catch (error) {
