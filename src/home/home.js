@@ -220,7 +220,6 @@ function Home() {
             ))}
             </List>
             </div>
-            <button onClick={handleDisconnection}>Deconnexion</button>
           </div>
           )}
       {role === 'etudiant' &&  (
