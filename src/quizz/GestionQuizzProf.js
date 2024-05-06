@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
 import { getUserInfo } from "../connexion/UserAPI.js";
-import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, getChapitreById} from './QuizzAPI.js';
+import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, getChapitreById } from './QuizzAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
@@ -28,7 +28,7 @@ const style = {
 
 function GestionQuizzProf() {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
     const [idUe, setIdUe] = useState('');
     const [quizzes, setQuizzes] = useState([]);
     const [open, setOpen] = useState(false);
@@ -114,18 +114,27 @@ function GestionQuizzProf() {
     return (
         <div className='background_quizz_principale'>
             <div className='base-container_quizz_principale'>
-                <h1 className='quizz-title'>Vos quizzes</h1>
+                <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }} className='quizz-title'>Vos quizzes</Typography>
                 <div className='container_quizzs'>
                     {quizzes ? (
                         quizzes.length > 0 ? (
                             quizzes.map(quiz => (
-                                <Box sx={{ flexWrap: { lg: 'nowrap',xs: 'wrap' }, height: { lg: '120px',xs: '220px' } }}
-                                    key={quiz.id_quizz} className='container_quizz'>
+                                <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }} key={quiz.id_quizz} className='container_quizz'>
                                     <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
-                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.label}</Typography>
+                                        <Typography sx={{
+                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis"
+                                        }}>{quiz.label}</Typography>
                                     </Box>
                                     <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
-                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.note} </Typography>
+                                        <Typography sx={{
+                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis"
+                                        }}>{quiz.note} </Typography>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
                                     </Box>
                                     <StyledButton
@@ -151,27 +160,28 @@ function GestionQuizzProf() {
                                             <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                                                 <StyledButton
                                                     onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
-                                                    width={100}
+                                                    width={75}
                                                     color={'primary'}
                                                     content={"Oui"} />
                                                 <StyledButton
                                                     onClick={handleClose}
-                                                    width={100}
+                                                    width={75}
                                                     color={'primary'}
                                                     content={"Non"} />
                                             </Box>
                                         </Box>
                                     </Modal>
+
                                 </Box>
                             ))
                         ) : <p>Aucun quizz disponible.</p>
                     ) : <p>Aucun quizz disponible</p>}
                 </div>
                 {id && (
-                <StyledButton
-                    onClick={handleToCreateQuizz}
-                    color={'primary'}
-                    content={"Creer un quizz"} ></StyledButton>
+                    <StyledButton
+                        onClick={handleToCreateQuizz}
+                        color={'primary'}
+                        content={"Creer un quizz"} ></StyledButton>
                 )}
                 {!id && (
                     <div>
