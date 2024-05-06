@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getJMethod, getUe } from "./homeAPI.js";
-import { logout } from "../connexion/UserAPI.js";
+import { logout, getUserInfo } from "../connexion/UserAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
 
 import "./home.css";
@@ -71,16 +71,21 @@ function ServerDay(props) {
 function Home() {
   const requestAbortController = useRef(null);
   const [isSecure] = useState(null);
-  const [listUE, setListUE] = useState([])
+  const [listUE, setListUE] = useState([]);
   const [listJMethod, setListJMethod] = useState([]);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth());
+  const [role, setRole] = useState('');
 
   const handleListItemClick = (id) => {
     navigate(`/ue/${id}`);
+  };
+
+  const handleListItemClickProf = (id) => {
+    navigate(`/ueProf/${id}`);
   };
 
 
@@ -124,21 +129,20 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ueData = await getUe();
-        console.log("ueData", ueData);
-        setListUE(ueData);
+        const response_info = await getUserInfo();
+        setRole(response_info.role);
+        setListUE(response_info.ue);
       } catch (error) {
         console.error('Erreur lors de la récupération des UE:', error);
       }
       fetchJMethod();
     };
     fetchData();
+    console.log("role : ", role)
   }, []);
   
-  useEffect(() => { 
-    console.log(listUE);  
-    console.log(filteredListUE);  
-  }, [listUE]);
+  useEffect(() => {  
+  }, [listUE, role]);
 
   useEffect(() => {
     fetchJMethod(month);
@@ -163,30 +167,24 @@ function Home() {
     }
   }
 
-  const filteredListUE = listUE ? listUE.filter(ue =>
-    ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ue.label.toLowerCase().includes(searchQuery.toLowerCase())
-  ) : [];
+  const filteredListUE = listUE.filter(ue =>
+    ue.label.toLowerCase().includes(searchQuery)
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value.trim().toLowerCase());
+  };
 
   return (
     
     <div className='style_background_esp_ele'>
-      
-      <div className='container2_style'>
-        <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
-        <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
-          <div className="sub_container_ue" style={{
-            backgroundColor: "#133D56",
-            borderRadius: "20px",
-            marginBottom: "20px",
-            display: "flex",
-            flexDirection: "column",
-            flex: 1
-          }}>
-            <h2 style={{ marginLeft: "20px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
-            <TextField
-              onChange={(e) => setSearchQuery(e.target.value)}
+      {role === 'enseignant' &&  (
+          <div className='container2_style'>
+            <h1> Espace professeur </h1>
+            <div className="container-home-prof">
+              <h2>Liste Ue :</h2>
+              <TextField
+              onChange={handleSearchChange}
               sx={{
                 width: "90%",
                 alignSelf: "center",
@@ -215,24 +213,85 @@ function Home() {
               maxHeight: 300,
               '& ul': { padding: 0 },
             }}>
-              {listUE && listUE.length > 0 && listUE.map(ue => (
-                <ListItem style={{ marginLeft: "10px" }} key={ue.id_ue}
-                  onClick={() => handleListItemClick(ue.id_ue)}>
+              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+                <ListItem key={ue.id_ue} onClick={() => handleListItemClickProf(ue.id_ue)}>
                   <ListItemAvatar>
+                    <Avatar sx={{ width: 56, height: 56, paddingLeft: "20px" }} src={ue.path} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={ue.label}
+                    primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large",} }}
+                  />
+                </ListItem>
+            ))}
+            </List>
+            </div>
+            <button onClick={handleDisconnection}>Deconnexion</button>
+          </div>
+          )}
+      {role === 'etudiant' &&  (
+      <div className='container2_style'>
+        <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
+        <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
+          <div className="sub_container_ue" style={{
+            backgroundColor: "#133D56",
+            borderRadius: "20px",
+            marginBottom: "20px",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1
+          }}>
+            <h2 style={{ marginLeft: "20px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
+            <TextField
+              onChange={handleSearchChange}
+              sx={{
+                width: "90%",
+                alignSelf: "center",
+                borderRadius: "50px",
+                color: '#f5f5f5',
+                fontSize: "x-large",
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: "50px",
+                },
+                border: 3,
+              }}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton><SearchIcon sx={{ width: 40, height: 40 }} /></IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <List sx={{
+              width: '100%',
+              position: 'relative',
+              overflow: "hidden",
+              overflowY: "scroll",
+              maxHeight: 300,
+              '& ul': { padding: 0 },
+            }}>
+              
+              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+            <ListItem key={ue.id_ue} onClick={() => handleListItemClick(ue.id_ue)}>
+              <ListItemAvatar>
                     <Avatar sx={{ width: 56, height: 56 }} src={ue.path} />
                   </ListItemAvatar>
                   <div>
+                    {ue && ue.enseignant && ue.enseignant[0] &&  (
                     <ListItemText
                       primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
                       primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
                     />
+                    )}
                     <ListItemText
                       primary={ue.label}
                       primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
                     />
                   </div>
-                </ListItem>
-              ))}
+            </ListItem>
+          ))}
             </List>
 
 
@@ -258,7 +317,9 @@ function Home() {
         </div>
         {isSecure}
         <button onClick={handleDisconnection}>Deconnexion</button>
+           
       </div>
+       )}
     </div>
 
   );

@@ -33,3 +33,15 @@ export const logout = async (token) => {
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
 }
+
+
+export const getUserInfo = async () => {
+    try {
+        const response = await api.get(`/user/getUserInfo`);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

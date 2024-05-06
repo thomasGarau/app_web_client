@@ -9,7 +9,7 @@
     position: fixed;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     flex-direction: column;
 }
 
