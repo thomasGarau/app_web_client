@@ -1,7 +1,7 @@
 import api from '../config/axiosConfig';
 
 export const getCurrentUser = async () => {
-    
+
 }
 
 export const getListQuizzStatForUser = async () => {
@@ -10,7 +10,7 @@ export const getListQuizzStatForUser = async () => {
     }
     try {
         const response = await api.get(`/quizz/listQuizzPasser`, body);
-        console.log("réponse : ",response);
+        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
@@ -24,7 +24,7 @@ export const getUserInfo = async () => {
     }
     try {
         const response = await api.get(`/user/getUserInfo`, body);
-        console.log("réponse : ",response);
+        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
@@ -32,3 +32,14 @@ export const getUserInfo = async () => {
     }
 }
 
+export const updateUserProfilePicture = async (image) => {
+
+    try {
+        const response = await api.put(`/user/updateUserProfilePicture`, image);
+        console.log("réponse : ", response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
