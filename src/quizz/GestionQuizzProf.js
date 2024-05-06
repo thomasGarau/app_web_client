@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
-import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById, noteMoyennePourQuizz } from './QuizzAPI.js';
+import { getUserInfo } from "../connexion/UserAPI.js";
+import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, getChapitreById} from './QuizzAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
-import { getUe } from '../home/homeAPI.js';
+import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
 
 
 const style = {
@@ -34,19 +33,20 @@ function GestionQuizzProf() {
     const [quizzes, setQuizzes] = useState([]);
     const [open, setOpen] = useState(false);
     const [UE, setUE] = useState('');
-    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [listUE, setListUE] = useState([]);
-    //const [id, setId] = useState(undefined);
     const handleOpen = () => setOpen(true);
+    const [idLabel, setIdLabel] = useState(undefined);
     const handleClose = () => setOpen(false);
     const [openPop, setOpenPop] = useState(false);
+    const [listUE, setListUE] = useState([]);
     const handleOpen2 = () => setOpen(true);
     const handleClose2 = () => setOpen(false);
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const delQuizz = async (quizId) => {
         try {
             await deleteQuizz(quizId);
+            fetchMyQuizz();
         } catch (error) {
             console.error('Erreur lors de la suppression du quizz:', error);
         }
@@ -61,11 +61,44 @@ function GestionQuizzProf() {
         navigate(`/create_quizz/${idUe}`);
     };
 
+    const handleToCreateQuizzAll = async () => {
+        console.log(UE)
+        if (UE === '') {
+            setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
+            setErrorAnchorEl(document.getElementById('label-ue'));
+            setIdLabel('error-popover');
+            setOpenPop(true);
+            return
+        }
+        navigate(`/create_quizz/${UE.id_ue}`);
+    }
+
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpenPop(false);
+    };
+
 
     const fetchMyQuizz = async () => {
         try {
-            const quizzsResponse = await getQuizzParChap(id);
-            setQuizzes(quizzsResponse);
+            if (id) {
+                const quizzsResponse = await getQuizzParChap(id);
+                setQuizzes(quizzsResponse[0]);
+                const quizzInfo = await getQuizzInfo(quizzsResponse[0][0].id_quizz);
+                setIdUe(quizzInfo.id_ue);
+            } else {
+                const quizzs = await getListQuizzCreateForUser();
+                const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
+                    const chapitreInfo = await getChapitreById(quizz.id_chapitre);
+                    const note_moyenne = parseFloat(quizz.moyenne_note).toFixed(1);
+                    return { ...quizz, chapitreInfo, note: note_moyenne };
+                }));
+                setQuizzes(enhancedQuizzs);
+                const response_info = await getUserInfo();
+                setListUE(response_info.ue);
+            }
+
         } catch (error) {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
@@ -76,11 +109,6 @@ function GestionQuizzProf() {
         fetchMyQuizz();
     }, [id]);
 
-    const handleClosePopover = () => {
-        setErrorAnchorEl(null);
-        setErrorMessage('');
-        setOpenPop(false);
-    };
 
 
     return (
@@ -139,65 +167,75 @@ function GestionQuizzProf() {
                         ) : <p>Aucun quizz disponible.</p>
                     ) : <p>Aucun quizz disponible</p>}
                 </div>
+                {id && (
                 <StyledButton
-                    onClick={handleOpen2}
+                    onClick={handleToCreateQuizz}
                     color={'primary'}
                     content={"Creer un quizz"} ></StyledButton>
-                <Modal
-                    open={open}
-                    onClose={handleClose2}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Choississez une UE
-                        </Typography>
-                        <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                            <InputLabel id="label-ue">UE</InputLabel>
-                            <Select
-                                sx={{
-                                    width: "100%",
-                                    borderRadius: "10px",
-                                    backgroundColor: "#f0f0f0"
-                                }}
-                                labelId="label-ue"
-                                id="demo-simple-select"
-                                value={UE}
-                                label="UE"
-                                onChange={handleChangeUE}
-                            >
-                                {listUE && listUE.map((ue, index) => (
-                                    <MenuItem key={index} value={ue}>
-                                        {ue.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-
-                            <StyledButton
-                                content={"Creer le quizz"}
-                                width={"90%"}
-                                color={"primary"}
-                                onClick={handleToCreateQuizz} />
-                        </FormControl>
-                        <Popover
-                            id={id}
-                            open={openPop}
-                            anchorEl={errorAnchorEl}
-                            onClose={handleClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                        >
-                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                        </Popover>
-                    </Box>
-                </Modal>
+                )}
+                {!id && (
+                    <div>
+                     <StyledButton
+                     onClick={handleOpen2}
+                     color={'primary'}
+                     content={"Creer un quizz"} ></StyledButton>
+                 <Modal
+                     open={open}
+                     onClose={handleClose2}
+                     aria-labelledby="modal-modal-title"
+                     aria-describedby="modal-modal-description"
+                 >
+                     <Box sx={style}>
+                         <Typography id="modal-modal-title" variant="h6" component="h2">
+                             Choississez une UE
+                         </Typography>
+                         <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
+                             <InputLabel id="label-ue">UE</InputLabel>
+                             <Select
+                                 sx={{
+                                     width: "100%",
+                                     borderRadius: "10px",
+                                     backgroundColor: "#f0f0f0"
+                                 }}
+                                 labelId="label-ue"
+                                 id="demo-simple-select"
+                                 value={UE}
+                                 label="UE"
+                                 onChange={handleChangeUE}
+                             >
+                                 {listUE && listUE.map((ue, index) => (
+                                     <MenuItem key={index} value={ue}>
+                                         {ue.label}
+                                     </MenuItem>
+                                 ))}
+                             </Select>
+ 
+                             <StyledButton
+                                 content={"Creer le quizz"}
+                                 width={"90%"}
+                                 color={"primary"}
+                                 onClick={handleToCreateQuizzAll} />
+                         </FormControl>
+                         <Popover
+                             id={id}
+                             open={openPop}
+                             anchorEl={errorAnchorEl}
+                             onClose={handleClosePopover}
+                             anchorOrigin={{
+                                 vertical: 'bottom',
+                                 horizontal: 'center',
+                             }}
+                             transformOrigin={{
+                                 vertical: 'top',
+                                 horizontal: 'center',
+                             }}
+                         >
+                             <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                         </Popover>
+                     </Box>
+                 </Modal>
+                 </div>
+                )}
             </div>
         </div>
     );
