@@ -21,6 +21,19 @@
     justify-content: space-evenly;
 }
 
+.container-home-prof{
+    background-color: #133D56;
+    width: 90%;
+    height: 90%;
+    border-radius: 20px;
+    color : white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
 .sub_container_ue {
     width: 50%;
     height: 100%;

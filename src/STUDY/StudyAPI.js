@@ -7,6 +7,7 @@ export const getCoursParChap = async (chap_id) => {
         const body = {
             id_chapitre: chap_id
         };
+        console.log(body);
         const response = await api.post(`/cours/allcours-chapitre`, body);
         return response.data;
     }

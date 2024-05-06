@@ -27,6 +27,7 @@ import UpdateQuizz from './quizz/UpdateQuizz';
 import CreateForum from './forum/CreateForum';
 import GestionQuizz from './quizz/GestionQuizz';
 import Presentation from './presentation/Presentation';
+import UeProf from './ue/UeProf'
 ;
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<PrivateRoute> <Layout><StatQuestion /> </Layout></PrivateRoute>} />
         <Route path="/carte_mental" element={ <PrivateRoute> <Layout><Carte_mental /></Layout> </PrivateRoute> } />
         <Route path="/etude/:id" element={ <PrivateRoute> <Layout><Study/></Layout> </PrivateRoute> }/>
+        <Route path="/ueProf/:id" element={ <PrivateRoute> <Layout><UeProf/></Layout> </PrivateRoute> }/>
         <Route path="/forum/:id_forum" element={ <PrivateRoute> <Layout><Forum/></Layout> </PrivateRoute> }/>
         <Route path="/forum/chap/:id_chap" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
         <Route path="/forum/quizz/:id_quizz" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>

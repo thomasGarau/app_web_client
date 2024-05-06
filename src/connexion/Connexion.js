@@ -28,9 +28,10 @@ function Connexion() {
 
     try {
       const data = await Authenticate(username, password);
+      console.log("data cookie : ",data);
       const { token, days, role } = data;
       if (token) {
-        createCookie(token, days, role);
+        createCookie(token,days, role);
         navigate('/home');
       } else {
         console.log("Erreur de connexion");

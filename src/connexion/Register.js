@@ -48,9 +48,9 @@ function Register() {
 
         await Registry(email, password)
             .then(data => {
-                const { token, days } = data;
+                const { token, days, role } = data;
                 if (token) {
-                    createCookie(token, days);
+                    createCookie(token, days, role);
                     navigate('/home');
                 } else {
                     console.log("Erreur lors de l'inscription");
