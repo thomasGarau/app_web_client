@@ -9,6 +9,14 @@
     justify-content: space-evenly;
 }
 
+.title_container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 200px;
+    align-items: center;
+}
+
 .container1_style{
     display: flex;
     align-items: center;
