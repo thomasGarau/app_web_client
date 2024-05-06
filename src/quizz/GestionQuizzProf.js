@@ -119,22 +119,23 @@ function GestionQuizzProf() {
                     {quizzes ? (
                         quizzes.length > 0 ? (
                             quizzes.map(quiz => (
-                                <div key={quiz.id_quizz} className='container_quizz'>
-                                    <div id='quizz_sujet' className='theme_quizz'>
-                                        <p>{quiz.label}</p>
-                                    </div>
-                                    <div id='quizz_like' className='quizz_like'>
-                                        <p>{quiz.note} </p>
+                                <Box sx={{ flexWrap: { lg: 'nowrap',xs: 'wrap' }, height: { lg: '120px',xs: '220px' } }}
+                                    key={quiz.id_quizz} className='container_quizz'>
+                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
+                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.label}</Typography>
+                                    </Box>
+                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
+                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.note} </Typography>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
-                                    </div>
+                                    </Box>
                                     <StyledButton
                                         onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
-                                        width={'200px'}
+                                        width={200}
                                         color={'white'}
                                         content={"Modifier"}></StyledButton>
                                     <StyledButton
                                         onClick={handleOpen}
-                                        width={'200px'}
+                                        width={200}
                                         color={'white'}
                                         content={"Supprimer"}></StyledButton>
                                     <Modal
@@ -150,19 +151,18 @@ function GestionQuizzProf() {
                                             <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                                                 <StyledButton
                                                     onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
-                                                    width={'75px'}
+                                                    width={100}
                                                     color={'primary'}
                                                     content={"Oui"} />
                                                 <StyledButton
                                                     onClick={handleClose}
-                                                    width={'75px'}
+                                                    width={100}
                                                     color={'primary'}
                                                     content={"Non"} />
                                             </Box>
                                         </Box>
                                     </Modal>
-
-                                </div>
+                                </Box>
                             ))
                         ) : <p>Aucun quizz disponible.</p>
                     ) : <p>Aucun quizz disponible</p>}
@@ -230,7 +230,7 @@ function GestionQuizzProf() {
                                  horizontal: 'center',
                              }}
                          >
-                             <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                             <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
                          </Popover>
                      </Box>
                  </Modal>

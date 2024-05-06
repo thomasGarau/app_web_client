@@ -29,6 +29,7 @@ import GestionQuizz from './quizz/GestionQuizz';
 import Presentation from './presentation/Presentation';
 import UeProf from './ue/UeProf'
 import GestionQuizzProf from './quizz/GestionQuizzProf'
+import RoleBasedRoute from './services/RoleBasedRoute';
 ;
 
 function App() {
@@ -38,29 +39,33 @@ function App() {
       <Routes> 
         <Route path="/connexion" element={<PublicRoute><Layout><Connexion /></Layout></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Layout><Register /></Layout></PublicRoute>} />
-        <Route path="/presentation" element={<Layout><Presentation /></Layout>} />
+        <Route path="/presentation" element={<PublicRoute><Layout><Presentation /></Layout></PublicRoute>} />
         <Route path="/forgot_password" element={<PublicRoute><Layout><Forgot /></Layout></PublicRoute>} />
         <Route path="/reset_password" element={<PublicRoute><Layout><Reset /></Layout></PublicRoute>} />
-        <Route path="/ue/:id" element={<PrivateRoute><Layout><Ue /></Layout></PrivateRoute>} />
-        <Route path="/quizz/:id" element={<PrivateRoute> <Layout><Quizz_principale /> </Layout></PrivateRoute>} />
-        <Route path="/gestion_quizz" element={<PrivateRoute> <Layout><GestionQuizz /> </Layout></PrivateRoute>} />
-        <Route path="/gestion_quizz/prof/:id" element={<PrivateRoute> <Layout><GestionQuizzProf /> </Layout></PrivateRoute>} />
-        <Route path="/gestion_quizz/prof/" element={<PrivateRoute> <Layout><GestionQuizzProf /> </Layout></PrivateRoute>} />
-        <Route path="/statQuizz/:quizId/:noteQuizId" element={<PrivateRoute> <Layout><StatQuizz /> </Layout></PrivateRoute>} />
-        <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<PrivateRoute> <Layout><StatQuestion /> </Layout></PrivateRoute>} />
-        <Route path="/carte_mental" element={ <PrivateRoute> <Layout><Carte_mental /></Layout> </PrivateRoute> } />
-        <Route path="/etude/:id" element={ <PrivateRoute> <Layout><Study/></Layout> </PrivateRoute> }/>
-        <Route path="/ueProf/:id" element={ <PrivateRoute> <Layout><UeProf/></Layout> </PrivateRoute> }/>
-        <Route path="/forum/:id_forum" element={ <PrivateRoute> <Layout><Forum/></Layout> </PrivateRoute> }/>
-        <Route path="/forum/chap/:id_chap" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
-        <Route path="/forum/quizz/:id_quizz" element={ <PrivateRoute> <Layout><CreateForum/></Layout> </PrivateRoute> }/>
-        <Route path="/quiz-completed/:quizId" element={<PrivateRoute><Layout><QuizzFin /></Layout></PrivateRoute>} />
-        <Route path="/create_quizz/:idUe" element={ <PrivateRoute> <Layout><CreateQuizz/></Layout> </PrivateRoute> }/>
-        <Route path="/update_quizz/:quizId" element={ <PrivateRoute> <Layout><UpdateQuizz/></Layout> </PrivateRoute> }/>
-        <Route path="/quiz/:quizId/question/:questionId" element={ <PrivateRoute> <Layout><Question /></Layout> </PrivateRoute> }/>
-        <Route path="/quiz/:quizId/question-handler" element={<PrivateRoute> <Layout><QuestionHandler /> </Layout> </PrivateRoute> } />
-        <Route path="/home" element={<PrivateRoute> <Layout><Home /></Layout> </PrivateRoute> } />
-        <Route path="/profile" element={<PrivateRoute><Layout><Profile /></Layout></PrivateRoute>} />
+
+
+        <Route path="/ue/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><Ue /></Layout></RoleBasedRoute>} />
+        <Route path="/quizz/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Quizz_principale /> </Layout></RoleBasedRoute>} />
+        <Route path="/gestion_quizz" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><GestionQuizz /> </Layout></RoleBasedRoute>} />
+        <Route path="/statQuizz/:quizId/:noteQuizId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuizz /> </Layout></RoleBasedRoute>} />
+        <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuestion /> </Layout></RoleBasedRoute>} />
+        <Route path="/carte_mental" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Carte_mental /></Layout> </RoleBasedRoute> } />
+        <Route path="/forum/:id_forum" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Forum/></Layout> </RoleBasedRoute> }/>
+        <Route path="/forum/chap/:id_chap" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><CreateForum/></Layout> </RoleBasedRoute> }/>
+        <Route path="/forum/quizz/:id_quizz" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><CreateForum/></Layout> </RoleBasedRoute> }/>
+        <Route path="/quiz-completed/:quizId" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><QuizzFin /></Layout></RoleBasedRoute>} />
+        <Route path="/quiz/:quizId/question/:questionId" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Question /></Layout> </RoleBasedRoute> }/>
+        <Route path="/quiz/:quizId/question-handler" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><QuestionHandler /> </Layout> </RoleBasedRoute> } />
+        
+        <Route path="/gestion_quizz/prof/:id" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
+        <Route path="/gestion_quizz/prof/" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
+        <Route path="/ueProf/:id" element={ <RoleBasedRoute allowedRoles={['enseignant']}> <Layout><UeProf/></Layout> </RoleBasedRoute> }/>
+
+        <Route path="/etude/:id" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Study/></Layout> </RoleBasedRoute> }/>
+        <Route path="/create_quizz/:idUe" element={ <RoleBasedRoute  allowedRoles={['enseignant', 'etudiant']}> <Layout><CreateQuizz/></Layout> </RoleBasedRoute> }/>
+        <Route path="/update_quizz/:quizId" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><UpdateQuizz/></Layout> </RoleBasedRoute> }/>
+        <Route path="/home" element={<RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Home /></Layout> </RoleBasedRoute> } />
+        <Route path="/profile" element={<RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}><Layout><Profile /></Layout></RoleBasedRoute>} />
         <Route path="/" element={<PublicRoute><Layout><Principal /></Layout></PublicRoute>} /> 
       </Routes>
     </Router>

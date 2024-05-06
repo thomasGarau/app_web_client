@@ -102,6 +102,7 @@ function GestionQuizz() {
     };
 
     useEffect(() => {
+        
         fetchMyQuizz();
     }, []);
 
