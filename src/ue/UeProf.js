@@ -24,7 +24,7 @@ function UeProf() {
     }, [id]);
     
     const handleQuizClick = (chapterId) => {
-        navigate(`/quizz/${chapterId}`);
+        navigate(`/gestion_quizz/prof/${chapterId}`);
     };
 
     const handleCourseClick = (chapterId) => {

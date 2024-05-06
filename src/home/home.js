@@ -131,7 +131,13 @@ function Home() {
       try {
         const response_info = await getUserInfo();
         setRole(response_info.role);
-        setListUE(response_info.ue);
+        if( role === 'etudiant'){
+          const response = await getUe();
+          setListUE(response);
+        }
+        else if (role === 'enseignant'){
+          setListUE(response_info.ue);
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération des UE:', error);
       }
@@ -139,10 +145,8 @@ function Home() {
     };
     fetchData();
     console.log("role : ", role)
-  }, []);
+  }, [role]);
   
-  useEffect(() => {  
-  }, [listUE, role]);
 
   useEffect(() => {
     fetchJMethod(month);
