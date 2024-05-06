@@ -6,7 +6,7 @@ import { getTokenAndRole } from '../services/Cookie.js';
 import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById, noteMoyennePourQuizz } from './QuizzAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
 import { getUe } from '../home/homeAPI.js';
 
 
@@ -34,10 +34,13 @@ function GestionQuizz() {
     const [quizzes, setQuizzes] = useState([]);
     const [open, setOpen] = useState(false);
     const [UE, setUE] = useState('');
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
     const [listUE, setListUE] = useState([]);
+    const [id, setId] = useState(undefined);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [open2, setOpen2] = useState(false);
+    const [openPop, setOpenPop] = useState(false);
     const handleOpen2 = () => setOpen(true);
     const handleClose2 = () => setOpen(false);
 
@@ -52,6 +55,18 @@ function GestionQuizz() {
     const handleChangeUE = (event) => {
         setUE(event.target.value);
         console.log(UE)
+    };
+
+    const handleToCreateQuizz = async () => {
+        console.log("UE : ", UE);
+        if (UE === '') {
+            setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
+            setErrorAnchorEl(document.getElementById('label-ue'));
+            setId('error-popover');
+            setOpenPop(true);
+            return
+        }
+        navigate(`/create_quizz/${UE.id_ue}`);
     };
 
 
@@ -92,6 +107,13 @@ function GestionQuizz() {
     useEffect(() => {
         fetchMyQuizz();
     }, []);
+
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpenPop(false);
+    };
+
 
     return (
         <div className='background_quizz_principale'>
@@ -167,14 +189,14 @@ function GestionQuizz() {
                             Choississez une UE
                         </Typography>
                         <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                            <InputLabel id="label-quizz">UE</InputLabel>
+                            <InputLabel id="label-ue">UE</InputLabel>
                             <Select
                                 sx={{
                                     width: "100%",
                                     borderRadius: "10px",
                                     backgroundColor: "#f0f0f0"
                                 }}
-                                labelId="label-quizz"
+                                labelId="label-ue"
                                 id="demo-simple-select"
                                 value={UE}
                                 label="UE"
@@ -191,8 +213,24 @@ function GestionQuizz() {
                                 content={"Creer le quizz"}
                                 width={"90%"}
                                 color={"primary"}
-                                onClick={() => navigate(`/create_quizz/${UE.id_ue}`)} />
+                                onClick={handleToCreateQuizz} />
                         </FormControl>
+                        <Popover
+                            id={id}
+                            open={openPop}
+                            anchorEl={errorAnchorEl}
+                            onClose={handleClosePopover}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                        </Popover>
                     </Box>
                 </Modal>
             </div>
