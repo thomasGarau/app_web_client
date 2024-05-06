@@ -10,10 +10,9 @@
 }
 
 .title_container {
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
-    top: 200px;
     align-items: center;
 }
 

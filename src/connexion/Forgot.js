@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Box } from '@mui/material';
+import { Link, Box, Typography } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 
 function Forgot() {
@@ -28,7 +28,7 @@ function Forgot() {
   return (
     <div className='background'>
       <div className='base-container'>
-        <h1 style={{ fontFamily: "Nanum Pen Script", fontSize: "4em", margin: "0px" }}>Mot de passe oublie</h1>
+      <Typography sx={{ fontSize: {xs: "2em", sm: "3em", md:"4em"}, margin: "0px" }}>Mot de passe oublie</Typography>
         <div className='sub-container'>
           <input
             className='input-connexion'

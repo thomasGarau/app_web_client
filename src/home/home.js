@@ -134,10 +134,10 @@ function Home() {
     };
     fetchData();
   }, []);
-  
-  useEffect(() => { 
-    console.log(listUE);  
-    console.log(filteredListUE);  
+
+  useEffect(() => {
+    console.log(listUE);
+    console.log(filteredListUE);
   }, [listUE]);
 
   useEffect(() => {
@@ -150,18 +150,7 @@ function Home() {
     fetchJMethod(date.$M);
   };
 
-  async function handleDisconnection() {
-    try {
-      const { token, role } = getTokenAndRole();
-      await logout(token)
-      eraseCookie();
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion :', error);
-      throw error;
-    } finally {
-      navigate('/');
-    }
-  }
+
 
   const filteredListUE = listUE ? listUE.filter(ue =>
     ue.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -170,11 +159,11 @@ function Home() {
   ) : [];
 
   return (
-    
+
     <div className='style_background_esp_ele'>
-      
+
       <div className='container2_style'>
-        <h1 style={{ fontSize: "xxx-large" }}>Espace Eleve</h1>
+        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }}>Espace Eleve</Typography>
         <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
           <div className="sub_container_ue" style={{
             backgroundColor: "#133D56",
@@ -240,6 +229,7 @@ function Home() {
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
             <DateCalendar
+            sx={{ width: {lg: "50%",md: "100%", sm:"100%" }, margin:{sm: "0px 20px"}, height: "100%" }}
               loading={isLoading}
               onMonthChange={handleMonthChange}
               renderLoading={() => <DayCalendarSkeleton />}
@@ -257,7 +247,7 @@ function Home() {
           </div>
         </div>
         {isSecure}
-        <button onClick={handleDisconnection}>Deconnexion</button>
+        
       </div>
     </div>
 

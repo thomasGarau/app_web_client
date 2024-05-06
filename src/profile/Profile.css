@@ -1,18 +1,18 @@
-@media (max-width: 600px) {
+@media (max-width: 1080px) {
     .style-background-profile {
         background-color: #C3D9FF;
         width: 100%;
         height: 100%;
-        position: fixed;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-end;
+        overflow-y: auto;
     }
     
     .user-container {
-        top: 115px;
-        flex: 2;
+        margin-top: 115px;
+        flex: 2 1;
         position: relative;
     }
 
@@ -46,7 +46,7 @@
     }
 }
 
-@media (min-width: 601px) {
+@media (min-width: 1081px) {
     .style-background-profile {
         background-color: #C3D9FF;
         width: 100%;
