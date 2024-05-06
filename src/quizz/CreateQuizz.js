@@ -128,7 +128,7 @@ function UpdateQuizz() {
 
             console.log(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
             await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
-            navigate("/home");
+            navigate("/gestion_quizz");
         } catch (error) {
             console.error('Erreur lors de la création du Quizz :', error);
             setErrorMessage('Erreur lors de la création du Quizz :', error);

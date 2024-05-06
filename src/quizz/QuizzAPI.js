@@ -165,7 +165,7 @@ export const deleteQuizz = async (quizId) => {
         quizz: quizId
     }
     try {
-        const response = await api.get(`/quizz/deleteQuizz`, body);
+        const response = await api.post(`/quizz/deleteQuizz`, body);
         console.log("réponse : ",response);
         return response.data;
     }

@@ -11,7 +11,7 @@ import { logout } from "../connexion/UserAPI";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie";
 
 export default function Profile() {
-    const [user, setUser] = useState({ nom: "Garau", prenom: "Thomas", formation: "Master 1 DFS a Corte", anniversaire: "01/06/2001" })
+    const [user, setUser] = useState('')
     const [listQuizz, setListQuizz] = useState([])
 
     const [quizz, setQuizz] = useState('')
@@ -21,6 +21,7 @@ export default function Profile() {
     const [errorMessage, setErrorMessage] = useState('');
     const [id, setId] = useState(undefined);
     const [open, setOpen] = useState(false);
+    const [role, setRole] = useState('');
 
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -65,6 +66,10 @@ export default function Profile() {
 
     }
 
+    const toGestionQuizzProf = () => {
+        navigate(`/gestion_quizz/prof`);
+    }
+
     useEffect(() => {
         const fetchListQuizz = async () => {
             try {
@@ -79,7 +84,8 @@ export default function Profile() {
             try {
                 const user = await getUserInfo();
                 setUser(user);
-                console.log(user)
+                setRole(user.role);
+                console.log(role)
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations utilisateurs:', error);
             }
@@ -109,6 +115,7 @@ export default function Profile() {
 
     return (
         <div className='style-background-profile'>
+
             <div className="user-container">
                 <Typography sx={{
                     marginTop: "20px", fontSize: {
@@ -118,10 +125,12 @@ export default function Profile() {
                     },
                     fontWeight: "bold"
                 }}>BONJOUR {user.nom} {user.prenom}!</Typography>
+                {role === 'etudiant' && (
                 <div className="div-formation">
                     <HomeRepairServiceIcon fontSize="large" />
                     <span className="formation-text">Formation: {user.formation}</span>
                 </div>
+                )}
                 <div className="div-formation">
                     <CakeIcon fontSize="large" />
                     <span className="formation-text">Naissance: {user.anniversaire}</span>
@@ -174,10 +183,18 @@ export default function Profile() {
                         onClick={toStatQuizz} />
                 </FormControl>
             )}
+            {role === 'etudiant' && (
             <StyledButton
                 content={"Gestion de vos quizz"}
                 color={"primary"}
                 onClick={toGestionQuizz} />
+            )}
+            {role === 'enseignant' && (
+                <StyledButton
+                content={"Gestion de vos quizz"}
+                color={"primary"}
+                onClick={toGestionQuizzProf} />
+            )}
             <StyledButton color={"primary"} content={"Déconnexion"} onClick={handleDisconnection} />
             <Popover
                 id={id}
