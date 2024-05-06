@@ -122,7 +122,7 @@ export const getLastNoteQuizz = async (quizId) => {
         };
         console.log("body info note : ",body);
 
-        const response = await api.post(`/quizz/getLastNoteForQuizz`, body);
+        const response = await api.get(`/quizz/getLastNoteForQuizz`, body);
         console.log("réponse info note : ",response);
         return response.data;
     }
@@ -180,6 +180,20 @@ export const getChapitreById = async (chapitreId) => {
     }
     try {
         const response = await api.post(`/cours/getChapitreById`, body);
+        console.log("réponse : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const noteMoyennePourQuizz = async (quizId) => {
+    const body = {
+        quizz: quizId
+    }
+    try {
+        const response = await api.post(`/quizz/noteMoyennePourQuizz`, body);
         console.log("réponse : ",response);
         return response.data;
     }

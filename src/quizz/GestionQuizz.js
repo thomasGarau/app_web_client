@@ -3,10 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById, noteMoyennePourQuizz } from './QuizzAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
 import { getUe } from '../home/homeAPI.js';
 
 
@@ -34,10 +34,13 @@ function GestionQuizz() {
     const [quizzes, setQuizzes] = useState([]);
     const [open, setOpen] = useState(false);
     const [UE, setUE] = useState('');
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
     const [listUE, setListUE] = useState([]);
+    const [id, setId] = useState(undefined);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [open2, setOpen2] = useState(false);
+    const [openPop, setOpenPop] = useState(false);
     const handleOpen2 = () => setOpen(true);
     const handleClose2 = () => setOpen(false);
 
@@ -49,9 +52,21 @@ function GestionQuizz() {
         }
     };
 
-    const handleChangeUE = (event) => {  
+    const handleChangeUE = (event) => {
         setUE(event.target.value);
         console.log(UE)
+    };
+
+    const handleToCreateQuizz = async () => {
+        console.log("UE : ", UE);
+        if (UE === '') {
+            setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
+            setErrorAnchorEl(document.getElementById('label-ue'));
+            setId('error-popover');
+            setOpenPop(true);
+            return
+        }
+        navigate(`/create_quizz/${UE.id_ue}`);
     };
 
 
@@ -61,10 +76,18 @@ function GestionQuizz() {
             console.log("quizzs : ", quizzs);
             const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
                 const chapitreInfo = await getChapitreById(quizz.id_chapitre);
-                return { ...quizz, chapitreInfo };
+                let quizzNote = 0; // Initialiser la note du chapitre à 0 par défaut
+                try {
+                    const note = await noteMoyennePourQuizz(quizz.id_quizz);
+                    console.log("note : ", note);
+                    quizzNote = parseFloat(note.noteMoyenne.toFixed(1));
+                } catch (error) {
+                    console.error('Erreur lors de la récupération de la note moyenne du quizz:', error);
+                }
+                return { ...quizz, chapitreInfo, quizzNote };
             }));
-            setQuizzes(enhancedQuizzs);
             console.log("enhancedQuizzs : ", enhancedQuizzs);
+            setQuizzes(enhancedQuizzs);
             const ues = await getUe();
             setListUE(ues);
             console.log("ues : ", ues);
@@ -72,6 +95,7 @@ function GestionQuizz() {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
     };
+
 
     const toCreateQuizz = (id) => {
         console.log("id : ", UE);
@@ -83,6 +107,13 @@ function GestionQuizz() {
     useEffect(() => {
         fetchMyQuizz();
     }, []);
+
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpenPop(false);
+    };
+
 
     return (
         <div className='background_quizz_principale'>
@@ -100,7 +131,7 @@ function GestionQuizz() {
                                         <p>{quiz.label}</p>
                                     </div>
                                     <div id='quizz_like' className='quizz_like'>
-                                        <p>{quiz.note} </p>
+                                        <p>{quiz.quizzNote} </p>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
                                     </div>
                                     <StyledButton
@@ -158,14 +189,14 @@ function GestionQuizz() {
                             Choississez une UE
                         </Typography>
                         <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                            <InputLabel id="label-quizz">UE</InputLabel>
+                            <InputLabel id="label-ue">UE</InputLabel>
                             <Select
                                 sx={{
                                     width: "100%",
                                     borderRadius: "10px",
                                     backgroundColor: "#f0f0f0"
                                 }}
-                                labelId="label-quizz"
+                                labelId="label-ue"
                                 id="demo-simple-select"
                                 value={UE}
                                 label="UE"
@@ -182,8 +213,24 @@ function GestionQuizz() {
                                 content={"Creer le quizz"}
                                 width={"90%"}
                                 color={"primary"}
-                                onClick={() => navigate(`/create_quizz/${UE.id_ue}`)} />
+                                onClick={handleToCreateQuizz} />
                         </FormControl>
+                        <Popover
+                            id={id}
+                            open={openPop}
+                            anchorEl={errorAnchorEl}
+                            onClose={handleClosePopover}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                        </Popover>
                     </Box>
                 </Modal>
             </div>

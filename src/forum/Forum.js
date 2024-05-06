@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, IconButton, ButtonGroup } from '@mui/material';
+import { Button, IconButton, ButtonGroup, Popover, Typography } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiCommentPlus, mdiAlert } from '@mdi/js';
 import './Forum.css';
 import StyledButton from "../composent/StyledBouton";
 import { getMessageForum, ajouterMessageForum, closeForum } from './ForumAPI';
 import { jwtDecode } from 'jwt-decode';
-import {getTokenAndRole} from '../services/Cookie';
+import { getTokenAndRole } from '../services/Cookie';
 
 
 
@@ -20,10 +20,14 @@ function Forum() {
     const [titreForum, setTitreForum] = useState('');
     const [isClosed, setIsClosed] = useState(false);
     const endOfMessagesRef = useRef(null);
+    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [id, setId] = useState(undefined);
+    const [open, setOpen] = useState(false);
 
 
     async function fetchData() {
-        const {token, role} = await getTokenAndRole();
+        const { token, role } = await getTokenAndRole();
         const decodedToken = jwtDecode(token);
         const id_utilisateur = decodedToken.id_etudiant;
         const data = await getMessageForum(id_forum);
@@ -31,16 +35,16 @@ function Forum() {
         if (isClosed) {
             console.log("Forum fermé");
         }
-        
+
         // Trier les messages par date et heure
         const sortedMessages = data.messages.sort((a, b) => {
             // Reformater la date de DD/MM/YYYY à YYYY-MM-DD
             const datePartsA = a.message_date.split('/');
             const formattedDateA = `${datePartsA[2]}-${datePartsA[1]}-${datePartsA[0]}T${a.message_heure}`;
-    
+
             const datePartsB = b.message_date.split('/');
             const formattedDateB = `${datePartsB[2]}-${datePartsB[1]}-${datePartsB[0]}T${b.message_heure}`;
-    
+
             const dateA = new Date(formattedDateA);
             const dateB = new Date(formattedDateB);
             return dateA - dateB;
@@ -55,9 +59,9 @@ function Forum() {
         const [hours, minutes] = timeString.split(':');
         return `${hours}h${minutes}`;
     }
-    
-    
-    
+
+
+
 
     useEffect(() => {
         fetchData();
@@ -81,7 +85,14 @@ function Forum() {
             } catch (error) {
                 console.error('Erreur lors de l\'envoi du message:', error);
             }
+        } else if (e.key === 'Enter' && newMessage.trim() === '') {
+            setErrorMessage('Votre message est vide!');
+            setErrorAnchorEl(document.getElementById('input-message'));
+            setId('error-popover');
+            setOpen(true);
+            return
         }
+
     };
 
     const handleCloseForum = async () => {
@@ -98,13 +109,19 @@ function Forum() {
         endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpen(false);
+    };
+
     return (
         <div className='background-forum'>
             <div className='forum-container'>
                 <div className='title-container'>
                     <h1 className='forum-title'>Forum : {titreForum} </h1>
                 </div>
-                <div className='forum-question-container' style={{paddingBottom : isClosed? '10px' : '100px'}}>
+                <div className='forum-question-container' style={{ paddingBottom: isClosed ? '10px' : '100px' }}>
                     {discussions.map((post, index) => (
                         <div className="forum-question" key={post.id_message}>
                             <div className='question-head'>
@@ -118,27 +135,44 @@ function Forum() {
                     <div ref={endOfMessagesRef} />
                 </div>
 
-                <div className='comment-footer' style={{ display: isClosed ? 'none' : 'flex'}}
->
+                <div className='comment-footer' style={{ display: isClosed ? 'none' : 'flex' }}
+                >
                     {isOwner && (
-                            <StyledButton
+                        <StyledButton
                             width={'200px'}
                             content={"Cloturer"}
                             color={"primary"}
                             fontSize={"1.5em"}
                             onClick={handleCloseForum}
                         />
-                        )}
+                    )}
                     <input
+                        id='input-message'
                         className='input-forum'
                         placeholder='Nouveau message...'
                         onChange={handleChange}
                         onKeyDown={submitMessage}
                         value={newMessage}
                     />
-                    
+
                 </div>
             </div>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={errorAnchorEl}
+                onClose={handleClosePopover}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                  }}
+            >
+                <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+            </Popover>
         </div>
     );
 }

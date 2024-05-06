@@ -9,6 +9,14 @@
     justify-content: space-evenly;
 }
 
+.title_container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 200px;
+    align-items: center;
+}
+
 .container1_style{
     display: flex;
     align-items: center;
@@ -19,7 +27,7 @@
     border-radius: 20px;
     background-color: #F5F5F5;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 .button-principale{
