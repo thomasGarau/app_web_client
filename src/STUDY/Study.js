@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCoursParChap, recolteInteraction, addCours, editCours, deleteCours } from './StudyAPI';
 import './Study.css';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../profile/ProfileAPI';
 import StyledButton from '../composent/StyledBouton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 
 
 function Study() {
@@ -28,6 +29,9 @@ function Study() {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [progression, setProgression] = useState(0);
     const clicRef = useRef(clic);
+    const [editingCourseId, setEditingCourseId] = useState(null);
+    const [editedContent, setEditedContent] = useState('');
+    const [editedLabel, setEditedLabel] = useState('');
     const elapsedTimeRef = useRef(elapsedTime);
     const scrollRef = useRef(scroll);
     const progressionRef = useRef(progression);
@@ -42,6 +46,7 @@ function Study() {
             setRole(response_info.role);
             const data = await getCoursParChap(id);
             setCours(data);
+            console.log(data);
             const ids = data.map(cour => cour.id_cours);
             setCourseIds(ids);
         } catch (error) {
@@ -57,12 +62,20 @@ function Study() {
         console.log(cours);
     }, [id]);
 
-    const editCours = () => {
-        console.log('edit');
-    }
+    const editCour = (cour) => {
+        setEditingCourseId(cour.id_cours);
+        setEditedContent(cour.contenu);
+        setEditedLabel(cour.label);
+    };
 
-    const deleteCours = () => {
-        console.log('delete');
+
+    const deleteCour = (id_cours) => {
+        try {
+            deleteCours(id_cours);
+            fetchCours();
+        } catch (error) {
+            console.error("Erreur lors de la suppression du cours :", error);
+        }
     }
 
     const handleClosePopover = () => {
@@ -117,44 +130,75 @@ function Study() {
         setContenu(value);
       };
 
-      const handleCreateCours = async () => {
-
-        if (sujet.trim() === '') {
-            setErrorMessage('Ce champ est requis!');
+      const validateCourseInputs = (label, content) => {
+        if (label.trim() === '') {
+            setErrorMessage('Le nom du cours est requis!');
             setErrorAnchorEl(document.getElementById('sujet'));
             setIdStudy('error-popover');
             setOpen(true);
-            return
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(sujet)) {
+            return false;
+        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(label)) {
             setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('sujet'));
             setIdStudy('error-popover');
             setOpen(true);
-            return;
+            return false;
         }
-        if (contenu.trim() === '') {
-            setErrorMessage('Ce champ est requis!');
+    
+        if (content.trim() === '') {
+            setErrorMessage('Le contenu du cours est requis!');
             setErrorAnchorEl(document.getElementById('contenu'));
             setIdStudy('error-popover');
             setOpen(true);
-            return
+            return false;
         }
-        try {
-            console.log(sujet, contenu, id);
-            await addCours(sujet, contenu, parseInt(id));
-            setIsAdding(false);
-            setSujet('');
-            setContenu('');
-            fetchCours();
-            
-        } catch (error) {
-            console.error("Erreur lors de la création du forum :", error);
-            setErrorMessage('Erreur lors de la création du forum. Veuillez réessayer.');
-            setErrorAnchorEl(document.getElementById('sujet'));
+    
+        if (content.length > 300) {
+            setErrorMessage('Limite de caractère dépassée pour le contenu.');
+            setErrorAnchorEl(document.getElementById('contenu'));
             setIdStudy('error-popover');
             setOpen(true);
+            return false;
+        }
+    
+        return true;
+    };
+    
+
+    const handleCreateCours = async () => {
+        if (validateCourseInputs(sujet, contenu)) {
+            try {
+                await addCours(sujet, contenu, parseInt(id));
+                setIsAdding(false);
+                setSujet('');
+                setContenu('');
+                fetchCours();
+            } catch (error) {
+                console.error("Erreur lors de la création du cours :", error);
+                setErrorMessage('Erreur lors de la création du cours. Veuillez réessayer.');
+                setErrorAnchorEl(document.getElementById('sujet'));
+                setIdStudy('error-popover');
+                setOpen(true);
+            }
         }
     };
+    
+    const handleSaveEdit = async () => {
+        if (validateCourseInputs(editedLabel, editedContent)) {
+            try {
+                await editCours(editingCourseId, editedLabel, editedContent);
+                setEditingCourseId(null);
+                fetchCours();
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour du cours :", error);
+                setErrorMessage('Erreur lors de la mise à jour du cours. Veuillez réessayer.');
+                setErrorAnchorEl(document.getElementById('sujet')); // Adjust if needed
+                setIdStudy('error-popover');
+                setOpen(true);
+            }
+        }
+    };
+    
 
 
     useEffect(() => {
@@ -201,34 +245,78 @@ function Study() {
                     <h1 className='study-title'>Cours du chapitre</h1>
                     {cours.length > 0 ? (
                         cours.map(cour => (
-                            <Accordion
-                                onClick={incrementerClic}
-                                onChange={(event, expanded) => handleCurrentCour(event, expanded, cour.id_cours)}
-                                key={cour.id_cours}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
+                            <Accordion key={cour.id_cours} onChange={() => { if (editingCourseId) handleSaveEdit(editingCourseId); }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                    {editingCourseId === cour.id_cours ? (
+                                        <Typography>Modification</Typography>
+                                ) : (
                                     <Typography>{cour.label}</Typography>
+                                )}
                                 </AccordionSummary>
-                                <AccordionDetails
-                                    onScroll={incrementerScroll}
-                                    sx={{ overflowY: 'auto', maxHeight: '400px' }}>
-                                    <Typography className='paragraphe'>
-                                        {cour.contenu}
-                                    </Typography>
+                                <AccordionDetails>
+                                    {editingCourseId === cour.id_cours ? (
+                                        <div>
+                                        <TextField
+                                        fullWidth
+                                        label="Nom du cours"
+                                        variant="outlined"
+                                        id='sujet-edit'
+                                        sx={{
+                                            paddingBottom: '10px'
+                                        }}
+                                        value={editedLabel}
+                                        onChange={(e) => setEditedLabel(e.target.value)}
+                                    />
+                                        <TextField
+                                            fullWidth
+                                            label="Contenu du cours"
+                                            variant="outlined"
+                                            id='contenu-edit'
+                                            value={editedContent}
+                                            onChange={(e) => setEditedContent(e.target.value)}
+                                        />
+                                        </div>
+                                    ) : (
+                                        <Typography>{cour.contenu}</Typography>
+                                    )}
                                 </AccordionDetails>
                                 <AccordionActions>
-                                    <div className='icon-study' onClick={editCours}> <EditIcon /></div>
-                                      <div className='icon-study' onClick={deleteCours}><DeleteIcon /></div> 
-                                        
+                                    {role === 'enseignant' && (
+                                        <div>
+                                            {editingCourseId === cour.id_cours ? (
+                                                <div className='icon-study' onClick={() => handleSaveEdit(cour)}> <SaveIcon /></div>
+                                            ) : (
+                                                <div>
+                                                     <div className='icon-study' onClick={() => editCour(cour)}> <EditIcon /></div>
+                                                     <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
+
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </AccordionActions>
                             </Accordion>
+                            
                         ))
                     ) : (
                         <p>Aucun cours disponible pour ce chapitre.</p>
                     )}
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={errorAnchorEl}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                    </Popover>
                 </div>
                 {role === 'etudiant' && (
                 <QuestionForum id_chap={id} />
@@ -330,6 +418,7 @@ function Study() {
                     </div>
                     
                 )}
+                
             </div>
         </div>
     );

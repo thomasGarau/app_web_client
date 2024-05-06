@@ -49,14 +49,14 @@ export const recolteInteraction = async (currentCour, chap_id, clic, dureeSessio
 }
 
 
-export const editCours = async (id, label, contenu, id_chapitre) => {
+export const editCours = async (id, label, contenu) => {
     try {
         const body = {
             id_study: id,
             label: label,
-            contenu: contenu,
-            id_chapitre: id_chapitre
+            contenu: contenu
         };
+        console.log(body);
         const response = await api.post(`/cours/update-cours`, body);
         return response.data;
     }
