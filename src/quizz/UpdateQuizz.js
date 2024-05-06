@@ -128,14 +128,14 @@ function UpdateQuizz() {
             ...selected.reponses.filter(answer => !delAnswer.includes(answer)),
             ...delAnswer
         ];
-        if(selected.label === '') {
+        if (selected.label === '') {
             setErrorMessage('Veuillez saisir une question.');
             setErrorAnchorEl(document.getElementById('question-input'));
             setId('error-popover');
             setOpenAnchor(true);
             return;
         }
-        if(selected.nombre_bonne_reponse === 0) {
+        if (selected.nombre_bonne_reponse === 0) {
             setErrorMessage('Veuillez choisir au moins une réponse valide.');
             setErrorAnchorEl(document.getElementById(`reponse${selected.reponses[0].id_reponse}`));
             setId('error-popover');
@@ -371,7 +371,7 @@ function UpdateQuizz() {
                         variant="plain"
                         id="question-input"
                         value={selected ? selected.label : ''}
-                        style={{ color: "black", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
+                        sx={{ color: "black", fontSize: {xs: '1.5em', sm:'2.2em', md: '3em'}, marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
@@ -394,7 +394,6 @@ function UpdateQuizz() {
                                         aria-describedby={id}
                                         id={"reponse" + reponse.id_reponse}
                                         placeholder={"Reponse " + (index + 1)}
-                                        style={{ color: "black", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
                                             const updatedReponses = [...selected.reponses];
                                             updatedReponses[index].contenu = event.target.value;
@@ -403,6 +402,7 @@ function UpdateQuizz() {
                                         }}
                                         variant="plain"
                                         sx={{
+                                            color: "black", fontSize: { xs: "1em", md: "2em" }, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
                                             '--Input-focusedInset': 'var(--any, )',
                                             '--Input-focusedThickness': '0.25rem',
                                             '--Input-focusedHighlight': 'rgba(245,245,245,.25)',
@@ -463,13 +463,13 @@ function UpdateQuizz() {
                                     size="lg"
                                     value={'multiple'}
 
-                                    label="CM"
+                                    label="M"
                                     checked={type === 'multiple'}
                                 />
                                 <Radio
                                     size="lg"
                                     value={'seul'}
-                                    label="CU"
+                                    label="U"
                                     checked={type === 'seul'}
                                 />
                                 <Radio

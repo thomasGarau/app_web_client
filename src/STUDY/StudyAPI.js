@@ -33,7 +33,7 @@ export const recolteInteraction = async (currentCour, chap_id, clic, dureeSessio
     try {
         const body = {
             cours: currentCour,
-            id_chapitre: chap_id,
+            chapitre: chap_id,
             dureeSession: dureeSession,
             clics: clic,
             scrolls: scroll,

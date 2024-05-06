@@ -23,7 +23,7 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     borderRadius: 2,
-    p: 4,
+    Typography: 4,
 };
 
 
@@ -32,17 +32,20 @@ function GestionQuizz() {
     const { idUE } = useParams();
     const [activeTab, setActiveTab] = useState('prof');
     const [quizzes, setQuizzes] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openCreate, setOpenCreate] = useState(false);
     const [UE, setUE] = useState('');
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [listUE, setListUE] = useState([]);
     const [id, setId] = useState(undefined);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleOpenCreate = () => setOpenCreate(true);
+    const handleCloseCreate = () => setOpenCreate(false);
+    const handleOpenDelete = () => setOpenDelete(true);
+    const handleCloseDelete = () => setOpenDelete(false);
     const [openPop, setOpenPop] = useState(false);
-    const handleOpen2 = () => setOpen(true);
-    const handleClose2 = () => setOpen(false);
+    const handleOpenPop = () => setOpenPop(true);
+    const handleClosePop = () => setOpenPop(false);
 
     const delQuizz = async (quizId) => {
         try {
@@ -89,7 +92,7 @@ function GestionQuizz() {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
     };
-    
+
 
     const toCreateQuizz = (id) => {
         console.log("id : ", UE);
@@ -117,30 +120,31 @@ function GestionQuizz() {
                     {quizzes ? (
                         quizzes.length > 0 ? (
                             quizzes.map(quiz => (
-                                <div key={quiz.id_quizz} className='container_quizz'>
-                                    <div id='quizz_sujet' className='theme_quizz'>
-                                        <p>{quiz.chapitreInfo[0].label}</p>
-                                    </div>
-                                    <div id='quizz_sujet' className='theme_quizz'>
-                                        <p>{quiz.label}</p>
-                                    </div>
-                                    <div id='quizz_like' className='quizz_like'>
-                                        <p>{quiz.moyenne_note} </p>
+                                <Box sx={{ flexWrap: { lg: 'nowrap',xs: 'wrap' }, height: { lg: '120px',xs: '220px' } }}
+                                    key={quiz.id_quizz} className='container_quizz'>
+                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
+                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.chapitreInfo[0].label}</Typography>
+                                    </Box>
+                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
+                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.label}</Typography>
+                                    </Box>
+                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
+                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.moyenne_note} </Typography>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
-                                    </div>
+                                    </Box>
                                     <StyledButton
                                         onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
-                                        width={'200px'}
+                                        width={200}
                                         color={'white'}
                                         content={"Modifier"}></StyledButton>
                                     <StyledButton
-                                        onClick={handleOpen}
-                                        width={'200px'}
+                                        onClick={handleOpenDelete}
+                                        width={200}
                                         color={'white'}
                                         content={"Supprimer"}></StyledButton>
                                     <Modal
-                                        open={open}
-                                        onClose={handleClose}
+                                        open={openDelete}
+                                        onClose={handleCloseDelete}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
@@ -150,31 +154,31 @@ function GestionQuizz() {
                                             </Typography>
                                             <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
                                                 <StyledButton
-                                                    onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
-                                                    width={'75px'}
+                                                    onClick={() => { delQuizz(quiz.id_quizz); handleCloseDelete(); }}
+                                                    width={100}
                                                     color={'primary'}
                                                     content={"Oui"} />
                                                 <StyledButton
-                                                    onClick={handleClose}
-                                                    width={'75px'}
+                                                    onClick={handleCloseDelete}
+                                                    width={100}
                                                     color={'primary'}
                                                     content={"Non"} />
                                             </Box>
                                         </Box>
                                     </Modal>
 
-                                </div>
+                                </Box>
                             ))
-                        ) : <p>Aucun quizz disponible.</p>
-                    ) : <p>Aucun quizz disponible</p>}
+                        ) : <Typography>Aucun quizz disponible.</Typography>
+                    ) : <Typography>Aucun quizz disponible</Typography>}
                 </div>
                 <StyledButton
-                    onClick={handleOpen2}
+                    onClick={handleOpenCreate}
                     color={'primary'}
                     content={"Creer un quizz"} ></StyledButton>
                 <Modal
-                    open={open}
-                    onClose={handleClose2}
+                    open={openCreate}
+                    onClose={handleCloseCreate}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
@@ -209,24 +213,25 @@ function GestionQuizz() {
                                 color={"primary"}
                                 onClick={handleToCreateQuizz} />
                         </FormControl>
-                        <Popover
-                            id={id}
-                            open={openPop}
-                            anchorEl={errorAnchorEl}
-                            onClose={handleClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                        >
-                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                        </Popover>
+
                     </Box>
                 </Modal>
+                <Popover
+                    id={id}
+                    open={openPop}
+                    anchorEl={errorAnchorEl}
+                    onClose={handleClosePopover}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
+                </Popover>
             </div>
         </div>
     );

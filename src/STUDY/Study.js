@@ -86,7 +86,6 @@ function Study() {
                 setElapsedTime(0);
                 setClic(0);
                 setScroll(0);
-                startTimeRef.current = null;
             } catch (error) {
                 console.error("Erreur lors de la récolte des données:", error);
             }

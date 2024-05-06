@@ -309,7 +309,7 @@ function UpdateQuizz() {
                     <Textarea
                         variant="plain"
                         value={selected ? selected.label : ''}
-                        style={{ color: "black", fontSize: "xx-large", marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
+                        style={{ color: "black", fontSize: {xs: '1.5em', sm:'2.2em', md: '3em'}, marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             const updatedQuestions = [...questions];
@@ -333,6 +333,7 @@ function UpdateQuizz() {
                                         }}
                                         variant="plain"
                                         sx={{
+                                            color: "black", fontSize: { xs: "1em", md: "2em" }, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
                                             '--Input-focusedInset': 'var(--any, )',
                                             '--Input-focusedThickness': '0.25rem',
                                             '--Input-focusedHighlight': 'rgba(245,245,245,.25)',

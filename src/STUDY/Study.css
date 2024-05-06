@@ -34,10 +34,11 @@
     flex-direction: column;
     justify-content: flex-start;
     margin-top: 125px;
-    border-bottom: 2vh solid #d9d9d9;
 }
 
 .question-part {
+    position: fixed;
+    bottom: 0;
     flex: 1;
     background-color: white;
     width: 100%;
@@ -73,7 +74,6 @@
         flex-direction: column;
         justify-content: flex-start;
         margin-top: 150px;
-        border-bottom: 2vh solid #d9d9d9;
     }
 
     .question-part {

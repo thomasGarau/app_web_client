@@ -70,17 +70,12 @@
 }
 
 .quizz_like{
-    width: 11%;
-    height: 70%;
+    padding: 0px 10px;
 }
 
 .theme_quizz{
     width: 25%;
     height: 70%;
-}
-
-.theme_quizz p {
-    font-size: 2em;
 }
 
 .theme_quizz p{
@@ -89,10 +84,6 @@
     word-wrap: break-word;
 }
 
-.quizz_like p {
-    font-size: 2em;
-
-}
 
 .btn_quizz, .btn_quizz_creer{
     width : 20%;

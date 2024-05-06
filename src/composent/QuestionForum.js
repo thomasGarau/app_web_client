@@ -79,7 +79,8 @@ function QuestionForum(props) {
                 display: "flex",
                 justifyContent: "space-between",
                 padding: "10px",
-                alignItems: "center"
+                alignItems: "center",
+                borderTop: "2vh solid #d9d9d9",
             }} >
                 <Typography variant="h3" className="forum-component-title">Forums</Typography>
                 <StyledButton
