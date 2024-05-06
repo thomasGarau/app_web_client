@@ -122,7 +122,7 @@ export const getLastNoteQuizz = async (quizId) => {
         };
         console.log("body info note : ",body);
 
-        const response = await api.get(`/quizz/getLastNoteForQuizz`, body);
+        const response = await api.post(`/quizz/getLastNoteForQuizz`, body);
         console.log("réponse info note : ",response);
         return response.data;
     }

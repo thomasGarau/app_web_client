@@ -62,7 +62,7 @@ function StatQuestion() {
             const nextQuestion = listQuestions[currentIndex + 1];
             navigate(`/statQuizz/${quizId}/${noteQuizId}/${nextQuestion.id_question}`);
         } else {
-            navigate(`/quiz-completed/${quizId}/`);
+            navigate(`/statQuizz/${quizId}/${noteQuizId}`);
         }
     };
 

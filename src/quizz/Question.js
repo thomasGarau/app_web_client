@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getQuestionParQUizz, getReponsesPourQuestion, getQuizzInfo } from './QuizzAPI';
 import { useQuiz } from './QuizContext';
+import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography, Button } from '@mui/material';
 
 import "@fontsource/nanum-pen-script";
 
@@ -70,17 +71,24 @@ function Question() {
     
 
     const handleAnswerSelect = (answerId) => {
-        let updatedAnswers = selectedAnswers.includes(answerId) ?
-            selectedAnswers.filter(id => id !== answerId) : [...selectedAnswers, answerId];
+        let updatedAnswers;
+    
+        if (questionType === 'seul' || questionType === 'vrai' || questionType === 'faux') {
+            // For single choice questions, set selectedAnswers to the current answerId exclusively
+            updatedAnswers = [answerId];
+        } else {
+            updatedAnswers = selectedAnswers.includes(answerId) ?
+                selectedAnswers.filter(id => id !== answerId) : [...selectedAnswers, answerId];
+        }
     
         setSelectedAnswers(updatedAnswers);
-
-        // Update global state for all selected answers
-        handleSelectAnswer(answerId, questionType);
+        handleSelectAnswer(answerId, questionType);  // Assuming you might want to do something with this globally
     };
+    
     
 
     const getIndicationText = () => {
+        console.log("questionType : ", questionType);
         switch (questionType) {
             case 'seul':
                 return 'Choisissez la bonne réponse';
@@ -100,23 +108,45 @@ function Question() {
     return (
         <div className='background-question'>
             <div className='base_container_quizz_question'>
-                <h1 className='quizz-title'>{quizzInfo.label || 'Titre non disponible'}</h1>
+            <Typography sx={{fontSize: { xs: "2em", sm: "3em", md: "4em" }}} className='quizz-title'>{quizzInfo.label || 'Titre non disponible'}</Typography>
                 <div className='question-quest-container'>
-                    <h3 className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</h3>
-                    <p className='indication'>{getIndicationText()}</p>
-                    <div className='reponse-container'>
-                        {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
-                            <button key={answer.id_reponse}
-                                    className={`reponse ${selectedAnswers.includes(answer.id_reponse) ? 'selected' : ''}`}
-                                    onClick={() => handleAnswerSelect(answer.id_reponse)}>
-                                {answer.contenu}
-                            </button>
-                        )) : <p>Pas de réponses disponibles</p>}
-                    </div>
+                <Typography sx={{fontSize: { xs: "1em", sm: "1.5em", md: "2em" }}} className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</Typography>
+                    <Typography sx={{fontSize: { xs: "0.5em", sm: "1.0em", md: "1.5em" }}}>{getIndicationText()}</Typography>
+                    
+                    <Box className="reponse-container"
+                        sx={{
+                        display: 'flex',           // Enable flexbox
+                        flexDirection: 'column',   // Stack children vertically
+                        alignItems: 'center',      // Center items horizontally
+                        width: '100%',             // Full width container
+                        p: 1                       // Padding around the box
+                        }}>
+                    {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
+                        <Button key={answer.id_reponse}
+                        variant="contained"
+                        sx={{
+                          mb: 1,
+                          background: selectedAnswers.includes(answer.id_reponse) ? '#6998EA' : 'white', // Updated color names
+                          color: 'black',
+                          '&:hover': {
+                            backgroundColor: '#6998EA', // Ensure consistency in color names
+                          },
+                          '&:focus': {
+                            backgroundColor: '#6998EA', 
+                          },
+                          width: '80%',
+                          height: '50px',
+                        }}
+                        onClick={() => handleAnswerSelect(answer.id_reponse)}>
+                  {answer.contenu}
+                </Button>
+                
+                    )) : <Typography variant="subtitle1">Pas de réponses disponibles</Typography>}
+                    </Box>
                 </div>
                 <div className='button-container'>
-                    <StyledButton onClick={navigateToPreviousQuestion} color={"secondary"} content={"Retour"} className='btn_retour button-connection'></StyledButton>
-                    <StyledButton onClick={navigateToNextQuestion} color={"primary"} content={"Valider"} className='btn_valider button-connection'></StyledButton>
+                    <StyledButton onClick={navigateToPreviousQuestion} width={300} color={"secondary"} content={"Retour"} className='btn_retour button-connection'></StyledButton>
+                    <StyledButton onClick={navigateToNextQuestion} width={300} color={"primary"} content={"Valider"} className='btn_valider button-connection'></StyledButton>
                 </div>
             </div>
         </div>
