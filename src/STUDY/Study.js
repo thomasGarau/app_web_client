@@ -324,22 +324,22 @@ function Study() {
                 {role === 'enseignant' && !isAdding && (
                     <StyledButton
                     content={"Ajouter un cours"}
-                    width={200}
+                    width={300}
                     color={"primary"}
                     onClick={() => setIsAdding(true)}
                     />
                     )}
                 {role === 'enseignant' && isAdding && (
                     <div className='ajouter-cours-container'>
-                        <Box display="flex" alignItems="center" width="20%" padding="10px">
+                        <Box display="flex" flexWrap="wrap" alignItems="center" width="40%" padding="10px">
                             <Typography
                                 sx={{
                                     mr: 1,
-                                    width: "50%",
+                                    width: "40%",
                                     color: 'white',
                                     fontSize: {
-                                        xs: "1em",
-                                        sm: "1.2em",
+                                        xs: "0.8em",
+                                        sm: "1.0em",
                                         md: "1.5em"
                                     }
                                 }}
@@ -356,7 +356,7 @@ function Study() {
                             />
 
                         </Box>
-                        <Box display="flex" alignItems="center" width="40%" padding="10px">
+                        <Box display="flex" flexWrap="wrap" alignItems="center" width="40%" padding="10px">
                             <Typography sx={{
                                 mr: 1,
                                 width: "50%",

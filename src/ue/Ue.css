@@ -25,10 +25,15 @@
 
 }
 
+.container2_style h1{
+    font-size: 2em;
+    margin : 10px
+}
+
 .container-home-prof-ue{
     background-color: #133D56;
     width: 90%;
-    height: 80%;
+    height: 75%;
     border-radius: 20px;
     color : white;
     display: flex;
