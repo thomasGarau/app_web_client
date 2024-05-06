@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById, noteMoyennePourQuizz } from './QuizzAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
@@ -49,7 +49,7 @@ function GestionQuizz() {
         }
     };
 
-    const handleChangeUE = (event) => {  
+    const handleChangeUE = (event) => {
         setUE(event.target.value);
         console.log(UE)
     };
@@ -61,10 +61,18 @@ function GestionQuizz() {
             console.log("quizzs : ", quizzs);
             const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
                 const chapitreInfo = await getChapitreById(quizz.id_chapitre);
-                return { ...quizz, chapitreInfo };
+                let quizzNote = 0; // Initialiser la note du chapitre à 0 par défaut
+                try {
+                    const note = await noteMoyennePourQuizz(quizz.id_quizz);
+                    console.log("note : ", note);
+                    quizzNote = parseFloat(note.noteMoyenne.toFixed(1));
+                } catch (error) {
+                    console.error('Erreur lors de la récupération de la note moyenne du quizz:', error);
+                }
+                return { ...quizz, chapitreInfo, quizzNote };
             }));
-            setQuizzes(enhancedQuizzs);
             console.log("enhancedQuizzs : ", enhancedQuizzs);
+            setQuizzes(enhancedQuizzs);
             const ues = await getUe();
             setListUE(ues);
             console.log("ues : ", ues);
@@ -72,6 +80,7 @@ function GestionQuizz() {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
     };
+
 
     const toCreateQuizz = (id) => {
         console.log("id : ", UE);
@@ -100,7 +109,7 @@ function GestionQuizz() {
                                         <p>{quiz.label}</p>
                                     </div>
                                     <div id='quizz_like' className='quizz_like'>
-                                        <p>{quiz.note} </p>
+                                        <p>{quiz.quizzNote} </p>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
                                     </div>
                                     <StyledButton

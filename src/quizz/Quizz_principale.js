@@ -50,17 +50,10 @@ function Quizz_principale() {
     }
 };
 
-
-
-
-
   useEffect(() => {
     fetchUeData();
   }, []); 
 
-  
-
-  
 
   return (
     <div className='background_quizz_principale'>
