@@ -115,7 +115,7 @@ function GestionQuizz() {
     return (
         <div className='background_quizz_principale'>
             <div className='base-container_quizz_principale'>
-                <h1 className='quizz-title'>Vos quizzes</h1>
+                <Typography sx={{fontSize: { xs: "2em", sm: "3em", md: "4em" }}} className='quizz-title'>Vos quizzes</Typography>
                 <div className='container_quizzs'>
                     {quizzes ? (
                         quizzes.length > 0 ? (
