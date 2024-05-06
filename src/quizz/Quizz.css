@@ -23,7 +23,7 @@
     height: 70vh;
     justify-content: start;
     padding: 0.5%;
-    margin-top: 7.5%;
+    margin-top: 120px;
     overflow: hidden;
 }
 
@@ -157,7 +157,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     overflow-x :hidden;
     background-color: #C3D9FF;
     padding-top : 150px;
@@ -169,7 +169,7 @@
     align-items: center;
     justify-content: space-around;
     width: 100dvw;
-    height: 10dvh;
+    height: 40%;
     margin-top: 10px;
 }
 
@@ -211,7 +211,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    height: 63dvh;
+    height: 60%;
     width: 100dvw;
     border-bottom: 2vh solid #d9d9d9;
 }
@@ -249,6 +249,9 @@
   }
 
 @media (max-width: 600px){
+    .quiz-final-score{
+        height: 80%;
+    }
 
     .quiz-final-demi-cercle-vide p{
         font-size: 2.5em;

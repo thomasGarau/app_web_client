@@ -4,6 +4,7 @@ import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
 import { getQuizzParChap, getQuestionParQUizz } from './QuizzAPI.js';
+import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 
@@ -58,26 +59,42 @@ function Quizz_principale() {
   return (
     <div className='background_quizz_principale'>
       <div className='base-container_quizz_principale'>
-        <h1 className='quizz-title'>Quizz de l'UE</h1>
+        <Typography sx={{fontSize: { xs: "2em", sm: "3em", md: "4em" }}} className='quizz-title'>Quizz de l'UE</Typography>
         <div className='quizz_type'>
-          <h2 className='Nom_Quizz' style={getTabStyle('prof')} onClick={() => setActiveTab('prof')}>Quizz Prof</h2>
-          <h2 className='Nom_Quizz' style={getTabStyle('eleve')} onClick={() => setActiveTab('eleve')}>Quizz Eudiant</h2>
+          <Typography sx={{fontSize: { xs: "1em", sm: "1.5em", md: "2em" }}} style={getTabStyle('prof')} onClick={() => setActiveTab('prof')} className='quizz-title'>Quizz Prof</Typography>
+          <Typography sx={{fontSize: { xs: "1em", sm: "1.5em", md: "2em" }}} style={getTabStyle('eleve')} onClick={() => setActiveTab('eleve')} className='quizz-title'>Quizz Etudiant</Typography>
         </div>
         <div className='container_quizzs'>
           {quizzes ? (
             quizzes.length > 0 ? (
               quizzes.filter(quiz => quiz.createur === activeTab).map(quiz => (
-                <div key={quiz.id_quizz} className='container_quizz'>
-                  <div id='quizz_sujet' className='theme_quizz'>
-                    <p>{quiz.label}</p>
-                  </div>
-                  <div id='quizz_like' className='quizz_like'>
-                    <p>{quiz.note} </p>
-                    <img className='img_coeur' src={stars_yellow} alt='like' />
-                  </div>
-                  <StyledButton onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)}  content={"Commencer"}>Commencer</StyledButton>
 
-                </div>
+              <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }}
+                key={quiz.id_quizz} className='container_quizz'>
+                <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
+                  <Typography sx={{
+                    fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis"
+                }}>{quiz.label}</Typography>
+            </Box>
+            <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
+                <Typography sx={{
+                    fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis"
+                }}>{quiz.note} </Typography>
+                <img className='img_coeur' src={stars_yellow} alt='like' />
+            </Box>
+                  <StyledButton
+                  width={200}
+                  color={'white'}
+                  onClick={() => navigate(`/quiz/${quiz.id_quizz}/question-handler`)}  
+                  content={"Commencer"}>Commencer</StyledButton>
+
+                </Box>
               ))
             ) : <p>Aucun quizz disponible.</p>
           ) : <p>Aucun quizz disponible</p>}
