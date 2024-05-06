@@ -45,3 +45,34 @@ export const getUserInfo = async () => {
         throw error;
     }
 }
+
+export const Retrieve = async (num_etudiant) => {
+    const body = {
+        num_etudiant: num_etudiant
+    }
+    try {
+        console.log("body : ",body);
+        const response = await axios.post('http://localhost:3001/api/user/forgetPassword', body);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const updatePassword = async (num_etudiant, verif_code, password) => {
+    const body = {
+        num_etudiant: num_etudiant,
+        verif_code: verif_code,
+        password: password
+    }
+    try {
+        const response = await axios.post(`http://localhost:3001/api/user/updatePassword`, body);
+        console.log("réponse info : ",response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
