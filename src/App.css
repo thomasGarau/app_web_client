@@ -13,6 +13,9 @@ html, body {
   width: 100vw;
 }
 
+#root {
+  height : 100%;
+}
 
 
 .App-logo {

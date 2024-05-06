@@ -71,7 +71,7 @@ function Connexion() {
   return (
     <div className='background'>
       <div className='base-container'>
-        <h1 style={{ fontSize: "4em", margin: "0px" }}>Connexion</h1>
+        <Typography sx={{ fontSize: {xs: "2em", sm: "3em", md:"4em"}, margin: "0px" }}>Connexion</Typography>
         <div className='sub-container'>
           <input
             aria-describedby={id}
@@ -93,7 +93,7 @@ function Connexion() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Link style={{ fontSize: "2em" }} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
+          <Link sx={{ fontSize: {xs: "1em", sm: "1.5em", md:"2em"} }} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
         </div>
         <div className='buttons-container'>
           <StyledButton

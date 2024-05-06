@@ -76,15 +76,9 @@ function GestionQuizz() {
             console.log("quizzs : ", quizzs);
             const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
                 const chapitreInfo = await getChapitreById(quizz.id_chapitre);
-                let quizzNote = 0; // Initialiser la note du chapitre à 0 par défaut
-                try {
-                    const note = await noteMoyennePourQuizz(quizz.id_quizz);
-                    console.log("note : ", note);
-                    quizzNote = parseFloat(note.noteMoyenne.toFixed(1));
-                } catch (error) {
-                    console.error('Erreur lors de la récupération de la note moyenne du quizz:', error);
-                }
-                return { ...quizz, chapitreInfo, quizzNote };
+                const note_moyenne = parseFloat(quizz.moyenne_note).toFixed(1);
+                console.log("note_moyenne : ", note_moyenne);
+                return { ...quizz, chapitreInfo, moyenne_note: note_moyenne };
             }));
             console.log("enhancedQuizzs : ", enhancedQuizzs);
             setQuizzes(enhancedQuizzs);
@@ -95,7 +89,7 @@ function GestionQuizz() {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
     };
-
+    
 
     const toCreateQuizz = (id) => {
         console.log("id : ", UE);
@@ -131,7 +125,7 @@ function GestionQuizz() {
                                         <p>{quiz.label}</p>
                                     </div>
                                     <div id='quizz_like' className='quizz_like'>
-                                        <p>{quiz.quizzNote} </p>
+                                        <p>{quiz.moyenne_note} </p>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
                                     </div>
                                     <StyledButton

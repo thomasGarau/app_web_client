@@ -7,6 +7,8 @@ import ppImage from '../composent/img/pp.png';
 import StyledButton from "../composent/StyledBouton";
 import { getListQuizzCreateForUser, getListQuizzStatForUser, getUserInfo } from "./ProfileAPI";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../connexion/UserAPI";
+import { eraseCookie, getTokenAndRole } from "../services/Cookie";
 
 export default function Profile() {
     const [user, setUser] = useState({ nom: "Garau", prenom: "Thomas", formation: "Master 1 DFS a Corte", anniversaire: "01/06/2001" })
@@ -92,10 +94,30 @@ export default function Profile() {
         setOpen(false);
     };
 
+    async function handleDisconnection() {
+        try {
+            const { token, role } = getTokenAndRole();
+            await logout(token)
+            eraseCookie();
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion :', error);
+            throw error;
+        } finally {
+            navigate('/');
+        }
+    }
+
     return (
         <div className='style-background-profile'>
             <div className="user-container">
-                <h1 className="hello">BONJOUR {user.nom} {user.prenom}!</h1>
+                <Typography sx={{
+                    marginTop: "20px", fontSize: {
+                        xs: "1.5em",
+                        sm: "2.25em",
+                        md: "3em"
+                    },
+                    fontWeight: "bold"
+                }}>BONJOUR {user.nom} {user.prenom}!</Typography>
                 <div className="div-formation">
                     <HomeRepairServiceIcon fontSize="large" />
                     <span className="formation-text">Formation: {user.formation}</span>
@@ -118,7 +140,6 @@ export default function Profile() {
                     alt="pp"
                 />
                 <StyledButton
-                    width={'200px'}
                     content={"Modifier"}
                     color={"primary"}
                     onClick={handleUpload}
@@ -148,16 +169,16 @@ export default function Profile() {
 
                     <StyledButton
                         content={"Selectionner"}
-                        width={"60%"}
+
                         color={"primary"}
                         onClick={toStatQuizz} />
                 </FormControl>
             )}
             <StyledButton
                 content={"Gestion de vos quizz"}
-                width={"60%"}
                 color={"primary"}
                 onClick={toGestionQuizz} />
+            <StyledButton color={"primary"} content={"Déconnexion"} onClick={handleDisconnection} />
             <Popover
                 id={id}
                 open={open}
@@ -174,6 +195,7 @@ export default function Profile() {
             >
                 <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
             </Popover>
+
         </div>
     )
 

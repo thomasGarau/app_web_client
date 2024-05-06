@@ -79,7 +79,7 @@ function Register() {
     return (
         <div className='background'>
             <div className='base-container'>
-                <h1 style={{ fontSize: "4em", margin: "0px" }}>Inscription</h1>
+                <Typography sx={{ fontSize: {xs: "2em", sm: "3em", md:"4em"}, margin: "0px" }}>Inscription</Typography>
                 <div className='sub-container'>
                     <input
                         aria-describedby='error-popover'
