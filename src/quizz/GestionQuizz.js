@@ -120,16 +120,31 @@ function GestionQuizz() {
                     {quizzes ? (
                         quizzes.length > 0 ? (
                             quizzes.map(quiz => (
-                                <Box sx={{ flexWrap: { lg: 'nowrap',xs: 'wrap' }, height: { lg: '120px',xs: '220px' } }}
+                                <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }}
                                     key={quiz.id_quizz} className='container_quizz'>
                                     <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
-                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.chapitreInfo[0].label}</Typography>
+                                        <Typography sx={{
+                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis"
+                                        }}>{quiz.chapitreInfo[0].label}</Typography>
                                     </Box>
                                     <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
-                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.label}</Typography>
+                                        <Typography sx={{
+                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis"
+                                        }}>{quiz.label}</Typography>
                                     </Box>
                                     <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
-                                        <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }}>{quiz.moyenne_note} </Typography>
+                                        <Typography sx={{
+                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                            overflow: "hidden",
+                                            whiteSpace: "nowrap",
+                                            textOverflow: "ellipsis"
+                                        }}>{quiz.moyenne_note} </Typography>
                                         <img className='img_coeur' src={stars_yellow} alt='like' />
                                     </Box>
                                     <StyledButton

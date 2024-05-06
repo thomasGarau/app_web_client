@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 export default function StyledButton({ content, width, onClick, color, height, fontSize, ariaDescribedby }) {
     const [styledButton] = useState({
         fontFamily: 'Shadows Into Light',
-        fontSize: { xs: '1em', sm: '1.3em', md: '1.7em' },
+        fontSize: { xs: '0.7em', sm: '1em', md: '1.7em' },
         border: 'none',
         color: color == "primary" ? 'white' : 'black',
         textAlign: 'center',
