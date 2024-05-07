@@ -30,10 +30,13 @@ function Connexion() {
       const data = await Authenticate(username, password);
       console.log("data cookie : ",data);
       const { token, days, role } = data;
-      if (token) {
+      if (token && role === 'etudiant' || role === 'professeur') {
         createCookie(token,days, role);
         navigate('/home');
-      } else {
+      } else if (role === 'admin'){
+        navigate('/admin-interface');
+      }
+        else {
         console.log("Erreur de connexion");
       }
     } catch (error) {

@@ -2,8 +2,9 @@ import { styled } from '@mui/system';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 
-export default function StyledButton({ content, width, onClick, color, height, fontSize, ariaDescribedby }) {
+export default function StyledButton({ content, width, onClick, color, height, fontSize, ariaDescribedby, isAbsolute }) {
     const [styledButton] = useState({
+        position: isAbsolute ? 'absolute' : 'relative',
         fontFamily: 'Shadows Into Light',
         fontSize: { xs: '0.7em', sm: '1em', md: '1.7em' },
         border: 'none',

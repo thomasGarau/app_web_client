@@ -30,6 +30,7 @@ import Presentation from './presentation/Presentation';
 import UeProf from './ue/UeProf'
 import GestionQuizzProf from './quizz/GestionQuizzProf'
 import RoleBasedRoute from './services/RoleBasedRoute';
+import AdminInterface from './admin/AdminInterface';
 ;
 
 function App() {
@@ -66,6 +67,9 @@ function App() {
         <Route path="/update_quizz/:quizId" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><UpdateQuizz/></Layout> </RoleBasedRoute> }/>
         <Route path="/home" element={<RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Home /></Layout> </RoleBasedRoute> } />
         <Route path="/profile" element={<RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}><Layout><Profile /></Layout></RoleBasedRoute>} />
+
+        <Route path="/admin-interface" element={<RoleBasedRoute allowedRoles={['administration']}><Layout><AdminInterface /></Layout></RoleBasedRoute>} />
+
         <Route path="/" element={<PublicRoute><Layout><Principal /></Layout></PublicRoute>} /> 
       </Routes>
     </Router>

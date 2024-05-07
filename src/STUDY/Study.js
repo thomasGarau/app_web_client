@@ -56,7 +56,7 @@ function Study() {
 
 
     useEffect(() => {
-        
+
 
         fetchCours();
         console.log(cours);
@@ -96,7 +96,6 @@ function Study() {
                 setElapsedTime(0);
                 setClic(0);
                 setScroll(0);
-                startTimeRef.current = null;
             } catch (error) {
                 console.error("Erreur lors de la récolte des données:", error);
             }
@@ -121,16 +120,16 @@ function Study() {
     const handleChangeContenu = (e) => {
         const value = e.target.value;
         if (value.length > 300) {
-          setErrorMessage('Limite de caractère dépassée.');
-          setErrorAnchorEl(document.getElementById('contenu'));
-          setIdStudy('error-popover');
-          setOpen(true);
-          return;
+            setErrorMessage('Limite de caractère dépassée.');
+            setErrorAnchorEl(document.getElementById('contenu'));
+            setIdStudy('error-popover');
+            setOpen(true);
+            return;
         }
         setContenu(value);
-      };
+    };
 
-      const validateCourseInputs = (label, content) => {
+    const validateCourseInputs = (label, content) => {
         if (label.trim() === '') {
             setErrorMessage('Le nom du cours est requis!');
             setErrorAnchorEl(document.getElementById('sujet'));
@@ -144,7 +143,7 @@ function Study() {
             setOpen(true);
             return false;
         }
-    
+
         if (content.trim() === '') {
             setErrorMessage('Le contenu du cours est requis!');
             setErrorAnchorEl(document.getElementById('contenu'));
@@ -152,7 +151,7 @@ function Study() {
             setOpen(true);
             return false;
         }
-    
+
         if (content.length > 300) {
             setErrorMessage('Limite de caractère dépassée pour le contenu.');
             setErrorAnchorEl(document.getElementById('contenu'));
@@ -160,10 +159,10 @@ function Study() {
             setOpen(true);
             return false;
         }
-    
+
         return true;
     };
-    
+
 
     const handleCreateCours = async () => {
         if (validateCourseInputs(sujet, contenu)) {
@@ -182,7 +181,7 @@ function Study() {
             }
         }
     };
-    
+
     const handleSaveEdit = async () => {
         if (validateCourseInputs(editedLabel, editedContent)) {
             try {
@@ -198,7 +197,7 @@ function Study() {
             }
         }
     };
-    
+
 
 
     useEffect(() => {
@@ -226,7 +225,7 @@ function Study() {
 
         // Retourner une fonction de nettoyage pour arrêter l'envoi de données lorsque le composant est démonté
         return () => clearInterval(interval);
-    }, [currentCour, id]); 
+    }, [currentCour, id]);
 
 
     useEffect(() => {
@@ -245,36 +244,41 @@ function Study() {
                     <h1 className='study-title'>Cours du chapitre</h1>
                     {cours.length > 0 ? (
                         cours.map(cour => (
-                            <Accordion key={cour.id_cours} onChange={() => { if (editingCourseId) handleSaveEdit(editingCourseId); }}>
+                            <Accordion onClick={incrementerClic} key={cour.id_cours} onChange={(event, expanded) => {
+                                if (editingCourseId) handleSaveEdit(editingCourseId);
+                                handleCurrentCour(event, expanded, cour.id_cours);
+                            }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                                     {editingCourseId === cour.id_cours ? (
                                         <Typography>Modification</Typography>
-                                ) : (
-                                    <Typography>{cour.label}</Typography>
-                                )}
+                                    ) : (
+                                        <Typography>{cour.label}</Typography>
+                                    )}
                                 </AccordionSummary>
-                                <AccordionDetails>
+                                <AccordionDetails
+                                    onScroll={incrementerScroll}
+                                    sx={{ overflowY: 'auto', maxHeight: '400px' }}>
                                     {editingCourseId === cour.id_cours ? (
                                         <div>
-                                        <TextField
-                                        fullWidth
-                                        label="Nom du cours"
-                                        variant="outlined"
-                                        id='sujet-edit'
-                                        sx={{
-                                            paddingBottom: '10px'
-                                        }}
-                                        value={editedLabel}
-                                        onChange={(e) => setEditedLabel(e.target.value)}
-                                    />
-                                        <TextField
-                                            fullWidth
-                                            label="Contenu du cours"
-                                            variant="outlined"
-                                            id='contenu-edit'
-                                            value={editedContent}
-                                            onChange={(e) => setEditedContent(e.target.value)}
-                                        />
+                                            <TextField
+                                                fullWidth
+                                                label="Nom du cours"
+                                                variant="outlined"
+                                                id='sujet-edit'
+                                                sx={{
+                                                    paddingBottom: '10px'
+                                                }}
+                                                value={editedLabel}
+                                                onChange={(e) => setEditedLabel(e.target.value)}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                label="Contenu du cours"
+                                                variant="outlined"
+                                                id='contenu-edit'
+                                                value={editedContent}
+                                                onChange={(e) => setEditedContent(e.target.value)}
+                                            />
                                         </div>
                                     ) : (
                                         <Typography>{cour.contenu}</Typography>
@@ -287,8 +291,8 @@ function Study() {
                                                 <div className='icon-study' onClick={() => handleSaveEdit(cour)}> <SaveIcon /></div>
                                             ) : (
                                                 <div>
-                                                     <div className='icon-study' onClick={() => editCour(cour)}> <EditIcon /></div>
-                                                     <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
+                                                    <div className='icon-study' onClick={() => editCour(cour)}> <EditIcon /></div>
+                                                    <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
 
                                                 </div>
                                             )}
@@ -296,7 +300,7 @@ function Study() {
                                     )}
                                 </AccordionActions>
                             </Accordion>
-                            
+
                         ))
                     ) : (
                         <p>Aucun cours disponible pour ce chapitre.</p>
@@ -319,16 +323,16 @@ function Study() {
                     </Popover>
                 </div>
                 {role === 'etudiant' && (
-                <QuestionForum id_chap={id} />
+                    <QuestionForum id_chap={id} />
                 )}
                 {role === 'enseignant' && !isAdding && (
                     <StyledButton
-                    content={"Ajouter un cours"}
-                    width={300}
-                    color={"primary"}
-                    onClick={() => setIsAdding(true)}
+                        content={"Ajouter un cours"}
+                        width={300}
+                        color={"primary"}
+                        onClick={() => setIsAdding(true)}
                     />
-                    )}
+                )}
                 {role === 'enseignant' && isAdding && (
                     <div className='ajouter-cours-container'>
                         <Box display="flex" flexWrap="wrap" alignItems="center" width="40%" padding="10px">
@@ -398,27 +402,27 @@ function Study() {
                             width={200}
                             color={"primary"}
                             onClick={handleCreateCours}
-                            />
-                            <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={errorAnchorEl}
-                        onClose={handleClosePopover}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                    </Popover>
+                        />
+                        <Popover
+                            id={id}
+                            open={open}
+                            anchorEl={errorAnchorEl}
+                            onClose={handleClosePopover}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
+                        </Popover>
                     </div>
-                    
+
                 )}
-                
+
             </div>
         </div>
     );
