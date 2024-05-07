@@ -50,7 +50,6 @@ function App() {
         <Route path="/statQuizz/:quizId/:noteQuizId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuizz /> </Layout></RoleBasedRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuestion /> </Layout></RoleBasedRoute>} />
         <Route path="/carte_mental" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Carte_mental /></Layout> </RoleBasedRoute> } />
-        <Route path="/forum/:id_forum" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Forum/></Layout> </RoleBasedRoute> }/>
         <Route path="/forum/chap/:id_chap" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><CreateForum/></Layout> </RoleBasedRoute> }/>
         <Route path="/forum/quizz/:id_quizz" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><CreateForum/></Layout> </RoleBasedRoute> }/>
         <Route path="/quiz-completed/:quizId" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><QuizzFin /></Layout></RoleBasedRoute>} />
@@ -61,6 +60,7 @@ function App() {
         <Route path="/gestion_quizz/prof/" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
         <Route path="/ueProf/:id" element={ <RoleBasedRoute allowedRoles={['enseignant']}> <Layout><UeProf/></Layout> </RoleBasedRoute> }/>
 
+        <Route path="/forum/:id_forum" element={ <RoleBasedRoute allowedRoles={['etudiant', 'enseignant']}> <Layout><Forum/></Layout> </RoleBasedRoute> }/>
         <Route path="/etude/:id" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Study/></Layout> </RoleBasedRoute> }/>
         <Route path="/create_quizz/:idUe" element={ <RoleBasedRoute  allowedRoles={['enseignant', 'etudiant']}> <Layout><CreateQuizz/></Layout> </RoleBasedRoute> }/>
         <Route path="/update_quizz/:quizId" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><UpdateQuizz/></Layout> </RoleBasedRoute> }/>

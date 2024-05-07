@@ -5,7 +5,7 @@ import StyledButton from '../composent/StyledBouton';
 import { getForumByCours, getForumByQuizz } from "../composent/QuestionAPI.js";
 
 function QuestionForum(props) {
-    const { id_chap, id_quizz } = props; 
+    const { id_chap, id_quizz, role } = props; 
     const [forums, setForums] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -83,13 +83,14 @@ function QuestionForum(props) {
                 borderTop: "2vh solid #d9d9d9",
             }} >
                 <Typography variant="h3" className="forum-component-title">Forums</Typography>
+                {role === "etudiant" && (
                 <StyledButton
                     width={'175px'}
                     content={"Poser une question"}
                     color={"primary"}
                     fontSize={"1.2em"}
                     onClick={handleCreateForum}
-                />
+                /> )}
             </div>
             <List className='button-ul'>
                 {forums.length > 0 ? (

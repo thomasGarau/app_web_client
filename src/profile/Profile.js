@@ -62,6 +62,7 @@ export default function Profile() {
                 await updateUserProfilePicture(formData);
                 // Mettre à jour l'URL de l'image dans le state
                 setImagePreviewUrl(URL.createObjectURL(picture.pictureAsFile));
+                window.location.reload();
             } catch (error) {
                 console.error('Error uploading profile picture:', error);
             }

@@ -318,9 +318,6 @@ function Study() {
                         <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
                     </Popover>
                 </div>
-                {role === 'etudiant' && (
-                <QuestionForum id_chap={id} />
-                )}
                 {role === 'enseignant' && !isAdding && (
                     <StyledButton
                     content={"Ajouter un cours"}
@@ -418,6 +415,7 @@ function Study() {
                     </div>
                     
                 )}
+                <QuestionForum id_chap={id} role={role} />
                 
             </div>
         </div>
