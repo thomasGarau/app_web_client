@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import './Profile.css'
-import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography, Popover } from "@mui/material";
+import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography, Popover, Avatar } from "@mui/material";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import ppImage from '../composent/img/pp.png';
@@ -178,10 +178,11 @@ export default function Profile() {
                     style={{ display: 'none' }}
                     onChange={photoUpload}
                 />
-                <img
+                <Avatar
                     className="pp-change-profile"
                     src={user.url}
                     alt="pp"
+                    sx={{ width: {xs: 50, sm: 75, md: 100}, height: {xs: 50, sm: 75, md: 100} }}
                 />
                 <StyledButton
                     content={"Modifier"}

@@ -54,13 +54,13 @@ function StatQuizz() {
     return (
         <div className='background-question-list'>
             <div className='questions-list-container'>
-                <Typography className="question-list-title" style={{ fontSize: "3em", margin: "0px" }}>Liste des questions du quizz {infos.label}</Typography>
+                <Typography className="question-list-title" style={{ fontSize: {xs: "1em", sm: "2em", md: "3em"}, margin: "0px" }}>Liste des questions du quizz {infos.label}</Typography>
                 <div className='questions-list-subcontainer'>
                     {listQuestions && listQuestions.length > 0 ? (
                         listQuestions.map((question, index) => (
                             <div key={question.id_question} className="question-container" onClick={() => handleQuestionClick(question.id_question)}>
                                 <Typography sx={{ flex: 1 }} className='question-title'>{question.label}</Typography>
-                                <Typography className='question-title'>
+                                <Typography sx={{textAlign:"center"}} className='question-title'>
                                     Reponse de l'élève: {question.reponsesUtilisateur.every((value, index) => value === question.bonnesReponses[index]) ? "juste" : "fausse"}
                                 </Typography>
 

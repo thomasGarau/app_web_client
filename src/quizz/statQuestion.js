@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import './Question.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { all } from 'axios';
+import { Box, Typography } from '@mui/material';
 
 function StatQuestion() {
     const navigate = useNavigate();
@@ -83,24 +84,29 @@ function StatQuestion() {
     return (
         <div className='background-question'>
             <div className='base_container_quizz_question'>
-                <h1 className='quizz-title'>{infos.label || 'Titre non disponible'}</h1>
+                <Typography sx={{ fontSize: { xs: "2em", sm: "2.5em", md: "3em" } }} className='quizz-title'>{infos.label || 'Titre non disponible'}</Typography>
                 <div className='question-quest-container'>
-                    <h3 className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</h3>
-                    <div className='reponse-container'>
+                    <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }} className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</Typography>
+                    <div className='reponse-container-stat'>
                         {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
-
-                            <button key={answer.id_reponse}
-                                className={`reponse-stat ${answer.est_bonne_reponse === 1 && currentQuestion.reponsesUtilisateur.every(
-                                    (value, index) => value === currentQuestion.bonnesReponses[index]
-                                ) ?
-                                    'user-correct' : answer.est_bonne_reponse === 0 && !currentQuestion.reponsesUtilisateur.every(
+                            <Box key={answer.id_reponse} sx={{ width: "80%", display: "flex", alignItems: "center" }}>
+                                <Typography
+                                    noWrap
+                                    className={`reponse-stat ${answer.est_bonne_reponse === 1 && currentQuestion.reponsesUtilisateur.every(
                                         (value, index) => value === currentQuestion.bonnesReponses[index]
-                                    ) ? 'user-wrong' : ""}`}
-                            >
-                                {answer.contenu}{answer.est_bonne_reponse === 1 ?
-                                    <CheckIcon fontSize='large' sx={{ color: "#4CAF50" }} /> :
-                                    <CloseIcon fontSize='large' sx={{ color: "#f44336" }} />}
-                            </button>
+                                    ) ?
+                                        'user-correct' : answer.est_bonne_reponse === 0 && !currentQuestion.reponsesUtilisateur.every(
+                                            (value, index) => value === currentQuestion.bonnesReponses[index]
+                                        ) ? 'user-wrong' : ""}`}
+                                >
+                                    {answer.contenu}
+                                </Typography>
+                                {answer.est_bonne_reponse === 1 ?
+                                    <CheckIcon fontSize='large' sx={{ color: "#4CAF50", position: "relative" }} /> :
+                                    <CloseIcon fontSize='large' sx={{ color: "#f44336", position: "relative" }} />}
+                            </Box>
+
+
                         )) : <p>Pas de réponses disponibles</p>}
                     </div>
                 </div>

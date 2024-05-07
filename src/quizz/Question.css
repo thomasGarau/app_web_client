@@ -89,6 +89,17 @@
   font-size: 2vw;
 }
 
+.reponse-container-stat{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+}
+
 .user-correct{
   background-color: #4CAF50;
   color: white;

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Header.css'
 import ppImage from './img/pp.png';
@@ -7,6 +7,7 @@ import "@fontsource/nanum-pen-script";
 import "@fontsource/caveat"
 import "@fontsource/shadows-into-light"
 import { getUserInfo } from "../profile/ProfileAPI";
+import { Avatar } from "@mui/material";
 
 function Header() {
 
@@ -37,20 +38,23 @@ function Header() {
 
     return (
         <div className="head">
-            <img 
-            className="logo" 
-            src={logo} 
-            alt="logo"
-            onClick={versPagePrincipale}
+            <Avatar
+                className="logo"
+                src={logo}
+                alt="logo"
+                onClick={versPagePrincipale}
+                sx={{ width: {xs: 50, sm: 75, md: 100}, height: {xs: 50, sm: 75, md: 100} }}
             />
-            <h1 
-            className="Nom">TrackMates</h1>
-            <img
-             className="pp" 
-             src={user.url} 
-             alt="pp"
-             onClick={VersProfile}
-             />
+            <h1
+                className="Nom">TrackMates</h1>
+            <Avatar
+                className="pp"
+                src={user.url}
+                alt="pp"
+                sx={{ width: {xs: 50, sm: 75, md: 100}, height: {xs: 50, sm: 75, md: 100} }}
+                onClick={VersProfile}
+            />
+
         </div>
     );
 }
