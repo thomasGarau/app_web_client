@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz, getChapitreById } from './QuizzAPI.js';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
@@ -14,6 +14,7 @@ function Quizz_principale() {
   const [quizzes, setQuizzes] = useState([]);
   const [questions, setQuestions] = useState([]);
   const { id } = useParams();
+  const [ueId, setUeId] = useState('');
   console.log("id : ", id);
 
   const getTabStyle = (tabName) => ({
@@ -45,6 +46,10 @@ function Quizz_principale() {
       // Fusionner les deux listes de quizz dans un seul tableau
       const combinedQuizzes = [...quizzProfesseurs, ...quizzEleves];
       setQuizzes(combinedQuizzes);
+
+
+      const responseInfo = await getChapitreById(id);
+      setUeId(responseInfo[0].id_ue);
       
     } catch (error) {
       console.error('Erreur lors de la récupération des quizz:', error);
@@ -100,7 +105,7 @@ function Quizz_principale() {
           ) : <p>Aucun quizz disponible</p>}
         </div>
         <StyledButton 
-        onClick={() => navigate('/create_quizz')} 
+        onClick={() => navigate(`/create_quizz/${ueId}`)} 
         color={'primary'}
         content={"Creer un quizz"} ></StyledButton>
       </div>

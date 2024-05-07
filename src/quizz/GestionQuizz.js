@@ -50,6 +50,7 @@ function GestionQuizz() {
     const delQuizz = async (quizId) => {
         try {
             await deleteQuizz(quizId);
+            fetchMyQuizz();
         } catch (error) {
             console.error('Erreur lors de la suppression du quizz:', error);
         }
@@ -115,7 +116,8 @@ function GestionQuizz() {
 
     return (
         <div className='background_quizz_principale'>
-            <div className='base-container_quizz_principale'>
+            <div className='background-quizz-principale-container'>
+                <div className='base-container_quizz_principale'>
                 <Typography sx={{fontSize: { xs: "2em", sm: "3em", md: "4em" }}} className='quizz-title'>Vos quizzes</Typography>
                 <div className='container_quizzs'>
                     {quizzes ? (
@@ -249,6 +251,7 @@ function GestionQuizz() {
                     <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
                 </Popover>
             </div>
+        </div>
         </div>
     );
 }

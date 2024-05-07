@@ -5,7 +5,7 @@ import StyledButton from '../composent/StyledBouton';
 import { getForumByCours, getForumByQuizz } from "../composent/QuestionAPI.js";
 
 function QuestionForum(props) {
-    const { id_chap, id_quizz } = props; 
+    const { id_chap, id_quizz, role } = props; 
     const [forums, setForums] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ function QuestionForum(props) {
                     console.log("id_quizz", id_quizz);
                     data = await getForumByQuizz(id_quizz);
                 }
+                if(data === null || data === undefined) return;
                 const sortedForums = data.sort((a, b) => {
                     if (a.etat === "0" && b.etat === "1") return 1;
                     if (a.etat === "1" && b.etat === "0") return -1;
@@ -78,18 +79,20 @@ function QuestionForum(props) {
             <div className="question-title-button" style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding: "10px",
+                padding : "0px",
+                paddingTop: "10px",
                 alignItems: "center",
                 borderTop: "2vh solid #d9d9d9",
             }} >
                 <Typography variant="h3" className="forum-component-title">Forums</Typography>
+                {role === "etudiant" && (
                 <StyledButton
                     width={'175px'}
                     content={"Poser une question"}
                     color={"primary"}
                     fontSize={"1.2em"}
                     onClick={handleCreateForum}
-                />
+                /> )}
             </div>
             <List className='button-ul'>
                 {forums.length > 0 ? (

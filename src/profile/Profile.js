@@ -50,20 +50,23 @@ export default function Profile() {
 
     useEffect(() => {
         const sendImage = async () => {
-            try {
-                // Créer un objet FormData
-                const formData = new FormData();
-                console.log(picture.pictureAsFile);
-                formData.append('path', picture.pictureAsFile);
-                for (var key of formData.entries()) {
-                    console.log(key[0] + ', ' + key[1])
+            if (picture.pictureAsFile) {
+                try {
+                    // Créer un objet FormData
+                    const formData = new FormData();
+                    console.log(picture.pictureAsFile);
+                    formData.append('path', picture.pictureAsFile);
+                    for (var key of formData.entries()) {
+                        console.log(key[0] + ', ' + key[1])
+                    }
+                    // Mettre à jour l'image de profil
+                    await updateUserProfilePicture(formData);
+                    // Mettre à jour l'URL de l'image dans le state
+                    setImagePreviewUrl(URL.createObjectURL(picture.pictureAsFile));
+                    window.location.reload();
+                } catch (error) {
+                    console.error('Error uploading profile picture:', error);
                 }
-                // Mettre à jour l'image de profil
-                await updateUserProfilePicture(formData);
-                // Mettre à jour l'URL de l'image dans le state
-                setImagePreviewUrl(URL.createObjectURL(picture.pictureAsFile));
-            } catch (error) {
-                console.error('Error uploading profile picture:', error);
             }
         }
         sendImage();
