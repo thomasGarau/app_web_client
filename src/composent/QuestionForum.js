@@ -26,6 +26,7 @@ function QuestionForum(props) {
                     console.log("id_quizz", id_quizz);
                     data = await getForumByQuizz(id_quizz);
                 }
+                if(data === null || data === undefined) return;
                 const sortedForums = data.sort((a, b) => {
                     if (a.etat === "0" && b.etat === "1") return 1;
                     if (a.etat === "1" && b.etat === "0") return -1;
@@ -78,7 +79,8 @@ function QuestionForum(props) {
             <div className="question-title-button" style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding: "10px",
+                padding : "0px",
+                paddingTop: "10px",
                 alignItems: "center",
                 borderTop: "2vh solid #d9d9d9",
             }} >

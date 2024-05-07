@@ -7,6 +7,8 @@ import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, 
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
+import Question from './Question.js';
+import QuestionForum from '../composent/QuestionForum.js';
 
 
 const style = {
@@ -42,6 +44,8 @@ function GestionQuizzProf() {
     const handleClose2 = () => setOpen(false);
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [showForum, setShowForum] = useState(false);
+    const [forumId, setForumId] = useState('');
 
     const delQuizz = async (quizId) => {
         try {
@@ -79,14 +83,21 @@ function GestionQuizzProf() {
         setOpenPop(false);
     };
 
+    const handleShowForum = (id_quizz) => {
+        console.log("forum_id : ", forumId)
+        setShowForum(false);
+        setForumId(id_quizz);
+        setShowForum(true);
+    }
+
 
     const fetchMyQuizz = async () => {
         try {
             if (id) {
                 const quizzsResponse = await getQuizzParChap(id);
                 setQuizzes(quizzsResponse[0]);
-                const quizzInfo = await getQuizzInfo(quizzsResponse[0][0].id_quizz);
-                setIdUe(quizzInfo.id_ue);
+                const responseInfo = await getChapitreById(id);
+                setIdUe(responseInfo[0].id_ue);
             } else {
                 const quizzs = await getListQuizzCreateForUser();
                 const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
@@ -113,142 +124,153 @@ function GestionQuizzProf() {
 
     return (
         <div className='background_quizz_principale'>
-            <div className='base-container_quizz_principale'>
-                <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }} className='quizz-title'>Vos quizzes</Typography>
-                <div className='container_quizzs'>
-                    {quizzes ? (
-                        quizzes.length > 0 ? (
-                            quizzes.map(quiz => (
-                                <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }} key={quiz.id_quizz} className='container_quizz'>
-                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
-                                        <Typography sx={{
-                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
-                                            overflow: "hidden",
-                                            whiteSpace: "nowrap",
-                                            textOverflow: "ellipsis"
-                                        }}>{quiz.label}</Typography>
-                                    </Box>
-                                    <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
-                                        <Typography sx={{
-                                            fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
-                                            overflow: "hidden",
-                                            whiteSpace: "nowrap",
-                                            textOverflow: "ellipsis"
-                                        }}>{quiz.note} </Typography>
-                                        <img className='img_coeur' src={stars_yellow} alt='like' />
-                                    </Box>
-                                    <StyledButton
-                                        onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
-                                        width={200}
-                                        color={'white'}
-                                        content={"Modifier"}></StyledButton>
-                                    <StyledButton
-                                        onClick={handleOpen}
-                                        width={200}
-                                        color={'white'}
-                                        content={"Supprimer"}></StyledButton>
-                                    <Modal
-                                        open={open}
-                                        onClose={handleClose}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box sx={style}>
-                                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                                Voulez vous vraiment supprimer le quizz?
-                                            </Typography>
-                                            <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-                                                <StyledButton
-                                                    onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
-                                                    width={75}
-                                                    color={'primary'}
-                                                    content={"Oui"} />
-                                                <StyledButton
-                                                    onClick={handleClose}
-                                                    width={75}
-                                                    color={'primary'}
-                                                    content={"Non"} />
-                                            </Box>
+            <div className='background-quizz-principale-container'>
+                <div className='base-container_quizz_principale'>
+                    <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }} className='quizz-title'>Vos quizzes</Typography>
+                    <div className='container_quizzs'>
+                        {quizzes ? (
+                            quizzes.length > 0 ? (
+                                quizzes.map(quiz => (
+                                    <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }} key={quiz.id_quizz} className='container_quizz'>
+                                        <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
+                                            <Typography sx={{
+                                                fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                                overflow: "hidden",
+                                                whiteSpace: "nowrap",
+                                                textOverflow: "ellipsis"
+                                            }}>{quiz.label}</Typography>
                                         </Box>
-                                    </Modal>
+                                        <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
+                                            <Typography sx={{
+                                                fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
+                                                overflow: "hidden",
+                                                whiteSpace: "nowrap",
+                                                textOverflow: "ellipsis"
+                                            }}>{quiz.note} </Typography>
+                                            <img className='img_coeur' src={stars_yellow} alt='like' />
+                                        </Box>
+                                        <StyledButton
+                                            onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
+                                            width={200}
+                                            color={'white'}
+                                            content={"Modifier"}></StyledButton>
+                                            <StyledButton
+                                            onClick={() => handleShowForum(quiz.id_quizz)}
+                                            width={200}
+                                            color={'white'}
+                                            content={"Forum"}></StyledButton>
+                                        <StyledButton
+                                            onClick={handleOpen}
+                                            width={200}
+                                            color={'white'}
+                                            content={"Supprimer"}></StyledButton>
+                                        <Modal
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
+                                        >
+                                            <Box sx={style}>
+                                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                    Voulez vous vraiment supprimer le quizz?
+                                                </Typography>
+                                                <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+                                                    <StyledButton
+                                                        onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
+                                                        width={75}
+                                                        color={'primary'}
+                                                        content={"Oui"} />
+                                                    <StyledButton
+                                                        onClick={handleClose}
+                                                        width={75}
+                                                        color={'primary'}
+                                                        content={"Non"} />
+                                                </Box>
+                                            </Box>
+                                        </Modal>
 
-                                </Box>
-                            ))
-                        ) : <p>Aucun quizz disponible.</p>
-                    ) : <p>Aucun quizz disponible</p>}
-                </div>
-                {id && (
-                    <StyledButton
-                        onClick={handleToCreateQuizz}
+                                    </Box>
+                                ))
+                            ) : <p>Aucun quizz disponible.</p>
+                        ) : <p>Aucun quizz disponible</p>}
+                    </div>
+                    {id && (
+                        <StyledButton
+                            onClick={handleToCreateQuizz}
+                            color={'primary'}
+                            content={"Creer un quizz"} ></StyledButton>
+                    )}
+                    {!id && (
+                        <div>
+                        <StyledButton
+                        onClick={handleOpen2}
                         color={'primary'}
                         content={"Creer un quizz"} ></StyledButton>
-                )}
-                {!id && (
-                    <div>
-                     <StyledButton
-                     onClick={handleOpen2}
-                     color={'primary'}
-                     content={"Creer un quizz"} ></StyledButton>
-                 <Modal
-                     open={open}
-                     onClose={handleClose2}
-                     aria-labelledby="modal-modal-title"
-                     aria-describedby="modal-modal-description"
-                 >
-                     <Box sx={style}>
-                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                             Choississez une UE
-                         </Typography>
-                         <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                             <InputLabel id="label-ue">UE</InputLabel>
-                             <Select
-                                 sx={{
-                                     width: "100%",
-                                     borderRadius: "10px",
-                                     backgroundColor: "#f0f0f0"
-                                 }}
-                                 labelId="label-ue"
-                                 id="demo-simple-select"
-                                 value={UE}
-                                 label="UE"
-                                 onChange={handleChangeUE}
-                             >
-                                 {listUE && listUE.map((ue, index) => (
-                                     <MenuItem key={index} value={ue}>
-                                         {ue.label}
-                                     </MenuItem>
-                                 ))}
-                             </Select>
- 
-                             <StyledButton
-                                 content={"Creer le quizz"}
-                                 width={"90%"}
-                                 color={"primary"}
-                                 onClick={handleToCreateQuizzAll} />
-                         </FormControl>
-                         <Popover
-                             id={id}
-                             open={openPop}
-                             anchorEl={errorAnchorEl}
-                             onClose={handleClosePopover}
-                             anchorOrigin={{
-                                 vertical: 'bottom',
-                                 horizontal: 'center',
-                             }}
-                             transformOrigin={{
-                                 vertical: 'top',
-                                 horizontal: 'center',
-                             }}
-                         >
-                             <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
-                         </Popover>
-                     </Box>
-                 </Modal>
-                 </div>
+                    <Modal
+                        open={open}
+                        onClose={handleClose2}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Choississez une UE
+                            </Typography>
+                            <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
+                                <InputLabel id="label-ue">UE</InputLabel>
+                                <Select
+                                    sx={{
+                                        width: "100%",
+                                        borderRadius: "10px",
+                                        backgroundColor: "#f0f0f0"
+                                    }}
+                                    labelId="label-ue"
+                                    id="demo-simple-select"
+                                    value={UE}
+                                    label="UE"
+                                    onChange={handleChangeUE}
+                                >
+                                    {listUE && listUE.map((ue, index) => (
+                                        <MenuItem key={index} value={ue}>
+                                            {ue.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+    
+                                <StyledButton
+                                    content={"Creer le quizz"}
+                                    width={"90%"}
+                                    color={"primary"}
+                                    onClick={handleToCreateQuizzAll} />
+                            </FormControl>
+                            <Popover
+                                id={id}
+                                open={openPop}
+                                anchorEl={errorAnchorEl}
+                                onClose={handleClosePopover}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                }}
+                            >
+                                <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
+                            </Popover>
+                        </Box>
+                    </Modal>
+                    </div>
+                    )}
+                </div>
+
+                {showForum && (
+                    <QuestionForum id_quizz={forumId} />
                 )}
             </div>
         </div>
-    );
+        );
 }
 
 export default GestionQuizzProf;
