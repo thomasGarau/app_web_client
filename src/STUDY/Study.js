@@ -10,6 +10,8 @@ import StyledButton from '../composent/StyledBouton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import { decodeJWT } from '../services/decode';
+import { getTokenAndRole } from '../services/Cookie';
 
 
 function Study() {
@@ -205,26 +207,30 @@ function Study() {
         startTimeRef.current = new Date();
 
         const sendData = async () => {
-            setElapsedTime(new Date());
-            try {
-                // Calculer la durée de session en soustrayant la date de début de session de la date actuelle
-                const dureeSession = new Date() - startTimeRef.current;
-                // Utiliser les valeurs actuelles des références useRef
-                await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
-                setElapsedTime(0);
-                setClic(0);
-                setScroll(0);
-            } catch (error) {
-                console.error("Erreur lors de la récolte des données:", error);
+            const { token, role } = await getTokenAndRole();
+            const tokenInfo = decodeJWT(token);
+            if (tokenInfo.consentement === 1) {
+                setElapsedTime(new Date());
+                try {
+                    // Calculer la durée de session en soustrayant la date de début de session de la date actuelle
+                    const dureeSession = new Date() - startTimeRef.current;
+                    // Utiliser les valeurs actuelles des références useRef
+                    await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
+                    setElapsedTime(0);
+                    setClic(0);
+                    setScroll(0);
+                } catch (error) {
+                    console.error("Erreur lors de la récolte des données:", error);
+                }
+            };
+            const interval = setInterval(sendData, 10000);
+            if (currentCour === null) {
+                clearInterval(interval);
             }
-        };
-        const interval = setInterval(sendData, 180000);
-        if (currentCour === null) {
-            clearInterval(interval);
-        }
 
-        // Retourner une fonction de nettoyage pour arrêter l'envoi de données lorsque le composant est démonté
-        return () => clearInterval(interval);
+            // Retourner une fonction de nettoyage pour arrêter l'envoi de données lorsque le composant est démonté
+            return () => clearInterval(interval);
+        }
     }, [currentCour, id]);
 
 
@@ -420,7 +426,7 @@ function Study() {
 
                 )}
                 <QuestionForum id_chap={id} role={role} />
-                
+
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ import "./home.css";
 import { Badge, IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography, Box, Modal } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { DateCalendar, DayCalendarSkeleton, PickersDay } from '@mui/x-date-pickers';
+import { decodeJWT } from "../services/decode.js";
 
 
 const style = {
@@ -88,7 +89,6 @@ function Home() {
     navigate(`/ueProf/${id}`);
   };
 
-
   function importAll(r) {
     let images = {};
     r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
@@ -101,11 +101,22 @@ function Home() {
     setIsLoading(true);
     const controller = new AbortController();
     try {
-      const JMethod = await getJMethod();
-      setListJMethod(JMethod);
-      requestAbortController.current = controller;
-    } catch (error) {
-      console.error('Erreur lors de la méthode des J:', error);
+      const { token, role } = await getTokenAndRole();
+      const tokenInfo = decodeJWT(token);
+      console.log(tokenInfo);
+      if (tokenInfo.consentement === 1) {
+        console.log("consentement");
+        try {
+          const JMethod = await getJMethod();
+          setListJMethod(JMethod);
+          requestAbortController.current = controller;
+        } catch (error) {
+          console.error('Erreur lors de la méthode des J:', error);
+        }
+      }
+    }
+    catch (error) {
+      console.error('Erreur lors de la récupération du token :', error);
     } finally {
       setIsLoading(false);
     }
@@ -131,11 +142,11 @@ function Home() {
       try {
         const response_info = await getUserInfo();
         setRole(response_info.role);
-        if( role === 'etudiant'){
+        if (role === 'etudiant') {
           const response = await getUe();
           setListUE(response);
         }
-        else if (role === 'enseignant'){
+        else if (role === 'enseignant') {
           setListUE(response_info.ue);
         }
       } catch (error) {
@@ -146,7 +157,7 @@ function Home() {
     fetchData();
     console.log("role : ", role)
   }, [role]);
-  
+
 
   useEffect(() => {
     fetchJMethod(month);
@@ -171,12 +182,12 @@ function Home() {
   return (
 
     <div className='style_background_esp_ele'>
-      {role === 'enseignant' &&  (
-          <div className='container2_style'>
-            <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }}>Espace Professeur</Typography>
-            <div className="container-home-prof">
-              <h2>Liste Ue :</h2>
-              <TextField
+      {role === 'enseignant' && (
+        <div className='container2_style'>
+          <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }}>Espace Professeur</Typography>
+          <div className="container-home-prof">
+            <h2>Liste Ue :</h2>
+            <TextField
               onChange={handleSearchChange}
               sx={{
                 width: "90%",
@@ -213,105 +224,105 @@ function Home() {
                   </ListItemAvatar>
                   <ListItemText
                     primary={ue.label}
-                    primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large",} }}
+                    primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large", } }}
                   />
                 </ListItem>
-            ))}
+              ))}
             </List>
-            </div>
-          </div>
-          )}
-      {role === 'etudiant' &&  (
-      <div className='container2_style'>
-        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }}>Espace Eleve</Typography>
-        <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
-          <div className="sub_container_ue" style={{
-            backgroundColor: "#133D56",
-            borderRadius: "20px",
-            marginBottom: "20px",
-            display: "flex",
-            flexDirection: "column",
-            flex: 1
-          }}>
-            <h2 style={{ marginLeft: "20px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
-            <TextField
-              onChange={handleSearchChange}
-              sx={{
-                width: "90%",
-                alignSelf: "center",
-                borderRadius: "50px",
-                color: '#f5f5f5',
-                fontSize: "x-large",
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: "50px",
-                },
-                border: 3,
-              }}
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <IconButton><SearchIcon sx={{ width: 40, height: 40 }} /></IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <List sx={{
-              width: '100%',
-              position: 'relative',
-              overflow: "hidden",
-              overflowY: "scroll",
-              maxHeight: 300,
-              '& ul': { padding: 0 },
-            }}>
-              
-              {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
-            <ListItem key={ue.id_ue} onClick={() => handleListItemClick(ue.id_ue)}>
-              <ListItemAvatar>
-                    <Avatar sx={{ width: 56, height: 56 }} src={ue.path} />
-                  </ListItemAvatar>
-                  <div>
-                    {ue && ue.enseignant && ue.enseignant[0] &&  (
-                    <ListItemText
-                      primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
-                      primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
-                    />
-                    )}
-                    <ListItemText
-                      primary={ue.label}
-                      primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
-                    />
-                  </div>
-            </ListItem>
-          ))}
-            </List>
-
-
-          </div>
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
-            <DateCalendar
-            sx={{ width: {lg: "330px",md: "100%", sm:"100%" }, margin:{sm: "0px 20px"}, height: "100%" }}
-              loading={isLoading}
-              onMonthChange={handleMonthChange}
-              renderLoading={() => <DayCalendarSkeleton />}
-              slots={{
-                day: ServerDay,
-              }}
-              slotProps={{
-                day: {
-                  highlightedDays,
-                  listJMethod,
-                },
-              }}
-            />
-
           </div>
         </div>
-        {isSecure}
-           
-      </div>
-       )}
+      )}
+      {role === 'etudiant' && (
+        <div className='container2_style'>
+          <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }}>Espace Eleve</Typography>
+          <div className="sub_container_ue_j" style={{ display: "flex", width: "90%", justifyContent: "space-between", height: "70%" }}>
+            <div className="sub_container_ue" style={{
+              backgroundColor: "#133D56",
+              borderRadius: "20px",
+              marginBottom: "20px",
+              display: "flex",
+              flexDirection: "column",
+              flex: 1
+            }}>
+              <h2 style={{ marginLeft: "20px", fontSize: "xx-large", color: "#F5F5F5" }}>Liste d'UE</h2>
+              <TextField
+                onChange={handleSearchChange}
+                sx={{
+                  width: "90%",
+                  alignSelf: "center",
+                  borderRadius: "50px",
+                  color: '#f5f5f5',
+                  fontSize: "x-large",
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: "50px",
+                  },
+                  border: 3,
+                }}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <IconButton><SearchIcon sx={{ width: 40, height: 40 }} /></IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <List sx={{
+                width: '100%',
+                position: 'relative',
+                overflow: "hidden",
+                overflowY: "scroll",
+                maxHeight: 300,
+                '& ul': { padding: 0 },
+              }}>
+
+                {filteredListUE && filteredListUE.length > 0 && filteredListUE.map(ue => (
+                  <ListItem key={ue.id_ue} onClick={() => handleListItemClick(ue.id_ue)}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ width: 56, height: 56 }} src={ue.path} />
+                    </ListItemAvatar>
+                    <div>
+                      {ue && ue.enseignant && ue.enseignant[0] && (
+                        <ListItemText
+                          primary={ue.enseignant[0].nom + " " + ue.enseignant[0].prenom} // Assurez-vous d'accéder au premier élément
+                          primaryTypographyProps={{ style: { color: '#f5f5f5' } }}
+                        />
+                      )}
+                      <ListItemText
+                        primary={ue.label}
+                        primaryTypographyProps={{ style: { color: '#f5f5f5', fontSize: "x-large" } }}
+                      />
+                    </div>
+                  </ListItem>
+                ))}
+              </List>
+
+
+            </div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
+              <DateCalendar
+                sx={{ width: { lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
+                loading={isLoading}
+                onMonthChange={handleMonthChange}
+                renderLoading={() => <DayCalendarSkeleton />}
+                slots={{
+                  day: ServerDay,
+                }}
+                slotProps={{
+                  day: {
+                    highlightedDays,
+                    listJMethod,
+                  },
+                }}
+              />
+
+            </div>
+          </div>
+          {isSecure}
+
+        </div>
+      )}
     </div>
 
   );
