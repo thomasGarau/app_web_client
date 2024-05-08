@@ -33,11 +33,7 @@ function Connexion() {
       if (token) {
         const tokenInfo = decodeJWT(token);
         createCookie(token, days, tokenInfo.role);
-        if (tokenInfo.role === 'administration') {
-          navigate('/admin-interface');
-        } else {
-          navigate('/home');
-        }
+        navigate('/home');
       } else {
         console.log("Erreur de connexion");
       }

@@ -31,9 +31,12 @@ import UeProf from './ue/UeProf'
 import GestionQuizzProf from './quizz/GestionQuizzProf'
 import RoleBasedRoute from './services/RoleBasedRoute';
 import AdminInterface from './admin/AdminInterface';
-;
+import { useIdleTimer } from './services/inactive';
 
 function App() {
+
+  useIdleTimer(12000); // 20 minutes = 1200000 ms
+
   return (
     <QuizProvider>
     <Router>
