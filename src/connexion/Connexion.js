@@ -9,6 +9,7 @@ import { Link, Box, Popover, Typography } from '@mui/material';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
 import StyledButton from '../composent/StyledBouton.js';
+import { decodeJWT } from '../services/decode.js';
 
 
 
@@ -28,18 +29,15 @@ function Connexion() {
 
     try {
       const data = await Authenticate(username, password);
-      console.log("data cookie : ", data);
-      const { token, days, role } = data;
+      const { token, days} = data;
       if (token) {
-        const user = await getUserInfo();
-        if (user.role === 'administration') {
-          createCookie(token, days, role);
+        const tokenInfo = decodeJWT(token);
+        createCookie(token, days, tokenInfo.role);
+        if (tokenInfo.role === 'administration') {
           navigate('/admin-interface');
         } else {
-          createCookie(token, days, role);
           navigate('/home');
         }
-
       } else {
         console.log("Erreur de connexion");
       }
