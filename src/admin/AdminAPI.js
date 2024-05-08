@@ -11,3 +11,15 @@ export const addUser = async (file) => {
         throw error;
     }
 }
+
+export const addFormation = async (file) => {
+
+    try {
+        const response = await api.post(`/administration/ajouter-formation`, file);
+        console.log("réponse : ", response);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //modules
-import { Authenticate } from './UserAPI.js';
+import { Authenticate, getUserInfo } from './UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import { Link, Box, Popover, Typography } from '@mui/material';
 import './Connexion.css';
@@ -28,15 +28,19 @@ function Connexion() {
 
     try {
       const data = await Authenticate(username, password);
-      console.log("data cookie : ",data);
+      console.log("data cookie : ", data);
       const { token, days, role } = data;
-      if (token && role === 'etudiant' || role === 'professeur') {
-        createCookie(token,days, role);
-        navigate('/home');
-      } else if (role === 'admin'){
-        navigate('/admin-interface');
-      }
-        else {
+      if (token) {
+        const user = await getUserInfo();
+        if (user.role === 'administration') {
+          createCookie(token, days, role);
+          navigate('/admin-interface');
+        } else {
+          createCookie(token, days, role);
+          navigate('/home');
+        }
+
+      } else {
         console.log("Erreur de connexion");
       }
     } catch (error) {
@@ -47,12 +51,12 @@ function Connexion() {
       } else if (!password.trim()) {
         setErrorMessage('Veuillez remplir tous les champs.');
         setErrorAnchorEl(document.getElementById('password'));
-        console.log(document.getElementById('password')); 
+        console.log(document.getElementById('password'));
       } else {
         setErrorMessage('Mot de passe invalide! Veuillez réessayer.');
         setErrorAnchorEl(document.getElementById('password'));
         console.log(document.getElementById('password'));
-        
+
       }
       setId('error-popover');
       setOpen(true);
@@ -74,7 +78,7 @@ function Connexion() {
   return (
     <div className='background'>
       <div className='base-container'>
-        <Typography sx={{ fontSize: {xs: "2em", sm: "3em", md:"4em"}, margin: "0px" }}>Connexion</Typography>
+        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" }, margin: "0px" }}>Connexion</Typography>
         <div className='sub-container'>
           <input
             aria-describedby={id}
@@ -96,7 +100,7 @@ function Connexion() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Link sx={{ fontSize: {xs: "1em", sm: "1.5em", md:"2em"} }} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
+          <Link sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
         </div>
         <div className='buttons-container'>
           <StyledButton
