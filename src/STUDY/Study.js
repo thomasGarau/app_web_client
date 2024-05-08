@@ -223,7 +223,7 @@ function Study() {
                     console.error("Erreur lors de la récolte des données:", error);
                 }
             };
-            const interval = setInterval(sendData, 10000);
+            const interval = setInterval(sendData, 180000);
             if (currentCour === null) {
                 clearInterval(interval);
             }
