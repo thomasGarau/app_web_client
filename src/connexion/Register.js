@@ -86,7 +86,7 @@ function Register() {
                 const { token, days, role } = data;
                 if (token) {
                     createCookie(token, days, role);
-                    navigate('/home');
+                    navigate('/connexion');
                 } else {
                     console.log("Erreur lors de l'inscription");
                 }
