@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { eraseCookie, getTokenAndRole } from './Cookie';
 import { logout } from '../connexion/UserAPI';
 
-export const useIdleTimer = (timeout = 1200000) => {
+export const useIdleTimer = (timeout = 1_200_000) => {
 
     useEffect(() => {
         let timer;
