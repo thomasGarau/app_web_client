@@ -83,10 +83,10 @@ function Register() {
 
         await Registry(email, password, checkedTracking)
             .then(data => {
-                const { token, days, role } = data;
+                const { token, days } = data;
                 if (token) {
-                    createCookie(token, days, role);
-                    navigate('/connexion');
+                    createCookie(token, days);
+                    navigate('/home');
                 } else {
                     console.log("Erreur lors de l'inscription");
                 }
