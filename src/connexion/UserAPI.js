@@ -11,11 +11,12 @@ export const Authenticate = async (user, password) => {
     .catch(error => {console.log(error); throw error;})
 }
 
-export const Registry = async (email, password) => {
+export const Registry = async (email, password, consentement) => {
     console.log("registry")
     return axios.post('http://localhost:3001/api/user/register', {
             'email':email,
-            'password':password
+            'password':password,
+            'consentement':consentement
     })
     .then(response => {return response.data})
     .catch(error => {console.log(error); throw error;})
