@@ -35,7 +35,7 @@ import { useIdleTimer } from './services/inactive';
 
 function App() {
 
-  useIdleTimer(12000); // 20 minutes = 1200000 ms
+  useIdleTimer(1_200_000); // 20 minutes = 1200000 ms
 
   return (
     <QuizProvider>
