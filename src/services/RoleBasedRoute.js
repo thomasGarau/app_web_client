@@ -40,8 +40,10 @@ const RoleBasedRoute = ({ children, allowedRoles }) => {
     // Check if user is authenticated and if their role is in the allowed roles for this route
     if (isAuthenticated && allowedRoles.includes(userRole)) {
         return children;
+    } else if (isAuthenticated && userRole === 'administration') {
+        return <Navigate to="/admin-interface" replace />;  
     } else if (isAuthenticated) {
-        return <Navigate to="/home" replace />;  // Redirect to an unauthorized access page or another appropriate page
+        return <Navigate to="/home" replace />;
     } else {
         return <Navigate to="/connexion" replace />;
     }
