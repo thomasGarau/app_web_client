@@ -31,15 +31,8 @@ function Connexion() {
       console.log("data cookie : ", data);
       const { token, days, role } = data;
       if (token) {
-        const user = await getUserInfo();
-        if (user.role === 'administration') {
-          createCookie(token, days, role);
-          navigate('/admin-interface');
-        } else {
-          createCookie(token, days, role);
-          navigate('/home');
-        }
-
+        createCookie(token, days, role);
+        navigate('/home');
       } else {
         console.log("Erreur de connexion");
       }
