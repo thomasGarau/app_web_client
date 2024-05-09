@@ -152,9 +152,28 @@ function AdminInterface() {
                     <Typography sx={{ fontSize: { xs: '1em', sm: '2em', md: '3em' }, color: 'white', textAlign: 'center', marginTop: '20%' }}>Déposez le fichier ici</Typography>
                 </div>
             )}
-            <Box sx={{ position: 'absolute', top: { xs: '240px', sm: '300px', md: '25%' }, left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', display: 'flex', alignItems: 'center', flexDirection: { xs: 'column', md: 'row' } }}>
+            {window.visualViewport.width <= 890 ?
+            <Typography sx={{
+                textAlign: 'center',
+                position: 'absolute', left: '50%',
+                top: { xs: '52%', sm: '52%', md: '45%' },
+                fontSize: { xs: '1em', sm: '1.5em', md: '2.5em' },
+                transform: 'translate(-50%, -50%)',
+                width: { xs: '80%', sm: '60%', md: '80%' },
+            }}>ATTENTION!! Des formations doivent à tout prix apparaître dans votre base de donnée avant de mettre la liste des élèves, sans quoi l'envoi sera annulé.</Typography>
+            : ''}<Box sx={{
+                position: 'absolute',
+                bottom: { xs: '-25px', sm: '0px', md: '25%' },
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: { xs: 'column', md: 'row' }
+            }}>
                 <div><Typography>Liste d'élève à ajouter: </Typography>
                     <TextField
+                        sx={{ height: { xs: '50px', sm: '62px', md: '75px' } }}
                         disabled
                         variant="outlined"
                         type="text"
@@ -179,10 +198,19 @@ function AdminInterface() {
                     onClick={sendDataEleve}
                 />
             </Box>
-            <Box sx={{ position: 'absolute', bottom: { xs: '-40px', sm: '0px', md: '25%' }, left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', display: 'flex', alignItems: 'center', flexDirection: { xs: 'column', md: 'row' } }}>
+            <Box sx={{
+                position: 'absolute',
+                top: { xs: '260px', sm: '300px', md: '25%' },
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                textAlign: 'center', display: 'flex',
+                alignItems: 'center',
+                flexDirection: { xs: 'column', md: 'row' }
+            }}>
 
                 <div><Typography>Liste de formation, leurs UE et leurs professeurs: </Typography>
                     <TextField
+                        sx={{ height: { xs: '50px', sm: '62px', md: '75px' } }}
                         disabled
                         variant="outlined"
                         type="text"
