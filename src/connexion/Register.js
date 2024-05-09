@@ -79,9 +79,8 @@ function Register() {
     };
 
     const handleRegister = async () => {
-        console.log(checkedTracking)
-
-        await Registry(email, password, checkedTracking)
+        const tracking = checkedTracking ? 0 : 1;
+        await Registry(email, password, tracking)
             .then(data => {
                 const { token, days } = data;
                 if (token) {
