@@ -200,21 +200,8 @@ function UeProf() {
                 {isAdding && (
                     <div className='create-chapitre-form'>
                         <Box display="flex" flexWrap="wrap" alignItems="center" width="50%" padding="10px">
-                        <Typography
-                            sx={{
-                                mr: 1,
-                                width: "40%",
-                                color: 'black',
-                                fontSize: {
-                                    xs: "0.5em",
-                                    sm: "0.8em",
-                                    md: "1.0em"
-                                }
-                            }}
-                            className='create-forum-typography'>
-                            Nom du chapitre :
-                        </Typography>
-                        <input
+                        <TextField
+                            label='Nom du chapitre'
                             aria-describedby={id}
                             type="text"
                             id='nom'

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCoursParChap, recolteInteraction, addCours, editCours, deleteCours } from './StudyAPI';
 import './Study.css';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../profile/ProfileAPI';
@@ -13,6 +13,23 @@ import SaveIcon from '@mui/icons-material/Save';
 import { decodeJWT } from '../services/decode';
 import { getTokenAndRole } from '../services/Cookie';
 
+
+const style = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: { xs: '90%', sm: '70%', md: '50%' },
+    bgcolor: 'background.paper',
+    border: '2px solid #133D56',
+    boxShadow: 24,
+    borderRadius: 2,
+    Typography: 4,
+    height: '90vh',
+};
 
 function Study() {
     const [cours, setCours] = useState([]);
@@ -86,6 +103,10 @@ function Study() {
         setOpen(false);
     };
 
+    const handleCloseAdd = () => {
+        setIsAdding(false);
+    };
+
     const handleCurrentCour = async (event, expanded, id_cours) => {
         if (expanded) {
             setCurrentCour(id_cours);
@@ -121,14 +142,19 @@ function Study() {
 
     const handleChangeContenu = (e) => {
         const value = e.target.value;
-        if (value.length > 300) {
+        setContenu(value);
+    };
+
+    const handleChangeSujet = (e) => {
+        const value = e.target.value;
+        if (value.length > 100) {
             setErrorMessage('Limite de caractère dépassée.');
-            setErrorAnchorEl(document.getElementById('contenu'));
+            setErrorAnchorEl(document.getElementById('sujet'));
             setIdStudy('error-popover');
             setOpen(true);
             return;
         }
-        setContenu(value);
+        setSujet(value);
     };
 
     const validateCourseInputs = (label, content) => {
@@ -154,14 +180,6 @@ function Study() {
             return false;
         }
 
-        if (content.length > 300) {
-            setErrorMessage('Limite de caractère dépassée pour le contenu.');
-            setErrorAnchorEl(document.getElementById('contenu'));
-            setIdStudy('error-popover');
-            setOpen(true);
-            return false;
-        }
-
         return true;
     };
 
@@ -169,6 +187,7 @@ function Study() {
     const handleCreateCours = async () => {
         if (validateCourseInputs(sujet, contenu)) {
             try {
+                console.log(sujet, contenu, id)
                 await addCours(sujet, contenu, parseInt(id));
                 setIsAdding(false);
                 setSujet('');
@@ -182,6 +201,7 @@ function Study() {
                 setOpen(true);
             }
         }
+        handleCloseAdd()
     };
 
     const handleSaveEdit = async () => {
@@ -337,75 +357,63 @@ function Study() {
                     />
                 )}
                 {role === 'enseignant' && isAdding && (
-                    <div className='ajouter-cours-container'>
-                        <Box display="flex" flexWrap="wrap" alignItems="center" width="40%" padding="10px">
-                            <Typography
+                    <><Modal
+                        open={isAdding}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <TextField
+                                placeholder='Sujet du cours'
+                                variant='standard'
                                 sx={{
-                                    mr: 1,
-                                    width: "40%",
-                                    color: 'white',
-                                    fontSize: {
-                                        xs: "0.8em",
-                                        sm: "1.0em",
-                                        md: "1.5em"
+
+                                    width: "100%",
+
+                                }}
+                                inputProps={{
+                                    sx: {
+                                        padding: '10px',
+                                        fontSize: {
+                                            xs: "1em",
+                                            sm: "1.3em",
+                                            md: "1.7em"
+                                        }
                                     }
                                 }}
-                                className='create-forum-typography'>
-                                Nom du cours :
-                            </Typography>
-                            <input
-                                aria-describedby={id}
-                                type="text"
-                                id='sujet'
-                                className='form-input'
                                 value={sujet}
-                                onChange={(e) => setSujet(e.target.value)}
-                            />
+                                onChange={handleChangeSujet}>
 
-                        </Box>
-                        <Box display="flex" flexWrap="wrap" alignItems="center" width="40%" padding="10px">
-                            <Typography sx={{
-                                mr: 1,
-                                width: "50%",
-                                color: 'white',
-                                fontSize: {
-                                    xs: "1em",
-                                    sm: "1.2em",
-                                    md: "1.5em"
-                                }
-                            }}
-                                className='create-forum-typography'>
-                                Contenu du cours :
-                            </Typography>
-                            <textarea
+                            </TextField>
+                            <TextField
+                                placeholder='Contenu du cours'
+                                variant='filled'
                                 aria-describedby={id}
+                                multiline
                                 id='contenu'
-                                className='form-textarea'
                                 value={contenu}
                                 onChange={handleChangeContenu}
+                                rows={27}
                                 sx={{
-                                    width: {
-                                        xs: "80%",  // Plus large sur les petits écrans pour une meilleure accessibilité
-                                        sm: "80%",
-                                        md: "80%"    // Plus étroit sur les écrans larges
-                                    },
+                                    overflowY: 'auto',
+                                    width: '100%',
                                     fontSize: {
-                                        xs: "0.8em",  // Plus petite taille de police sur les petits écrans
+                                        xs: "0.8em", // Plus petite taille de police sur les petits écrans
                                         sm: "1.2em",
-                                        md: "1.5em"   // Taille normale sur les écrans plus larges
+                                        md: "1.5em" // Taille normale sur les écrans plus larges
                                     },
-                                    borderRadius: "20px",
-                                    padding: "5px",
-                                    border: "1px solid #ccc"
-                                }}
-                            />
+
+                                }} />
+                            <Box>
+                                <StyledButton
+                                    content={"Ajouter"}
+                                    width={200}
+                                    color={"primary"}
+                                    onClick={handleCreateCours} />
+                            </Box>
+
                         </Box>
-                        <StyledButton
-                            content={"Ajouter"}
-                            width={200}
-                            color={"primary"}
-                            onClick={handleCreateCours}
-                        />
+                    </Modal>
                         <Popover
                             id={id}
                             open={open}
@@ -422,7 +430,7 @@ function Study() {
                         >
                             <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
                         </Popover>
-                    </div>
+                    </>
 
                 )}
                 <QuestionForum id_chap={id} role={role} />
