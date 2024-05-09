@@ -152,7 +152,6 @@ function AdminInterface() {
                     <Typography sx={{ fontSize: { xs: '1em', sm: '2em', md: '3em' }, color: 'white', textAlign: 'center', marginTop: '20%' }}>Déposez le fichier ici</Typography>
                 </div>
             )}
-            {window.visualViewport.width <= 890 ?
             <Typography sx={{
                 textAlign: 'center',
                 position: 'absolute', left: '50%',
@@ -161,7 +160,7 @@ function AdminInterface() {
                 transform: 'translate(-50%, -50%)',
                 width: { xs: '80%', sm: '60%', md: '80%' },
             }}>ATTENTION!! Des formations doivent à tout prix apparaître dans votre base de donnée avant de mettre la liste des élèves, sans quoi l'envoi sera annulé.</Typography>
-            : ''}<Box sx={{
+            <Box sx={{
                 position: 'absolute',
                 bottom: { xs: '-25px', sm: '0px', md: '25%' },
                 left: '50%',
