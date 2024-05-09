@@ -30,3 +30,44 @@ export const ueInfo = async (ue_id) => {
         throw error;
     }
 }
+
+export const addChapitre = async (label, ue_id) => {
+    try {
+        const body = {
+            label: label,
+            id_ue: ue_id
+        };
+        const response = await api.post(`/ue/add-chapitre`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const updateChapitre = async (id, label) => {
+    try {
+        const body = {
+            id_chapitre: id,
+            label: label
+        };
+        const response = await api.post(`/ue/update-chapitre`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const deleteChapitre = async (id) => {
+    try {
+        const body = {
+            id_chapitre: id
+        };
+        const response = await api.post(`/ue/delete-chapitre`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

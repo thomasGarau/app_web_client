@@ -25,21 +25,51 @@
 
 }
 
-.container2_style h1{
+.container-ue-prof {
+    display: flex;
+    align-items: center;
+    margin-top: 160px;
+    margin-bottom: 20px;
+    padding: 1%;
+    width: 80%;
+    min-height: 70%;
+    border-radius: 20px;
+    background-color: #F5F5F5;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.container-ue-prof h1{
     font-size: 2em;
     margin : 10px
+}
+
+.contenant-bouton-chap{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.create-chapitre-form{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .container-home-prof-ue{
     background-color: #133D56;
     width: 90%;
-    height: 75%;
+    height: 70%;
     border-radius: 20px;
-    color : white;
+    color: white;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 20px;
+    padding-top: 10px;
     align-items: center;
 }
 
