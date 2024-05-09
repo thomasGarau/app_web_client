@@ -91,7 +91,13 @@ function StatQuestion() {
                         {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
                             <Box key={answer.id_reponse} sx={{ width: "80%", display: "flex", alignItems: "center" }}>
                                 <Typography
-                                    noWrap
+                                    sx={{
+                                        fontSize: { xs: "0.8em", sm: "1.2em", md: "1.6em" },
+                                        overflow: 'hidden',
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        marginRight: "10px"
+                                    }}
                                     className={`reponse-stat ${answer.est_bonne_reponse === 1 && currentQuestion.reponsesUtilisateur.every(
                                         (value, index) => value === currentQuestion.bonnesReponses[index]
                                     ) ?

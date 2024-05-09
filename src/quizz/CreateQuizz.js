@@ -298,7 +298,7 @@ function UpdateQuizz() {
                             labelId="chapitre-label"
                             id="select-chapitre"
                             value={chapitre}
-                            label="Chapitrem"
+                            label="Chapitre"
                             onChange={handleChangeChapitre}
                         >
                             {listChapitre.length > 0 && listChapitre.map((chap, index) => (
@@ -325,7 +325,6 @@ function UpdateQuizz() {
                                 <div key={index} style={{ display: "flex", alignItems: "center", margin: "15px 0px", justifyContent: "space-between" }}>
                                     <Input
                                         placeholder={"Reponse " + (index + 1)}
-                                        style={{ color: "black", fontSize: "x-large", backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%" }}
                                         onChange={(event) => {
                                             const updatedReponses = [...selected.reponses];
                                             updatedReponses[index].contenu = event.target.value;
@@ -333,7 +332,7 @@ function UpdateQuizz() {
                                         }}
                                         variant="plain"
                                         sx={{
-                                            color: "black", fontSize: { xs: "1em", md: "2em" }, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
+                                            color: "black",fontSize: {xs: '0.8em', sm: '1.4em', md: '2em'}, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
                                             '--Input-focusedInset': 'var(--any, )',
                                             '--Input-focusedThickness': '0.25rem',
                                             '--Input-focusedHighlight': 'rgba(245,245,245,.25)',
@@ -393,13 +392,13 @@ function UpdateQuizz() {
                                     size="lg"
                                     value={'multiple'}
 
-                                    label="CM"
+                                    label="M"
                                     checked={type === 'multiple'}
                                 />
                                 <Radio
                                     size="lg"
                                     value={'seul'}
-                                    label="CU"
+                                    label="U"
                                     checked={type === 'seul'}
                                 />
                                 <Radio

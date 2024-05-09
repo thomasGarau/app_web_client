@@ -302,7 +302,7 @@ function Home() {
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
               <DateCalendar
-                sx={{ width: { lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
+                sx={{ width: {xs:"250px", lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
                 loading={isLoading}
                 onMonthChange={handleMonthChange}
                 renderLoading={() => <DayCalendarSkeleton />}
