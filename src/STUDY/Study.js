@@ -56,6 +56,7 @@ function Study() {
     const progressionRef = useRef(progression);
     const startTimeRef = useRef(null);
     const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
 
 
@@ -81,12 +82,12 @@ function Study() {
         console.log(cours);
     }, [id]);
 
-    const editCour = (cour) => {
+    const isEditingCour = (cour) => {
+        setIsEditing(true);
         setEditingCourseId(cour.id_cours);
-        setEditedContent(cour.contenu);
-        setEditedLabel(cour.label);
+        setContenu(cour.contenu);
+        setSujet(cour.label);
     };
-
 
     const deleteCour = (id_cours) => {
         try {
@@ -105,6 +106,10 @@ function Study() {
 
     const handleCloseAdd = () => {
         setIsAdding(false);
+    };
+
+    const handleCloseEdit = () => {
+        setIsEditing(false);
     };
 
     const handleCurrentCour = async (event, expanded, id_cours) => {
@@ -193,15 +198,37 @@ function Study() {
                 setSujet('');
                 setContenu('');
                 fetchCours();
+                handleCloseAdd();
             } catch (error) {
                 console.error("Erreur lors de la création du cours :", error);
                 setErrorMessage('Erreur lors de la création du cours. Veuillez réessayer.');
-                setErrorAnchorEl(document.getElementById('sujet'));
+                setErrorAnchorEl(document.getElementById('sujet-add'));
                 setIdStudy('error-popover');
                 setOpen(true);
             }
         }
-        handleCloseAdd()
+
+    };
+
+    const handleEditCours = async () => {
+        if (validateCourseInputs(sujet, contenu)) {
+            try {
+                console.log(sujet, contenu, id)
+                await editCours(parseInt(id), sujet, contenu);
+                setIsAdding(false);
+                setSujet('');
+                setContenu('');
+                fetchCours();
+                handleCloseEdit();
+            } catch (error) {
+                console.error("Erreur lors de la modification du cours :", error);
+                setErrorMessage('Erreur lors de la modification du cours. Veuillez réessayer.');
+                setErrorAnchorEl(document.getElementById('sujet-edit'));
+                setIdStudy('error-popover');
+                setOpen(true);
+            }
+        }
+
     };
 
     const handleSaveEdit = async () => {
@@ -275,53 +302,24 @@ function Study() {
                                 handleCurrentCour(event, expanded, cour.id_cours);
                             }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                                    {editingCourseId === cour.id_cours ? (
-                                        <Typography>Modification</Typography>
-                                    ) : (
-                                        <Typography>{cour.label}</Typography>
-                                    )}
+
+                                    <Typography>{cour.label}</Typography>
+
                                 </AccordionSummary>
                                 <AccordionDetails
                                     onScroll={incrementerScroll}
                                     sx={{ overflowY: 'auto', maxHeight: '400px' }}>
-                                    {editingCourseId === cour.id_cours ? (
-                                        <div>
-                                            <TextField
-                                                fullWidth
-                                                label="Nom du cours"
-                                                variant="outlined"
-                                                id='sujet-edit'
-                                                sx={{
-                                                    paddingBottom: '10px'
-                                                }}
-                                                value={editedLabel}
-                                                onChange={(e) => setEditedLabel(e.target.value)}
-                                            />
-                                            <TextField
-                                                fullWidth
-                                                label="Contenu du cours"
-                                                variant="outlined"
-                                                id='contenu-edit'
-                                                value={editedContent}
-                                                onChange={(e) => setEditedContent(e.target.value)}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <Typography>{cour.contenu}</Typography>
-                                    )}
+
+                                    <Typography>{cour.contenu}</Typography>
+
                                 </AccordionDetails>
                                 <AccordionActions>
                                     {role === 'enseignant' && (
                                         <div>
-                                            {editingCourseId === cour.id_cours ? (
-                                                <div className='icon-study' onClick={() => handleSaveEdit(cour)}> <SaveIcon /></div>
-                                            ) : (
-                                                <div>
-                                                    <div className='icon-study' onClick={() => editCour(cour)}> <EditIcon /></div>
-                                                    <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
-
-                                                </div>
-                                            )}
+                                            <div>
+                                                <div className='icon-study' onClick={() => isEditingCour(cour)}> <EditIcon /></div>
+                                                <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
+                                            </div>
                                         </div>
                                     )}
                                 </AccordionActions>
@@ -364,6 +362,7 @@ function Study() {
                     >
                         <Box sx={style}>
                             <TextField
+                                id='sujet-add'
                                 placeholder='Sujet du cours'
                                 variant='standard'
                                 sx={{
@@ -434,7 +433,64 @@ function Study() {
 
                 )}
                 <QuestionForum id_chap={id} role={role} />
+                <Modal
+                    open={isEditing}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <TextField
+                            id='sujet-edit'
+                            placeholder='Sujet du cours'
+                            variant='standard'
+                            sx={{
 
+                                width: "100%",
+
+                            }}
+                            inputProps={{
+                                sx: {
+                                    padding: '10px',
+                                    fontSize: {
+                                        xs: "1em",
+                                        sm: "1.3em",
+                                        md: "1.7em"
+                                    }
+                                }
+                            }}
+                            value={sujet}
+                            onChange={handleChangeSujet}>
+
+                        </TextField>
+                        <TextField
+                            placeholder='Contenu du cours'
+                            variant='filled'
+                            aria-describedby={id}
+                            multiline
+                            id='contenu'
+                            value={contenu}
+                            onChange={handleChangeContenu}
+                            rows={27}
+                            sx={{
+                                overflowY: 'auto',
+                                width: '100%',
+                                fontSize: {
+                                    xs: "0.8em", // Plus petite taille de police sur les petits écrans
+                                    sm: "1.2em",
+                                    md: "1.5em" // Taille normale sur les écrans plus larges
+                                },
+
+                            }} />
+                        <Box>
+                            <StyledButton
+                                content={"Valider"}
+                                width={200}
+                                color={"primary"}
+                                onClick={handleEditCours} />
+                        </Box>
+
+                    </Box>
+                </Modal>
             </div>
         </div>
     );
