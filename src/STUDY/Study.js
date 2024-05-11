@@ -164,7 +164,7 @@ function Study() {
             setIdStudy('error-popover');
             setOpen(true);
             return false;
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(label)) {
+        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
             setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('sujet'));
             setIdStudy('error-popover');
@@ -174,6 +174,12 @@ function Study() {
 
         if (content.trim() === '') {
             setErrorMessage('Le contenu du cours est requis!');
+            setErrorAnchorEl(document.getElementById('contenu'));
+            setIdStudy('error-popover');
+            setOpen(true);
+            return false;
+        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(content)) {
+            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('contenu'));
             setIdStudy('error-popover');
             setOpen(true);

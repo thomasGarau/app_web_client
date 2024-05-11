@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getChapParUE, ueInfo, addChapitre, updateChapitre, deleteChapitre } from './UeAPI.js';
-import './Ue.css'; // Assurez-vous que le chemin est correct pour vos styles
+import './Ue.css'; 
 import StyledButton from '../composent/StyledBouton.js';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField } from '@mui/material';
+import { Typography, Box, Popover, TextField } from '@mui/material';
 
 function UeProf() {
     const [chapters, setChapters] = useState([]);
     const { id } = useParams();
-    const [label, setLabel] = useState(''); // Ajout d'un état pour stocker le label de l'UE [1/2
+    const [label, setLabel] = useState(''); 
     const navigate = useNavigate(); 
     const [isAdding, setIAdding] = useState(false); 
     const [editChapterId, setEditChapterId] = useState(null);
@@ -45,15 +45,21 @@ function UeProf() {
             setErrorAnchorEl(document.getElementById('nom'));
             setOpen(true);
             return false;
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(label)) {
-            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
+        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
+            setErrorMessage('Caractère non autorisé.');
+            setErrorAnchorEl(document.getElementById('nom'));
+            setOpen(true);
+            return false;
+        } else if (label.length > 12) {
+            setErrorMessage('Le nom du chapitre ne doit pas dépasser 12 caractères.');
             setErrorAnchorEl(document.getElementById('nom'));
             setOpen(true);
             return false;
         }
-
+    
         return true;
     };
+    
     
     const handleQuizClick = (chapterId) => {
         navigate(`/gestion_quizz/prof/${chapterId}`);
