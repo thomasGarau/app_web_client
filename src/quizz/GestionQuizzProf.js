@@ -58,7 +58,6 @@ function GestionQuizzProf() {
 
     const handleChangeUE = (event) => {
         setUE(event.target.value);
-        console.log(UE)
     };
 
     const handleToCreateQuizz = async () => {
@@ -66,7 +65,6 @@ function GestionQuizzProf() {
     };
 
     const handleToCreateQuizzAll = async () => {
-        console.log(UE)
         if (UE === '') {
             setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
             setErrorAnchorEl(document.getElementById('label-ue'));
@@ -84,7 +82,6 @@ function GestionQuizzProf() {
     };
 
     const handleShowForum = (id_quizz) => {
-        console.log("forum_id : ", forumId)
         setShowForum(false);
         setForumId(id_quizz);
         setShowForum(true);

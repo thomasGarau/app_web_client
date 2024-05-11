@@ -125,8 +125,6 @@ function UpdateQuizz() {
         }
         try {
             const questionsWithoutId = questions.map(({ id_question, ...rest }) => rest);
-
-            console.log(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
             await createQuizz(title, estNegatif ? "negatif" : "normal", chapitre.id_chapitre, questionsWithoutId);
             navigate("/gestion_quizz");
         } catch (error) {
@@ -160,7 +158,6 @@ function UpdateQuizz() {
                 nombre_bonne_reponse: updatedNombreBonneReponse
             };
         });
-        console.log(selected);
     };
 
 
@@ -190,8 +187,6 @@ function UpdateQuizz() {
             setQuestions(prevQuestions => {
                 return prevQuestions.map(question => {
                     if (question.id_question === selected.id_question) {
-                        console.log(selected);
-                        console.log(type);
                         return { ...question, type: type, reponses: [...selected.reponses] };
                     }
 
@@ -204,16 +199,13 @@ function UpdateQuizz() {
 
     useEffect(() => {
         setType(selected.type);
-        console.log(selected);
     }, [selected]);
 
 
     useEffect(() => {
         const fetchChapitres = async () => {
             try {
-                console.log(parseInt(idUe));
                 const data = await getChapitreUE(parseInt(idUe));
-                console.log(data);
                 setListChapitre(data);
 
             } catch (error) {
@@ -313,7 +305,6 @@ function UpdateQuizz() {
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             const updatedQuestions = [...questions];
-                            console.log(updatedQuestions);
                             updatedQuestions[selected.id_question] = { ...selected, label: event.target.value };
                             setQuestions(updatedQuestions);
                             setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));

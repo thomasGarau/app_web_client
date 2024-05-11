@@ -65,7 +65,6 @@ function Study() {
             setRole(response_info.role);
             const data = await getCoursParChap(id);
             setCours(data);
-            console.log(data);
             const ids = data.map(cour => cour.id_cours);
             setCourseIds(ids);
         } catch (error) {
@@ -78,7 +77,6 @@ function Study() {
 
 
         fetchCours();
-        console.log(cours);
     }, [id]);
 
     const editCour = (cour) => {
@@ -128,7 +126,6 @@ function Study() {
 
 
     const incrementerClic = () => {
-        console.log('clic');
         setClic(prevClic => prevClic + 1);
 
     };
@@ -193,7 +190,6 @@ function Study() {
     const handleCreateCours = async () => {
         if (validateCourseInputs(sujet, contenu)) {
             try {
-                console.log(sujet, contenu, id)
                 await addCours(sujet, contenu, parseInt(id));
                 setIsAdding(false);
                 setSujet('');

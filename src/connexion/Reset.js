@@ -44,7 +44,6 @@ function Reset() {
         createCookie(token, days, role);
         navigate('/home');
       } else {
-        console.log("Erreur lors de la modification");
       }
     } catch (error) {
       console.error('Erreur lors de la modification du mot de passe :', error);

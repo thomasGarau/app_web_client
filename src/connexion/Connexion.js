@@ -35,7 +35,6 @@ function Connexion() {
         createCookie(token, days, tokenInfo.role);
         navigate('/home');
       } else {
-        console.log("Erreur de connexion");
       }
     } catch (error) {
       console.error('Erreur lors de l\'authentification :', error);
@@ -45,11 +44,9 @@ function Connexion() {
       } else if (!password.trim()) {
         setErrorMessage('Veuillez remplir tous les champs.');
         setErrorAnchorEl(document.getElementById('password'));
-        console.log(document.getElementById('password'));
       } else {
         setErrorMessage('Mot de passe invalide! Veuillez réessayer.');
         setErrorAnchorEl(document.getElementById('password'));
-        console.log(document.getElementById('password'));
 
       }
       setId('error-popover');

@@ -21,7 +21,6 @@ function QuizzFin() {
         if (allSelectedAnswers.length > 0 && !isSubmitted) {
             handleSubmit(quizId, allSelectedAnswers)
                 .then(response => {
-                    console.log('Réponse du serveur:', response);
                     setIsSubmitted(true);
                     setFinalScore(response.resultat.noteFinale);  // Stocker la note finale obtenue dans l'état
                     resetSelectedAnswers();  
@@ -33,7 +32,6 @@ function QuizzFin() {
         }
         getQuizzInfo(quizId)
             .then(response => {
-                console.log('Réponse de getQuizzInfo:', response);
                 setChapId(response.id_chapitre);  
                 setLabel(response.label);
             })
@@ -42,7 +40,6 @@ function QuizzFin() {
             });
         getLastNoteQuizz(quizId)
             .then(response => {
-                console.log('Réponse de getLastNoteQuizz:', response);
                 setFinalScore(response.note);  
                 setIdQuizzNote(response.id_note_quizz);
             })

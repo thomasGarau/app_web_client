@@ -11,7 +11,6 @@ const api = axios.create({
 api.interceptors.request.use( async (config) => {
   const {token, role} = await getTokenAndRole();
   if (token) {
-    console.log('Token:', token);
     config.headers.Authorization = `bearer ${token}`;
   }
   return config;
@@ -26,7 +25,6 @@ api.interceptors.response.use(async (response) => {
     const logoutEvent = new Event('logoutRequired');
     window.dispatchEvent(logoutEvent);
     history.push('/connexion');
-    console.log('Déconnexion due à un token invalide ou expiré.');
     return new Promise((resolve) => {
       resolve({ data: 'Session expired, user logged out.' });
     });

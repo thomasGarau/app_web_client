@@ -20,7 +20,6 @@ export const getMessageForum = async (id_forum) => {
             id_forum: id_forum
         };
         const response = await api.post(`/chat/forum`, body);
-        console.log("response", response.data);
         return response.data;
     }
     catch (error) {

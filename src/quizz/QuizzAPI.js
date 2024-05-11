@@ -8,7 +8,6 @@ export const getQuizzParChap = async (chap_id) => {
             chapitre: chap_id
         };
         const response = await api.post(`/quizz/quizzForChapter`, body);
-        console.log("réponse : ",response);
         return response.data;
     }
     catch (error) {
@@ -22,7 +21,6 @@ export const getQuestionParQUizz = async (quizz_id) => {
             quizz: quizz_id
         };
         const response = await api.post(`/quizz/questionsPourQuizz`, body);
-        console.log("réponse ques : ",response);
         return response.data;
     }
     catch (error) {
@@ -38,9 +36,7 @@ export const getReponsesPourQuestion = async (question_id) => {
         const body = {
             question: question_id
         };
-        console.log(body)
         const response = await api.post(`/quizz/reponsesPourQuestion`, body);
-        console.log("réponse reponse : ",response);
         return response.data;
     }
     catch (error) {
@@ -54,11 +50,8 @@ export const handleSubmit = async (quizId, selectedAnswers) => {
         data: selectedAnswers.map(idReponse => ({ idReponse }))
     };
 
-    console.log('Soumission :', payload);
-
     try {
         const response = await api.post('/quizz/ajouterReponseUtilisateurAuQuizz', payload);
-        console.log('Réponse de soumission:', response);
         return response.data;
     }
     catch (error) {
@@ -74,7 +67,6 @@ export const getQuizzInfo = async (quizId) => {
         };
 
         const response = await api.post(`/quizz/getQuizzInfo`, body);
-        console.log("réponse info : ",response);
         return response.data;
     }
     catch (error) {
@@ -87,10 +79,8 @@ export const getNoteQuizzInfo = async (noteQuizId) => {
         const body = {
             note_quizz: noteQuizId
         };
-        console.log("body info : ",body);
 
         const response = await api.post(`/quizz/getNoteQuizzInfo`, body);
-        console.log("réponse info note : ",response);
         return response.data;
     }
     catch (error) {
@@ -103,10 +93,8 @@ export const getStatQuestions = async (noteQuizId) => {
         const body = {
             note_quizz: noteQuizId
         };
-        console.log("body info : ",body);
 
         const response = await api.post(`/quizz/resultatUtilisateurQuizz`, body);
-        console.log("réponse info : ",response);
         return response.data;
     }
     catch (error) {
@@ -120,10 +108,8 @@ export const getLastNoteQuizz = async (quizId) => {
         const body = {
             quizz: quizId
         };
-        console.log("body info note : ",body);
 
         const response = await api.post(`/quizz/getLastNoteForQuizz`, body);
-        console.log("réponse info note : ",response);
         return response.data;
     }
     catch (error) {
@@ -137,9 +123,6 @@ export const getReponsesUtilisateurPourQuestion = async (question_id, quiz_id) =
             question: question_id,
             quizz: quiz_id
         };
-        //const response = await api.post(`/quizz/reponsesUtilisateurPourQuestion`, body);
-        //console.log("réponse reponse : ",response);
-        //return response.data;
     }
     catch (error) {
         throw error;
@@ -152,7 +135,6 @@ export const getListQuizzCreateForUser = async () => {
     }
     try {
         const response = await api.get(`/quizz/listQuizzCreer`, body);
-        console.log("réponse : ",response);
         return response.data;
     }
     catch (error) {
@@ -166,7 +148,6 @@ export const deleteQuizz = async (quizId) => {
     }
     try {
         const response = await api.post(`/quizz/deleteQuizz`, body);
-        console.log("réponse : ",response);
         return response.data;
     }
     catch (error) {
@@ -180,7 +161,6 @@ export const getChapitreById = async (chapitreId) => {
     }
     try {
         const response = await api.post(`/cours/getChapitreById`, body);
-        console.log("réponse : ",response);
         return response.data;
     }
     catch (error) {
@@ -194,7 +174,6 @@ export const noteMoyennePourQuizz = async (quizId) => {
     }
     try {
         const response = await api.post(`/quizz/noteMoyennePourQuizz`, body);
-        console.log("réponse : ",response);
         return response.data;
     }
     catch (error) {

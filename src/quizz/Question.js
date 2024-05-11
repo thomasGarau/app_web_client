@@ -88,7 +88,6 @@ function Question() {
     
 
     const getIndicationText = () => {
-        console.log("questionType : ", questionType);
         switch (questionType) {
             case 'seul':
                 return 'Choisissez la bonne réponse';

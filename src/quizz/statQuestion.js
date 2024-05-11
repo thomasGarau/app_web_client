@@ -39,7 +39,6 @@ function StatQuestion() {
                     setCurrentQuestion(current);
                     const answers = await getReponsesPourQuestion(current.id_question);
                     setCurrentQuestion(prev => ({ ...prev, answers: answers || [] }));
-                    console.log(answers);
                 } else {
                     setCurrentQuestion(null);
                 }
@@ -53,8 +52,6 @@ function StatQuestion() {
 
 
     useEffect(() => {
-        console.log(currentQuestion)
-        console.log(listQuestions)
     }, [listQuestions, currentQuestion])
 
     const navigateToNextQuestion = () => {

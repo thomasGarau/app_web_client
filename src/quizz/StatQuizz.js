@@ -41,8 +41,6 @@ function StatQuizz() {
     }, [noteQuizId]);
 
     useEffect(() => {
-        console.log(infos)
-        console.log(listQuestions)
 
     }, [listQuestions])
 
