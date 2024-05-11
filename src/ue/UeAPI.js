@@ -8,7 +8,6 @@ export const getChapParUE = async (ue_id) => {
         };
         
         const response = await api.post(`/ue/allchapitre-ue`, body);
-        console.log('Réponse de getChapParUE:', response.data);
         return response.data;
     }
     catch (error) {
@@ -23,7 +22,6 @@ export const ueInfo = async (ue_id) => {
         };
         
         const response = await api.post(`/ue/ueInfo`, body);
-        console.log('Réponse de ueInfo:', response.data);
         return response.data;
     }
     catch (error) {

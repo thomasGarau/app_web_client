@@ -30,7 +30,6 @@ export default function Profile() {
 
     const handleChangeQuizz = (event) => {
         setQuizz(event.target.value);
-        console.log(quizz)
     };
 
     const handleUpload = () => {
@@ -39,7 +38,6 @@ export default function Profile() {
 
     const photoUpload = async (e) => {
         e.preventDefault();
-        console.log(e.target.files[0])
         setPicture({
             picturePreview: URL.createObjectURL(e.target.files[0]),
             pictureAsFile: e.target.files[0],
@@ -54,10 +52,8 @@ export default function Profile() {
                 try {
                     // Créer un objet FormData
                     const formData = new FormData();
-                    console.log(picture.pictureAsFile);
                     formData.append('path', picture.pictureAsFile);
                     for (var key of formData.entries()) {
-                        console.log(key[0] + ', ' + key[1])
                     }
                     // Mettre à jour l'image de profil
                     await updateUserProfilePicture(formData);
@@ -99,7 +95,6 @@ export default function Profile() {
             try {
                 const quizzs = await getListQuizzStatForUser();
                 setListQuizz(quizzs);
-                console.log(quizzs)
             } catch (error) {
                 console.error('Erreur lors de la récupération des quizz:', error);
             }
@@ -109,7 +104,6 @@ export default function Profile() {
                 const user = await getUserInfo();
                 setUser(user);
                 setRole(user.role);
-                console.log(user)
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations utilisateurs:', error);
             }
@@ -124,7 +118,6 @@ export default function Profile() {
                 const user = await getUserInfo();
                 setUser(user);
                 setRole(user.role);
-                console.log(user)
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations utilisateurs:', error);
             }

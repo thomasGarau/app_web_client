@@ -103,9 +103,7 @@ function Home() {
     try {
       const { token, role } = await getTokenAndRole();
       const tokenInfo = decodeJWT(token);
-      console.log(tokenInfo);
       if (tokenInfo.consentement === 1) {
-        console.log("consentement");
         try {
           const JMethod = await getJMethod();
           setListJMethod(JMethod);
@@ -155,7 +153,6 @@ function Home() {
       fetchJMethod();
     };
     fetchData();
-    console.log("role : ", role)
   }, [role]);
 
 

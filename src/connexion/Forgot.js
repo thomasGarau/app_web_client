@@ -11,7 +11,6 @@ function Forgot() {
 
   const handleValidate = async () => {
     try {
-      console.log("numEtudiant", numEtudiant);
       const responseData = await Retrieve(numEtudiant);
       // Vérifier si la réponse contient la propriété 'token'
       if (responseData && responseData.token) {
@@ -25,7 +24,6 @@ function Forgot() {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     const { value } = e.target;
     setNumEtudiant(e.target.value);
   }

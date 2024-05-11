@@ -13,7 +13,6 @@ function QuestionHandler() {
                 const data = await getQuestionParQUizz(quizId);
                 setQuestions(data);
                 if (data && data.length > 0) {
-                   console.log("on navigue youhou : ", data);
                   navigate(`/quiz/${quizId}/question/${data[0].id_question}`);
                 } else {
                     // Gérer le cas où il n'y a pas de questions

@@ -228,7 +228,6 @@ function UpdateQuizz() {
 
     useEffect(() => {
         setType(selected.type);
-        console.log(selected);
 
     }, [selected]);
 

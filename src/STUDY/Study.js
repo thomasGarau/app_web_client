@@ -66,7 +66,6 @@ function Study() {
             setRole(response_info.role);
             const data = await getCoursParChap(id);
             setCours(data);
-            console.log(data);
             const ids = data.map(cour => cour.id_cours);
             setCourseIds(ids);
         } catch (error) {
@@ -79,7 +78,6 @@ function Study() {
 
 
         fetchCours();
-        console.log(cours);
     }, [id]);
 
     const isEditingCour = (cour) => {
@@ -133,7 +131,6 @@ function Study() {
 
 
     const incrementerClic = () => {
-        console.log('clic');
         setClic(prevClic => prevClic + 1);
 
     };
@@ -169,7 +166,7 @@ function Study() {
             setIdStudy('error-popover');
             setOpen(true);
             return false;
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(label)) {
+        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
             setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('sujet'));
             setIdStudy('error-popover');
@@ -183,6 +180,12 @@ function Study() {
             setIdStudy('error-popover');
             setOpen(true);
             return false;
+        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(content)) {
+            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
+            setErrorAnchorEl(document.getElementById('contenu'));
+            setIdStudy('error-popover');
+            setOpen(true);
+            return false;
         }
 
         return true;
@@ -192,7 +195,6 @@ function Study() {
     const handleCreateCours = async () => {
         if (validateCourseInputs(sujet, contenu)) {
             try {
-                console.log(sujet, contenu, id)
                 await addCours(sujet, contenu, parseInt(id));
                 setIsAdding(false);
                 setSujet('');

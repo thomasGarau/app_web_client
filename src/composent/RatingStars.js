@@ -6,7 +6,6 @@ import { EnvoyerNoteQuizz, getLastNoteQuizz } from './QuestionAPI';
 const RatingStars = ({ quizId }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  console.log('RatingStars quizId:', quizId);
 
   useEffect(() => {
     const fetchLastRating = async () => {

@@ -33,7 +33,6 @@ function Forum() {
         const data = await getMessageForum(id_forum);
         setIsClosed(data.forum_information.forum_etat === '0');
         if (isClosed) {
-            console.log("Forum fermé");
         }
 
         // Trier les messages par date et heure

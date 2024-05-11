@@ -8,7 +8,6 @@ export const getCoursParChap = async (chap_id) => {
             id_chapitre: chap_id
         };
         const response = await api.post(`/cours/allcours-chapitre`, body);
-        console.log(response);
         return response.data;
     }
     catch (error) {
@@ -39,7 +38,6 @@ export const recolteInteraction = async (currentCour, chap_id, clic, dureeSessio
             scrolls: scroll,
             progression: progression
         };
-        console.log(body);
         const response = await api.post(`/jMethode/recolteInteraction`, body);
         return response.data;
     }
@@ -56,7 +54,6 @@ export const editCours = async (id, label, contenu) => {
             label: label,
             contenu: contenu
         };
-        console.log(body);
         const response = await api.post(`/cours/update-cours`, body);
         return response.data;
     }

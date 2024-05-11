@@ -46,13 +46,11 @@ function AdminInterface() {
     };
 
     const fileUploadEleve = (e) => {
-        console.log(e.target.files[0]);
         setFileTextEleve(e.target.files[0].name);
         setFileEleve(e.target.files[0]);
     };
 
     const fileUploadFormation = (e) => {
-        console.log(e.target.files[0]);
         setFileTextFormation(e.target.files[0].name);
         setFileFormation(e.target.files[0]);
     };
@@ -76,7 +74,6 @@ function AdminInterface() {
                 setFileTextFormation(file.name);
                 setFileFormation(file);
             } else {
-                console.log('Le fichier ne contient pas le mot "formation"');
                 setFileTextEleve(file.name);
                 setFileEleve(file);
             }
@@ -114,10 +111,8 @@ function AdminInterface() {
     const sendDataEleve = async () => {
         try {
             const formData = new FormData();
-            console.log(fileEleve);
             formData.append('file', fileEleve);
             for (var key of formData.entries()) {
-                console.log(key[0] + ', ' + key[1])
             }
             await addUser(formData);
             setMessage('Etudiants ajoutés avec succès');
@@ -130,10 +125,8 @@ function AdminInterface() {
     const sendDataFormation = async () => {
         try {
             const formData = new FormData();
-            console.log(fileFormation);
             formData.append('file', fileFormation);
             for (var key of formData.entries()) {
-                console.log(key[0] + ', ' + key[1])
             }
             await addFormation(formData);
             setMessage('Formation ajoutée avec succès');
@@ -144,7 +137,6 @@ function AdminInterface() {
     }
 
     useEffect(() => {
-        console.log(isDragging);
     }, [isDragging]);
 
 

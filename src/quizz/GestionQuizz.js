@@ -58,11 +58,9 @@ function GestionQuizz() {
 
     const handleChangeUE = (event) => {
         setUE(event.target.value);
-        console.log(UE)
     };
 
     const handleToCreateQuizz = async () => {
-        console.log("UE : ", UE);
         if (UE === '') {
             setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
             setErrorAnchorEl(document.getElementById('label-ue'));
@@ -77,30 +75,19 @@ function GestionQuizz() {
     const fetchMyQuizz = async () => {
         try {
             const quizzs = await getListQuizzCreateForUser();
-            console.log("quizzs : ", quizzs);
             const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
                 const chapitreInfo = await getChapitreById(quizz.id_chapitre);
                 const note_moyenne = parseFloat(quizz.moyenne_note).toFixed(1);
-                console.log("note_moyenne : ", note_moyenne);
                 return { ...quizz, chapitreInfo, moyenne_note: note_moyenne };
             }));
-            console.log("enhancedQuizzs : ", enhancedQuizzs);
             setQuizzes(enhancedQuizzs);
             const ues = await getUe();
             setListUE(ues);
-            console.log("ues : ", ues);
         } catch (error) {
             console.error('Erreur lors de la récupération des quizz:', error);
         }
     };
 
-
-    const toCreateQuizz = (id) => {
-        console.log("id : ", UE);
-        console.log("id : ", id);
-        //navigate(`/create_quizz/${id}`);
-
-    };
 
     useEffect(() => {
         

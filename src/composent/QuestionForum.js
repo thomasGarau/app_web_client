@@ -18,12 +18,9 @@ function QuestionForum(props) {
             setIsLoading(true);
             try {
                 let data;
-                console.log ("props", props)
                 if (id_chap) {
-                    console.log("id_chap", id_chap);
                     data = await getForumByCours(id_chap);
                 } else if (id_quizz) {
-                    console.log("id_quizz", id_quizz);
                     data = await getForumByQuizz(id_quizz);
                 }
                 if(data === null || data === undefined) return;
@@ -54,8 +51,6 @@ function QuestionForum(props) {
     }
 
     const handleCreateForum = () => {
-        console.log("id_chap question forum", id_chap);
-        console.log("id_quizz question forum", id_quizz);
         const createPath = id_chap ? `/forum/chap/${id_chap}` : `/forum/quizz/${id_quizz}`;
         navigate(createPath);
     }

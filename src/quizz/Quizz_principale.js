@@ -15,7 +15,6 @@ function Quizz_principale() {
   const [questions, setQuestions] = useState([]);
   const { id } = useParams();
   const [ueId, setUeId] = useState('');
-  console.log("id : ", id);
 
   const getTabStyle = (tabName) => ({
     textDecoration: activeTab === tabName ? 'underline' : 'none',
@@ -27,8 +26,7 @@ function Quizz_principale() {
     try {
       const quizzsResponse = await getQuizzParChap(id);
       let quizzProfesseurs = [];
-      let quizzEleves = []
-      console.log("quizzsResponse : ", quizzsResponse);
+      let quizzEleves = [];
       
       if (quizzsResponse && Array.isArray(quizzsResponse[0])) {
         // Ajouter une propriété pour indiquer le type de chaque quizz

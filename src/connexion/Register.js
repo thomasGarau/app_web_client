@@ -87,7 +87,6 @@ function Register() {
                     createCookie(token, days);
                     navigate('/home');
                 } else {
-                    console.log("Erreur lors de l'inscription");
                 }
             })
             .catch(error => {

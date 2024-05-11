@@ -4,7 +4,6 @@ export const addUser = async (file) => {
 
     try {
         const response = await api.post(`/administration/ajouter-utilisateur`, file);
-        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
@@ -16,7 +15,6 @@ export const addFormation = async (file) => {
 
     try {
         const response = await api.post(`/administration/ajouter-formation`, file);
-        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
