@@ -5,6 +5,7 @@ import { handleSubmit, getQuizzInfo, getLastNoteQuizz } from './QuizzAPI';
 import RatingStars from '../composent/RatingStars.js';
 import StyledButton from '../composent/StyledBouton.js';
 import QuestionForum from '../composent/QuestionForum';
+import { getUserInfo } from '../profile/ProfileAPI';
 
 function QuizzFin() {
     const { quizId } = useParams();
@@ -12,6 +13,7 @@ function QuizzFin() {
     const navigate = useNavigate();
     const { allSelectedAnswers, resetSelectedAnswers } = useQuiz();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [role, setRole] = useState('');
     const [finalScore, setFinalScore] = useState('');  
     const [label, setLabel] = useState('');
     const [id_quizz_note, setIdQuizzNote] = useState('');
@@ -30,6 +32,10 @@ function QuizzFin() {
                 });
 
         }
+        getUserInfo()
+        .then(response_info => {
+            setRole(response_info.role);
+        })
         getQuizzInfo(quizId)
             .then(response => {
                 setChapId(response.id_chapitre);  
@@ -67,7 +73,7 @@ function QuizzFin() {
                     <StyledButton content={"Relire les questions"} color={"primary"} fontSize={"1.5em"} onClick={() => navigate(`/statQuizz/${quizId}/${id_quizz_note}`)}/>
                     
                 </div>
-                <QuestionForum id_quizz={quizId}  />
+                <QuestionForum id_quizz={quizId} role={role}  />
 
             </div>
         </div>

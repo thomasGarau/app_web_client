@@ -50,8 +50,8 @@ function UeProf() {
             setErrorAnchorEl(document.getElementById('nom'));
             setOpen(true);
             return false;
-        } else if (label.length > 12) {
-            setErrorMessage('Le nom du chapitre ne doit pas dépasser 12 caractères.');
+        } else if (label.length > 20) {
+            setErrorMessage('Le nom du chapitre ne doit pas dépasser 20 caractères.');
             setErrorAnchorEl(document.getElementById('nom'));
             setOpen(true);
             return false;

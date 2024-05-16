@@ -54,7 +54,9 @@ export const editCours = async (id, label, contenu) => {
             label: label,
             contenu: contenu
         };
+        console.log(body);
         const response = await api.post(`/cours/update-cours`, body);
+        console.log(response);
         return response.data;
     }
     catch (error) {
