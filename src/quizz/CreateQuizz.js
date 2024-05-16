@@ -70,22 +70,22 @@ function UpdateQuizz() {
             { contenu: "", est_bonne_reponse: 0 }
         ];
         setSelected(prevSelected => ({ ...prevSelected, reponses: newReponses }));
+    };
+
+    const changeQuestion = (newQuestion) => {
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
-                if (question.index === selected.index) {
-                    return { ...question, reponses: newReponses };
+                if (question.id_question === selected.id_question) {
+                    return selected;
                 }
                 return question;
             });
         });
-
+        
+        setSelected(newQuestion);
+        console.log(newQuestion);
     };
-
-    const changeQuestion = (question) => {
-        setSelected(question);
-
-    };
-
+    
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
@@ -93,15 +93,6 @@ function UpdateQuizz() {
 
     const removeReponse = (indexToRemove) => {
         const newReponses = [...selected.reponses.slice(0, indexToRemove), ...selected.reponses.slice(indexToRemove + 1)];
-        setQuestions(prevQuestions => {
-            return prevQuestions.map(question => {
-                if (question.id_question === selected.id_question) {
-                    return { ...question, reponses: newReponses };
-                }
-                return question;
-            });
-        });
-
         setSelected(prevSelected => {
             return { ...prevSelected, reponses: newReponses };
         });
@@ -181,22 +172,6 @@ function UpdateQuizz() {
         });
     };
 
-
-    useEffect(() => {
-        if (selected && selected.reponses && Array.isArray(selected.reponses)) {
-            setQuestions(prevQuestions => {
-                return prevQuestions.map(question => {
-                    if (question.id_question === selected.id_question) {
-                        return { ...question, type: type, reponses: [...selected.reponses] };
-                    }
-
-                    return question;
-                });
-            });
-        }
-    }, [type]);
-
-
     useEffect(() => {
         setType(selected.type);
     }, [selected]);
@@ -220,7 +195,7 @@ function UpdateQuizz() {
         setErrorAnchorEl(null);
         setErrorMessage('');
         setOpenAnchor(false);
-      };
+    };
 
 
     return (
@@ -301,13 +276,9 @@ function UpdateQuizz() {
                     <Textarea
                         variant="plain"
                         value={selected ? selected.label : ''}
-                        sx={{ color: "black", fontSize: {xs: '1.2em', sm:'1.5em', md: '2em'}, marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
+                        sx={{ color: "black", fontSize: { xs: '1.2em', sm: '1.5em', md: '2em' }, marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
-                        onChange={(event) => {
-                            const updatedQuestions = [...questions];
-                            updatedQuestions[selected.id_question] = { ...selected, label: event.target.value };
-                            setQuestions(updatedQuestions);
-                            setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
+                        onChange={(event) => {setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
                         }}
                     />
                     <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
@@ -323,7 +294,7 @@ function UpdateQuizz() {
                                         }}
                                         variant="plain"
                                         sx={{
-                                            color: "black",fontSize: {xs: '0.8em', sm: '1.4em', md: '2em'}, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
+                                            color: "black", fontSize: { xs: '0.8em', sm: '1.4em', md: '2em' }, backgroundColor: "#F5F5F5", padding: "5px", borderRadius: "10px", width: "100%",
                                             '--Input-focusedInset': 'var(--any, )',
                                             '--Input-focusedThickness': '0.25rem',
                                             '--Input-focusedHighlight': 'rgba(245,245,245,.25)',
@@ -445,95 +416,106 @@ function UpdateQuizz() {
                                 onClick={() => setEstNegatif(!estNegatif)}>{estNegatif ? <ExposureIcon /> : <IsoIcon />}</IconButton>
                         </> :
                         <>
-                            <RadioGroup
-                                name="radio-buttons-group"
-                                value={type}
-                                onChange={(event) => handleTypeChange(event.target.value)}
-                                style={{ position: "fixed", left: "10px", bottom: "5%" }}
-                            >
-                                <Radio
-                                    size="lg"
-                                    value={'multiple'}
+                            <Box sx={{
+                                position: "fixed",
+                                left: "1%",
+                                bottom: "5%",
+                                display: "flex",
+                                flexDirection: "column-reverse",
+                            }}>
+                                <RadioGroup
+                                    name="radio-buttons-group"
+                                    value={type}
+                                    onChange={(event) => handleTypeChange(event.target.value)}
+                                    sx={{ margin: "10px 0px" }}
+                                >
+                                    <Radio
+                                        size="lg"
+                                        value={'multiple'}
 
-                                    label="Choix Multiple"
-                                    checked={type === 'multiple'}
-                                />
-                                <Radio
-                                    size="lg"
-                                    value={'seul'}
-                                    label="Choix Unique"
-                                    checked={type === 'seul'}
-                                />
-                                <Radio
-                                    size="lg"
-                                    value={'vrais'}
-                                    label="Vrai"
-                                    checked={type === 'vrais'}
-                                />
-                                <Radio
-                                    size="lg"
-                                    value={'faux'}
-                                    label="Faux"
-                                    checked={type === 'faux'}
-                                />
-                            </RadioGroup>
-
-                            <Button
-                                onClick={validateQuizz}
-                                sx={{
+                                        label="Choix Multiple"
+                                        checked={type === 'multiple'}
+                                    />
+                                    <Radio
+                                        size="lg"
+                                        value={'seul'}
+                                        label="Choix Unique"
+                                        checked={type === 'seul'}
+                                    />
+                                    <Radio
+                                        size="lg"
+                                        value={'vrais'}
+                                        label="Vrai"
+                                        checked={type === 'vrais'}
+                                    />
+                                    <Radio
+                                        size="lg"
+                                        value={'faux'}
+                                        label="Faux"
+                                        checked={type === 'faux'}
+                                    />
+                                </RadioGroup>
+                                <Button sx={{
                                     color: "black",
                                     fontSize: "large",
                                     backgroundColor: "rgb(245 245 245)",
                                     padding: "10px",
                                     borderRadius: "20px",
-                                    position: "fixed",
-                                    bottom: "5%",
-                                    right: "1%",
                                     transitionDuration: '0.4s',
                                     '&:hover': {
                                         boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
                                         backgroundColor: 'rgb(245, 245, 245)',
                                     },
                                 }}
-                            >
-                                Valider le quizz
-                            </Button>
-                            <Button sx={{
+                                    onClick={toggleDrawer(true)}>Menu des questions</Button>
+                            </Box>
+
+                            <Box sx={{
                                 position: "fixed",
-                                left: "1%",
-                                bottom: "20%",
-                                color: "black",
-                                fontSize: "large",
-                                backgroundColor: "rgb(245 245 245)",
-                                padding: "10px",
-                                borderRadius: "20px",
-                                transitionDuration: '0.4s',
-                                '&:hover': {
-                                    boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
-                                    backgroundColor: 'rgb(245, 245, 245)',
-                                },
-                            }}
-                                onClick={toggleDrawer(true)}>Menu des questions</Button>
-                            <Button
-                                sx={{
-                                    color: "black",
-                                    fontSize: "large",
-                                    backgroundColor: "rgb(245, 245, 245)",
-                                    padding: "10px",
-                                    borderRadius: "20px",
-                                    position: "fixed",
-                                    bottom: "12.5%",
-                                    right: "1%",
-                                    transitionDuration: '0.4s',
-                                    '&:hover': {
-                                        boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
-                                        backgroundColor: 'rgb(245, 245, 245)',
-                                    },
-                                }}
-                                onClick={() => setEstNegatif(!estNegatif)}
-                            >
-                                {estNegatif ? "Negatif" : "Normal"} {estNegatif ? <ExposureIcon /> : <IsoIcon />}
-                            </Button>
+                                bottom: "5%",
+                                right: "1%",
+                                display: "flex",
+                                flexDirection: "column",
+                            }}>
+                                <Button
+                                    onClick={validateQuizz}
+                                    sx={{
+                                        color: "black",
+                                        fontSize: "large",
+                                        backgroundColor: "rgb(245 245 245)",
+                                        padding: "10px",
+                                        borderRadius: "20px",
+                                        margin: "10px 0px",
+                                        transitionDuration: '0.4s',
+                                        '&:hover': {
+                                            boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
+                                            backgroundColor: 'rgb(245, 245, 245)',
+                                        },
+                                    }}
+                                >
+                                    Valider le quizz
+                                </Button>
+                                <Button
+                                    sx={{
+                                        color: "black",
+                                        fontSize: "large",
+                                        backgroundColor: "rgb(245, 245, 245)",
+                                        padding: "10px",
+                                        borderRadius: "20px",
+                                        transitionDuration: '0.4s',
+                                        '&:hover': {
+                                            boxShadow: '0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3)',
+                                            backgroundColor: 'rgb(245, 245, 245)',
+                                        },
+                                    }}
+                                    onClick={() => setEstNegatif(!estNegatif)}
+                                >
+                                    {estNegatif ? "Negatif" : "Normal"} {estNegatif ? <ExposureIcon /> : <IsoIcon />}
+                                </Button>
+                            </Box>
+
+
+
 
                         </>
                     }
