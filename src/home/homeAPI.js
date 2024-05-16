@@ -12,20 +12,7 @@ export const getUe = async () => {
 
 export const getJMethod = async () => {
     try {
-        // const response = await api.get('/ue/ue-user');
-        const response = [
-            {
-                label: "nom de la matière",
-                date: "2024-04-30",
-                duree: 80
-            },
-            {
-                label: "nom de la matièrehihi",
-                date: "2024-05-01",
-                duree: 60
-            }
-
-        ]
+        const response = await api.post('/jMethode/getCalendrier');
         return response;
     }
     catch (error) {

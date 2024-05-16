@@ -75,11 +75,12 @@ function Register() {
     };
 
     const handleChangeTracking = (event) => {
+        console.log(event.target.checked);
         setCheckedTracking(event.target.checked);
     };
 
     const handleRegister = async () => {
-        const tracking = checkedTracking ? 0 : 1;
+        const tracking = checkedTracking ? 1 : 0;
         await Registry(email, password, tracking)
             .then(data => {
                 const { token, days } = data;

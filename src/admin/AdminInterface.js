@@ -37,6 +37,7 @@ function AdminInterface() {
     const [message, setMessage] = useState('');
     const [buttonClicked, setButtonClicked] = useState('');
     const [openWarning, setOpenWarning] = useState(false);
+    const [alreadyOpened, setAlreadyOpened] = useState(false);
 
     const navigate = useNavigate();
 
@@ -95,13 +96,19 @@ function AdminInterface() {
     };
 
     const openEleveWarning = () => {
-        setButtonClicked('eleve');
-        setOpenWarning(true);
+        if (alreadyOpened == true) {
+            setButtonClicked('eleve');
+            setOpenWarning(true);
+            setAlreadyOpened(false);
+        }
     };
 
     const openFormationWarning = () => {
-        setButtonClicked('formation');
-        setOpenWarning(true);
+        if (alreadyOpened == true) {
+            setButtonClicked('formation');
+            setOpenWarning(true);
+            setAlreadyOpened(false);
+        }
     };
 
     const handleCloseWarning = () => {
@@ -117,6 +124,7 @@ function AdminInterface() {
             await addUser(formData);
             setMessage('Etudiants ajoutés avec succès');
             setOpen(true);
+            handleCloseWarning();
         } catch (error) {
             console.error('Erreur à l\'ajout de nouveaux étudiant', error);
         }
@@ -131,6 +139,7 @@ function AdminInterface() {
             await addFormation(formData);
             setMessage('Formation ajoutée avec succès');
             setOpen(true);
+            handleCloseWarning();
         } catch (error) {
             console.error('Erreur à l\'ajout de nouvelles formations', error);
         }
