@@ -47,23 +47,28 @@ function ServerDay(props) {
       overlap="circular"
       badgeContent={isSelected ? '🌚' : undefined}
     >
-      <PickersDay onClick={isSelected ? handleOpen : null} {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
-      {isSelected ? <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {JMethod.length > 0 ? `UE à réviser: ${JMethod[0].label}` : ''}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {JMethod.length > 0 ? `Heure à réviser: ${JMethod[0].duree}` : ''}
-          </Typography>
-
-        </Box>
-      </Modal> : ""}
+      <PickersDay
+        onClick={isSelected ? handleOpen : null}
+        {...other}
+        outsideCurrentMonth={outsideCurrentMonth}
+        day={day}
+      />
+      {isSelected && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            {JMethod.map((item, index) => (
+              <Typography sx={{padding: "5px"}} key={index} id="modal-modal-title" variant="h6" component="h2">
+                {`Chapitre: ${item.label} à réviser !`}
+              </Typography>
+            ))}
+          </Box>
+        </Modal>
+      )}
     </Badge>
   );
 }
@@ -106,6 +111,7 @@ function Home() {
       if (tokenInfo.consentement === 1) {
         try {
           const JMethod = await getJMethod();
+          console.log(JMethod);
           setListJMethod(JMethod);
           requestAbortController.current = controller;
         } catch (error) {
@@ -299,7 +305,7 @@ function Home() {
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
               <DateCalendar
-                sx={{ width: {xs:"250px", lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
+                sx={{ width: { xs: "250px", lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
                 loading={isLoading}
                 onMonthChange={handleMonthChange}
                 renderLoading={() => <DayCalendarSkeleton />}

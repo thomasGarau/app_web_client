@@ -13,7 +13,7 @@ export const getUe = async () => {
 export const getJMethod = async () => {
     try {
         const response = await api.post('/jMethode/getCalendrier');
-        return response;
+        return response.data;
     }
     catch (error) {
         throw error;
