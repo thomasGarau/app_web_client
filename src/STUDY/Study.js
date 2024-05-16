@@ -231,21 +231,6 @@ function Study() {
 
     };
 
-    const handleSaveEdit = async () => {
-        if (validateCourseInputs(editedLabel, editedContent)) {
-            try {
-                await editCours(editingCourseId, editedLabel, editedContent);
-                setEditingCourseId(null);
-                fetchCours();
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour du cours :", error);
-                setErrorMessage('Erreur lors de la mise à jour du cours. Veuillez réessayer.');
-                setErrorAnchorEl(document.getElementById('sujet')); // Adjust if needed
-                setIdStudy('error-popover');
-                setOpen(true);
-            }
-        }
-    };
 
 
 
@@ -298,8 +283,6 @@ function Study() {
                     {cours.length > 0 ? (
                         cours.map(cour => (
                             <Accordion onClick={incrementerClic} key={cour.id_cours} onChange={(event, expanded) => {
-                                if (editingCourseId) handleSaveEdit(editingCourseId);
-                                handleCurrentCour(event, expanded, cour.id_cours);
                             }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
 

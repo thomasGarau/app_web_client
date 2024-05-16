@@ -227,23 +227,23 @@
 }
 
 .quiz-final-demi-cercle {
-    width: 50vw;               /* Utilisez viewport width pour la largeur */
-    height: 37.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
-    max-width: 400px;          /* Limite maximale pour la largeur */
-    max-height: 300px;         /* Limite maximale pour la hauteur */
-    background: white;
-    border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
-    border-top-right-radius: 25vw;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+   width: 50vw;               /* Utilisez viewport width pour la largeur */
+        height: 27.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
+        max-width: 400px;          /* Limite maximale pour la largeur */
+        max-height: 300px;         /* Limite maximale pour la hauteur */
+        background: white;
+        border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
+        border-top-right-radius: 25vw;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
 }
 
 .quiz-final-demi-cercle-vide {
     width: 37.5vw;             /* Réduisez proportionnellement la largeur */
     height: 21.875vw;          /* Réduisez proportionnellement la hauteur */
     max-width: 300px;          /* Limite maximale pour la largeur */
-    max-height: 175px;         /* Limite maximale pour la hauteur */
+    max-height: 200px;         /* Limite maximale pour la hauteur */
     background: white;
     border-top-left-radius: 18.75vw; /* Adaptez le rayon à la largeur */
     border-top-right-radius: 18.75vw;
@@ -256,6 +256,7 @@
 
   .quiz-final-demi-cercle-vide p{
     font-size: 5em;
+    margin : 0;
   }
 
 @media (max-width: 600px){
