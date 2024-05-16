@@ -66,18 +66,17 @@ function UpdateQuizz() {
             { contenu: "", est_bonne_reponse: 0 }
         ];
         setSelected(prevSelected => ({ ...prevSelected, reponses: newReponses }));
+    };
+
+    const changeQuestion = (question) => {
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
                 if (question.id_question === selected.id_question) {
-                    return { ...question, reponses: newReponses };
+                    return selected;
                 }
                 return question;
             });
         });
-
-    };
-
-    const changeQuestion = (question) => {
         setSelected(question);
 
     };
@@ -85,15 +84,6 @@ function UpdateQuizz() {
     const removeReponse = (indexToRemove) => {
         const newReponses = [...selected.reponses.slice(0, indexToRemove), ...selected.reponses.slice(indexToRemove + 1)];
         setDelAnswer([...delAnswer, selected.reponses[indexToRemove]]);
-        setQuestions(prevQuestions => {
-            return prevQuestions.map(question => {
-                if (question.id_question === selected.id_question) {
-                    return { ...question, reponses: newReponses };
-                }
-                return question;
-            });
-        });
-
         setSelected(prevSelected => {
             return { ...prevSelected, reponses: newReponses };
         });
@@ -209,22 +199,6 @@ function UpdateQuizz() {
             return prevSelected;
         });
     };
-
-
-    useEffect(() => {
-        if (selected && selected.reponses && Array.isArray(selected.reponses)) {
-            setQuestions(prevQuestions => {
-                return prevQuestions.map(question => {
-                    if (question.id_question === selected.id_question) {
-                        return { ...question, type: type, reponses: [...selected.reponses] };
-                    }
-
-                    return question;
-                });
-            });
-        }
-    }, [type]);
-
 
     useEffect(() => {
         setType(selected.type);
@@ -374,15 +348,6 @@ function UpdateQuizz() {
                         placeholder="Modifier la question ici"
                         onChange={(event) => {
                             setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
-                            setQuestions(prevQuestions => {
-                                return prevQuestions.map(question => {
-                                    if (question.id_question === selected.id_question) {
-
-                                        return { ...question, label: event.target.value };
-                                    }
-                                    return question;
-                                });
-                            });
                         }}
                     />
                     <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>

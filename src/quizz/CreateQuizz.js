@@ -35,7 +35,6 @@ function UpdateQuizz() {
     const [listChapitre, setListChapitre] = useState([])
     const [chapitre, setChapitre] = useState('')
     const [type, setType] = useState('')
-    const [radioCheck, setRadioCheck] = useState(0)
     const [open, setOpen] = useState(false);
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -73,6 +72,13 @@ function UpdateQuizz() {
     };
 
     const changeQuestion = (newQuestion) => {
+        if(selected.nombre_bonne_reponse === 0) {
+            setErrorMessage('Veuillez choisir au moins une bonne réponse.');
+            setErrorAnchorEl(document.getElementById('radio1'));
+            setId('error-popover');
+            setOpenAnchor(true);
+            return;
+        }
         setQuestions(prevQuestions => {
             return prevQuestions.map(question => {
                 if (question.id_question === selected.id_question) {
@@ -81,11 +87,11 @@ function UpdateQuizz() {
                 return question;
             });
         });
-        
+
         setSelected(newQuestion);
         console.log(newQuestion);
     };
-    
+
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
@@ -152,15 +158,30 @@ function UpdateQuizz() {
     };
 
 
-    const handleRadioChange = (event) => {
-        setRadioCheck(parseInt(event.target.value));
+    const handleRadioChange = (indexReponse) => {
         setSelected(prevSelected => {
-            const updatedReponses = prevSelected.reponses.map((reponse, index) => {
-                return { ...reponse, est_bonne_reponse: 0 };
+            // Mettre à jour les réponses pour réinitialiser 'est_bonne_reponse'
+            const updatedReponses = prevSelected.reponses.map((reponse) => ({
+                ...reponse,
+                est_bonne_reponse: 0
+            }));
+    
+            // Mettre à jour la réponse sélectionnée
+            const newUpdatedReponses = updatedReponses.map((reponse, index) => {
+                if (index === indexReponse) {
+                    return { ...reponse, est_bonne_reponse: 1 };
+                }
+                return reponse;
             });
-            return { ...prevSelected, reponses: updatedReponses };
+    
+            const updatedNombreBonneReponse = newUpdatedReponses.reduce((total, reponse) => total + reponse.est_bonne_reponse, 0);
+    
+            return {
+                ...prevSelected,
+                reponses: newUpdatedReponses,
+                nombre_bonne_reponse: updatedNombreBonneReponse
+            };
         });
-        validateReponse(radioCheck)
     };
 
     const handleTypeChange = (typeQuestion) => {
@@ -278,7 +299,8 @@ function UpdateQuizz() {
                         value={selected ? selected.label : ''}
                         sx={{ color: "black", fontSize: { xs: '1.2em', sm: '1.5em', md: '2em' }, marginTop: "10px", width: "80%", backgroundColor: "inherit" }}
                         placeholder="Modifier la question ici"
-                        onChange={(event) => {setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
+                        onChange={(event) => {
+                            setSelected(prevSelected => ({ ...prevSelected, label: event.target.value }));
                         }}
                     />
                     <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
@@ -313,14 +335,14 @@ function UpdateQuizz() {
                                         <Checkbox
                                             aria-describedby={id}
                                             onChange={() => validateReponse(index)}
-                                            checked={reponse.est_bonne_reponse === 1 ? true : false}
+                                            checked={reponse.est_bonne_reponse === 1}
                                             style={{ color: "#F5F5F5" }}
                                         /> :
                                         <Radio
-                                            checked={radioCheck === index}
-                                            onChange={handleRadioChange}
+                                            checked={reponse.est_bonne_reponse === 1}
+                                            onChange={() => handleRadioChange(index)}
+                                            id={'radio' + index}
                                             name="radio-buttons"
-                                            value={index}
                                             style={{ padding: "9px" }} />}
                                     <IconButton onClick={() => removeReponse(index)} className="icon-add" style={{ transition: "0.2s" }}>
                                         <DeleteIcon style={{ fill: "#f5f5f5" }} />

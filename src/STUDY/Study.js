@@ -80,11 +80,11 @@ function Study() {
         fetchCours();
     }, [id]);
 
-    const isEditingCour = (cour) => {
-        setIsEditing(true);
+    const isEditingCour = (cour) => {   
         setEditingCourseId(cour.id_cours);
         setContenu(cour.contenu);
         setSujet(cour.label);
+        setIsEditing(true);
     };
 
     const deleteCour = (id_cours) => {
@@ -196,7 +196,6 @@ function Study() {
         if (validateCourseInputs(sujet, contenu)) {
             try {
                 await addCours(sujet, contenu, parseInt(id));
-                setIsAdding(false);
                 setSujet('');
                 setContenu('');
                 fetchCours();
@@ -216,8 +215,7 @@ function Study() {
         if (validateCourseInputs(sujet, contenu)) {
             try {
                 console.log(sujet, contenu, id)
-                await editCours(parseInt(id), sujet, contenu);
-                setIsAdding(false);
+                await editCours(editingCourseId, sujet, contenu);
                 setSujet('');
                 setContenu('');
                 fetchCours();
