@@ -28,7 +28,7 @@ const style = {
 function Accueil() {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpen(false);
+  const handleCloseModal = () => setOpenModal(false);
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
