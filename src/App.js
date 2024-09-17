@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import PrivateRoute from './services/PrivateRoutes';
 import PublicRoute from './services/PublicRoute';
-import Principal from './principal/Principal';
+import Accueil from './principal/Acceuil';
 import Connexion from './connexion/Connexion';
 import Register from './connexion/Register';
 import Carte_mental from './carte_mental/Carte_mental';
@@ -73,7 +73,7 @@ function App() {
 
         <Route path="/admin-interface" element={<RoleBasedRoute allowedRoles={['administration']}><Layout><AdminInterface /></Layout></RoleBasedRoute>} />
 
-        <Route path="/" element={<PublicRoute><Layout><Principal /></Layout></PublicRoute>} /> 
+        <Route path="/" element={<PublicRoute><Layout><Accueil /></Layout></PublicRoute>} /> 
       </Routes>
     </Router>
     </QuizProvider>
