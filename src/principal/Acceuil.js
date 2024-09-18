@@ -6,24 +6,6 @@ import { Box, Button, Modal, Typography } from "@mui/material";
 import StyledButton from '../composent/StyledBouton.js';
 import GenConModal from '../composent/GenConModal.js';
 
-const style = {
-  position: 'absolute',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { xs: '90%', sm: '70%', md: '50%' },
-  bgcolor: 'background.paper',
-  border: '2px solid #133D56',
-  boxShadow: 24,
-  borderRadius: 2,
-  Typography: 4,
-  height: '90vh',
-};
-
-
 
 function Accueil() {
   const [openModal, setOpenModal] = useState(false);
