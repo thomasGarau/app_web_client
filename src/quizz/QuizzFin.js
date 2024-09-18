@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuiz } from './QuizContext';
-import { handleSubmit, getQuizzInfo, getLastNoteQuizz } from './QuizzAPI';
+import { handleSubmit, getQuizzInfo, getLastNoteQuizz } from '../API/QuizzAPI';
 import RatingStars from '../composent/RatingStars.js';
 import StyledButton from '../composent/StyledBouton.js';
 import QuestionForum from '../composent/QuestionForum';
-import { getUserInfo } from '../profile/ProfileAPI';
+import { getUserInfo } from '../API/ProfileAPI';
 
 function QuizzFin() {
     const { quizId } = useParams();

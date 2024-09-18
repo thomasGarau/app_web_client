@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import StyledButton from '../composent/StyledBouton';
 import { Box, Button, IconButton, Input, Modal, Snackbar, TextField, Typography } from '@mui/material';
-import { addFormation, addUser } from './AdminAPI';
+import { addFormation, addUser } from '../API/AdminAPI';
 import CloseIcon from '@mui/icons-material/Close';
-import { logout } from '../connexion/UserAPI';
+import { logout } from '../API/UserAPI';
 import { eraseCookie, getTokenAndRole } from '../services/Cookie';
 import { useNavigate } from 'react-router-dom';
 

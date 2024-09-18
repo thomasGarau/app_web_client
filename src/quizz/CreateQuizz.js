@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Typography, Popover } from "@mui/material";
 import Textarea from '@mui/joy/Textarea';
 import "./CreateQuizz.css";
-import { createQuizz, getChapitreUE } from "./CreateQuizzAPI";
+import { createQuizz } from "../API/CreateQuizzAPI";
+import { getChapParUE } from "../API/UeAPI";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionsDrawer from "./quizz_components/QuestionDrawer";
 import QuizzTitleInput from "./quizz_components/QuizzTitleInput";
@@ -126,7 +127,7 @@ function CreateQuizz() {
     useEffect(() => {
         const fetchChapitres = async () => {
             try {
-                const data = await getChapitreUE(parseInt(idUe));
+                const data = await getChapParUE(parseInt(idUe));
                 setListChapitre(data);
 
             } catch (error) {

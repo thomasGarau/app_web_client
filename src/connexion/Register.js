@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import "@fontsource/nanum-pen-script";
-import { Registry } from './UserAPI.js';
+import { Registry } from '../API/UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import StyledButton from '../composent/StyledBouton.js';

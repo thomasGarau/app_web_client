@@ -1,19 +1,6 @@
 import api from '../config/axiosConfig';
 
 
-export const getCoursParChap = async (chap_id) => {
-    try {
-        const body = {
-            id_chapitre: chap_id
-        };
-        const response = await api.post(`/cours/allcours-chapitre`, body);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}
-
 export const getMessageForum = async (id_forum) => {
     try {
         const body = {
@@ -54,19 +41,6 @@ export const closeForum = async (id_forum) => {
     }
 }
 
-export const getQuizzInfo = async (quizId) => {
-    try {
-        const body = {
-            quizz: quizId
-        };
-
-        const response = await api.post(`/quizz/getQuizzInfo`, body);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}
 
 export const addForumCours = async (label, contenu, id_cours) => {
     try {
@@ -93,6 +67,32 @@ export const addForumQuizz = async (label, contenu, id_quizz) => {
             
         };
         const response = await api.post(`/chat/add-forum-quizz`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getForumByCours = async (id_chap) => {
+    try {
+        const body = {
+            id_chapitre: id_chap
+        };
+        const response = await api.post(`/chat/forum-cours`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getForumByQuizz = async (id_quizz) => {
+    try {
+        const body = {
+            id_quizz: id_quizz
+        };
+        const response = await api.post(`/chat/forum-quizz`, body);
         return response.data;
     }
     catch (error) {

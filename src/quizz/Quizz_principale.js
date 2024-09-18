@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz, getChapitreById } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz } from '../API/QuizzAPI.js';
+import { getChapitreById } from '../API/CoursAPI.js';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
@@ -89,7 +89,7 @@ function Quizz_principale() {
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis"
                 }}>{quiz.note} </Typography>
-                <img className='img_coeur' src={stars_yellow} alt='like' />
+                <img className='img_coeur' src={`${process.env.PUBLIC_URL}/star_full.png`} alt='like' />
             </Box>
                   <StyledButton
                   width={200}

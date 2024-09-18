@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { eraseCookie, getTokenAndRole } from './Cookie';
-import { logout } from '../connexion/UserAPI';
+import { logout } from '../API/UserAPI';
 
 export const useIdleTimer = (timeout = 1_200_000) => {
 

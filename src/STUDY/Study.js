@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCoursParChap, recolteInteraction, addCours, editCours, deleteCours } from './StudyAPI';
+import { getCoursParChap, addCours, editCours, deleteCours } from '../API/CoursAPI';
+import { recolteInteraction } from '../API/jMethodeAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import QuestionForum from '../composent/QuestionForum';
-import { getUserInfo } from '../profile/ProfileAPI';
+import { getUserInfo } from '../API/ProfileAPI';
 import StyledButton from '../composent/StyledBouton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

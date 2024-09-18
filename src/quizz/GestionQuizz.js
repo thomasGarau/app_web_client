@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import stars_yellow from './img/star_full.png';
 import { getTokenAndRole } from '../services/Cookie.js';
-import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo, getChapitreById, noteMoyennePourQuizz } from './QuizzAPI.js';
+import { getQuizzParChap, getQuestionParQUizz, getListQuizzCreateForUser, deleteQuizz, getQuizzInfo,  noteMoyennePourQuizz } from '../API/QuizzAPI.js';
+import { getChapitreById } from '../API/CoursAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
-import { getUe } from '../home/homeAPI.js';
+import { getUe } from '../API/UeAPI.js';
 
 
 const style = {
@@ -135,7 +135,7 @@ function GestionQuizz() {
                                             whiteSpace: "nowrap",
                                             textOverflow: "ellipsis"
                                         }}>{quiz.moyenne_note} </Typography>
-                                        <img className='img_coeur' src={stars_yellow} alt='like' />
+                                        <img className='img_coeur' src={`${process.env.PUBLIC_URL}/star_full.png`} alt='like' />
                                     </Box>
                                     <StyledButton
                                         onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}

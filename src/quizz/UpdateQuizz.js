@@ -3,9 +3,6 @@ import { Typography, Popover } from "@mui/material";
 import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/joy/Button';
 import "./CreateQuizz.css";
-import { ajouterQuestionAuQuizz, getChapitreUE, updateQuestionduQuizz, updateQuizz } from "./CreateQuizzAPI";
-import { useNavigate, useParams } from "react-router-dom";
-import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "./QuizzAPI";
 import QuizzTitleInput from "./quizz_components/QuizzTitleInput";
 import QuestionsDrawer from "./quizz_components/QuestionDrawer";
 import ChapterSelect from "./quizz_components/ChapterSelect";
@@ -13,6 +10,11 @@ import AnswerOptions from "./quizz_components/AnswerOptions";
 import AnswerContainer from "./quizz_components/AnswerContainer";
 import { addQuestion, addReponse, changeQuestion, removeReponse, typeChange, validateQuizz, validateReponse } from "./quizz_services/QuizzService";
 import useErrorPopover from "../composent/useErrorPopover";
+import { ajouterQuestionAuQuizz, updateQuestionduQuizz, updateQuizz } from "../API/CreateQuizzAPI";
+import { getChapParUE } from "../API/UeAPI";
+import { getTokenAndRole } from "../services/Cookie";
+import { useNavigate, useParams } from "react-router-dom";
+import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "../API/QuizzAPI";
 
 function UpdateQuizz() {
     const { quizId } = useParams();
@@ -139,7 +141,7 @@ function UpdateQuizz() {
         const fetchChapitres = async () => {
             try {
                 if (idUe != null) {
-                    const data = await getChapitreUE(idUe);
+                    const data = await getChapParUE(idUe);
                     setListChapitre(data);
                 }
             } catch (error) {

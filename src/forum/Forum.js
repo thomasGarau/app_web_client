@@ -5,7 +5,7 @@ import Icon from '@mdi/react';
 import { mdiCommentPlus, mdiAlert } from '@mdi/js';
 import './Forum.css';
 import StyledButton from "../composent/StyledBouton";
-import { getMessageForum, ajouterMessageForum, closeForum } from './ForumAPI';
+import { getMessageForum, ajouterMessageForum, closeForum } from '../API/ForumAPI';
 import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getJMethod, getUe } from "./homeAPI.js";
-import { logout, getUserInfo } from "../connexion/UserAPI.js";
+import { getJMethod } from "../API/jMethodeAPI.js";
+import { getUe } from "../API/UeAPI.js";
+import { logout, getUserInfo } from "../API/ProfileAPI.js";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
 
 import "./home.css";
@@ -99,7 +100,6 @@ function Home() {
     r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
     return images
   }
-  const images = importAll(require.context('../ueIcons', false, /\.(png|jpe?g|svg)$/));
 
 
   const fetchJMethod = async () => {

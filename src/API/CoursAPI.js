@@ -1,4 +1,4 @@
-import api from '../config/axiosConfig';
+import api from '../config/axiosConfig.js';
 import { getTokenAndRole } from '../services/Cookie.js';
 
 
@@ -28,23 +28,19 @@ export const getChapitre = async (chap_id) => {
     }
 }
 
-export const recolteInteraction = async (currentCour, chap_id, clic, dureeSession, scroll, progression) => {
+export const getChapitreById = async (chapitreId) => {
+    const body = {
+        id_chapitre: chapitreId
+    }
     try {
-        const body = {
-            cours: currentCour,
-            chapitre: chap_id,
-            dureeSession: dureeSession,
-            clics: clic,
-            scrolls: scroll,
-            progression: progression
-        };
-        const response = await api.post(`/jMethode/recolteInteraction`, body);
+        const response = await api.post(`/cours/getChapitreById`, body);
         return response.data;
     }
     catch (error) {
         throw error;
     }
 }
+
 
 
 export const editCours = async (id, label, contenu) => {
