@@ -99,7 +99,6 @@ function Home() {
     r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
     return images
   }
-  const images = importAll(require.context('../ueIcons', false, /\.(png|jpe?g|svg)$/));
 
 
   const fetchJMethod = async () => {
