@@ -13,10 +13,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IsoIcon from '@mui/icons-material/Iso';
 import ExposureIcon from '@mui/icons-material/Exposure';
 import "./CreateQuizz.css";
-import { ajouterQuestionAuQuizz, createQuizz, getChapitreUE, getIdUtilisateur, updateQuestionduQuizz, updateQuizz } from "./CreateQuizzAPI";
+import { ajouterQuestionAuQuizz, createQuizz, getIdUtilisateur, updateQuestionduQuizz, updateQuizz } from "../API/CreateQuizzAPI";
+import { getChapParUE } from "../API/UeAPI";
 import { getTokenAndRole } from "../services/Cookie";
 import { useNavigate, useParams } from "react-router-dom";
-import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "./QuizzAPI";
+import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "../API/QuizzAPI";
 
 function UpdateQuizz() {
     const { quizId } = useParams();
@@ -210,7 +211,7 @@ function UpdateQuizz() {
         const fetchChapitres = async () => {
             try {
                 if (idUe != null) {
-                    const data = await getChapitreUE(idUe);
+                    const data = await getChapParUE(idUe);
                     setListChapitre(data);
                 }
             } catch (error) {

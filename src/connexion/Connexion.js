@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //modules
-import { Authenticate, getUserInfo } from './UserAPI.js';
+import { Authenticate, getUserInfo } from '../API/UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import { Link, Box, Popover, Typography } from '@mui/material';
 import './Connexion.css';

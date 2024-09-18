@@ -33,15 +33,6 @@ export const logout = async (token) => {
 }
 
 
-export const getUserInfo = async () => {
-    try {
-        const response = await api.get(`/user/getUserInfo`);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}
 
 export const Retrieve = async (num_etudiant) => {
     const body = {

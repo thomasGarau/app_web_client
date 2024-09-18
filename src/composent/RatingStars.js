@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import './RatingStars.css';
-import { EnvoyerNoteQuizz, getLastNoteQuizz } from './QuestionAPI';
+import { EnvoyerNoteQuizz, getNoteUtilisateurDonneeAuQuizz } from '../API/QuizzAPI';
 
 const RatingStars = ({ quizId }) => {
   const [rating, setRating] = useState(0);
@@ -10,7 +10,7 @@ const RatingStars = ({ quizId }) => {
   useEffect(() => {
     const fetchLastRating = async () => {
       try {
-        const lastRating = await getLastNoteQuizz(quizId);
+        const lastRating = await getNoteUtilisateurDonneeAuQuizz(quizId);
         if (lastRating !== undefined && lastRating !== null) {
           setRating(lastRating.note);
         }

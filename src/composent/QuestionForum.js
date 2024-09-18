@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, List, ListItem, ListItemText, Typography } from "@mui/material";
 import StyledButton from '../composent/StyledBouton';
-import { getForumByCours, getForumByQuizz } from "../composent/QuestionAPI.js";
+import { getForumByCours, getForumByQuizz } from "../API/ForumAPI.js";
 
 function QuestionForum(props) {
     const { id_chap, id_quizz, role } = props; 

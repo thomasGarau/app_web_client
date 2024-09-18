@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { verifyToken } from '../connexion/UserAPI.js';
+import { verifyToken } from '../API/UserAPI.js';
 import { getTokenAndRole } from './Cookie.js';
-import { getUserInfo } from '../profile/ProfileAPI';
+import { getUserInfo } from '../API/ProfileAPI';
 
 /**
  * RoleBasedRoute checks both authentication and specific role permissions.

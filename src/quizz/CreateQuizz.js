@@ -13,7 +13,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IsoIcon from '@mui/icons-material/Iso';
 import ExposureIcon from '@mui/icons-material/Exposure';
 import "./CreateQuizz.css";
-import { createQuizz, getChapitreUE } from "./CreateQuizzAPI";
+import { createQuizz } from "../API/CreateQuizzAPI";
+import { getChapParUE } from "../API/UeAPI";
 import { useNavigate, useParams } from "react-router-dom";
 
 function UpdateQuizz() {
@@ -201,7 +202,7 @@ function UpdateQuizz() {
     useEffect(() => {
         const fetchChapitres = async () => {
             try {
-                const data = await getChapitreUE(parseInt(idUe));
+                const data = await getChapParUE(parseInt(idUe));
                 setListChapitre(data);
 
             } catch (error) {

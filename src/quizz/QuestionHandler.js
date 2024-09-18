@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getQuestionParQUizz } from './QuizzAPI'; // Assurez-vous que cet import est correct
+import { getQuestionParQUizz } from '../API/QuizzAPI'; // Assurez-vous que cet import est correct
 
 function QuestionHandler() {
     const { quizId } = useParams();

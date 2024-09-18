@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getQuestionParQUizz, getReponsesPourQuestion, getQuizzInfo } from './QuizzAPI';
+import { getQuestionParQUizz, getReponsesPourQuestion, getQuizzInfo } from '../API/QuizzAPI';
 import { useQuiz } from './QuizContext';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography, Button } from '@mui/material';
 

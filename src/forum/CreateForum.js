@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormControl, MenuItem, Select, Box, Typography, Popover } from "@mui/material";
 import StyledButton from '../composent/StyledBouton';
-import { getCoursParChap, getQuizzInfo, addForumCours, addForumQuizz } from './ForumAPI';
+import { addForumCours, addForumQuizz } from '../API/ForumAPI';
+import { getCoursParChap } from '../API/CoursAPI';
+import { getQuizzInfo } from '../API/QuizzAPI';
 
 const CreateForum = () => {
     const navigate = useNavigate();

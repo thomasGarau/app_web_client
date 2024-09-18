@@ -4,9 +4,10 @@ import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography, Popo
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import StyledButton from "../composent/StyledBouton";
-import { getListQuizzCreateForUser, getListQuizzStatForUser, getUserInfo, updateUserProfilePicture } from "./ProfileAPI";
+import { getUserInfo, updateUserProfilePicture } from "../API/ProfileAPI";
+import { getListQuizzStatForUser } from "../API/QuizzAPI";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../connexion/UserAPI";
+import { logout } from "../API/UserAPI";
 import { eraseCookie, getTokenAndRole } from "../services/Cookie";
 
 export default function Profile() {

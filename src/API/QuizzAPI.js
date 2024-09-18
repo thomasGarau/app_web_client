@@ -1,4 +1,4 @@
-import api from '../config/axiosConfig';
+import api from '../config/axiosConfig.js';
 import { getTokenAndRole } from '../services/Cookie.js';
 import axios from 'axios';
 
@@ -8,6 +8,51 @@ export const getQuizzParChap = async (chap_id) => {
             chapitre: chap_id
         };
         const response = await api.post(`/quizz/quizzForChapter`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getNoteUtilisateurDonneeAuQuizz = async (quizId) => {
+    try {
+        const body = {
+            quizz: quizId
+        };
+        const response = await api.post(`/quizz/getNoteUtilisateurDonneeAuQuizz`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+
+export const EnvoyerNoteQuizz = async (quizId, note) => {
+    try{
+        const body = {
+            quizz: quizId,
+            note: note
+        };
+        const response = await api.post(`/quizz/ajouterNoteUtilisateurPourQuizz`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+
+
+
+export const getListQuizzStatForUser = async () => {
+    const body = {
+
+    }
+    try {
+        const response = await api.get(`/quizz/listQuizzPasser`, body);
+        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
@@ -117,17 +162,7 @@ export const getLastNoteQuizz = async (quizId) => {
     }
 }
 
-export const getReponsesUtilisateurPourQuestion = async (question_id, quiz_id) => {
-    try {
-        const body = {
-            question: question_id,
-            quizz: quiz_id
-        };
-    }
-    catch (error) {
-        throw error;
-    }
-}
+
 
 export const getListQuizzCreateForUser = async () => {
     const body = {
@@ -155,18 +190,6 @@ export const deleteQuizz = async (quizId) => {
     }
 }
 
-export const getChapitreById = async (chapitreId) => {
-    const body = {
-        id_chapitre: chapitreId
-    }
-    try {
-        const response = await api.post(`/cours/getChapitreById`, body);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}
 
 export const noteMoyennePourQuizz = async (quizId) => {
     const body = {

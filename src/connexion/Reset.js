@@ -3,7 +3,7 @@ import { Link, Box, Typography, Popover } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import { createCookie } from '../services/Cookie';
 import { useNavigate } from 'react-router-dom';
-import { Authenticate, updatePassword } from './UserAPI';
+import { Authenticate, updatePassword } from '../API/UserAPI';
 
 function Reset() {
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getChapParUE } from './UeAPI.js';
+import { getChapParUE } from '../API/UeAPI.js';
 import "@fontsource/nanum-pen-script";
 import './Ue.css';
 import StyledButton from '../composent/StyledBouton.js';

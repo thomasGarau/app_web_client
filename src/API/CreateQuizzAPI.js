@@ -84,15 +84,3 @@ export const ajouterQuestionAuQuizz = async (label, nombre_bonne_reponse, type, 
     }
 }
 
-export const getChapitreUE = async (id_ue) => {
-    try {
-        const body = {
-            id_ue: id_ue,
-        };
-        const response = await api.post('/ue/allchapitre-ue', body);
-        return response.data;
-    }
-    catch (error) {
-        throw error;
-    }
-}

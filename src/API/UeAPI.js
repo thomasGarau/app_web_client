@@ -1,4 +1,4 @@
-import api from '../config/axiosConfig';
+import api from '../config/axiosConfig.js';
 import { getTokenAndRole } from '../services/Cookie.js';
 
 export const getChapParUE = async (ue_id) => {
@@ -8,6 +8,27 @@ export const getChapParUE = async (ue_id) => {
         };
         
         const response = await api.post(`/ue/allchapitre-ue`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export const getUeProf = async () => {
+    try {
+        const response = await api.get('/ue/ue-enseignant');
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+
+export const getUe = async () => {
+    try {
+        const response = await api.get('/ue/ue-user');
         return response.data;
     }
     catch (error) {

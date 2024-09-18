@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 //modules
-import { getNoteQuizzInfo, getQuestionParQUizz, getReponsesPourQuestion, getStatQuestions } from './QuizzAPI.js';
+import { getNoteQuizzInfo, getQuestionParQUizz, getReponsesPourQuestion, getStatQuestions } from '../API/QuizzAPI.js';
 import { Link, Box, Typography, Avatar } from '@mui/material';
 import './StatQuizz.css';
 import "@fontsource/nanum-pen-script";

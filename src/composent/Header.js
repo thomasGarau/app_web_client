@@ -4,7 +4,7 @@ import './Header.css'
 import "@fontsource/nanum-pen-script";
 import "@fontsource/caveat"
 import "@fontsource/shadows-into-light"
-import { getUserInfo } from "../profile/ProfileAPI";
+import { getUserInfo } from "../API/ProfileAPI";
 import { Avatar } from "@mui/material";
 
 function Header() {

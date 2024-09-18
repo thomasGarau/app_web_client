@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getChapParUE, ueInfo, addChapitre, updateChapitre, deleteChapitre } from './UeAPI.js';
+import { getChapParUE, ueInfo, addChapitre, updateChapitre, deleteChapitre } from '../API/UeAPI.js';
 import './Ue.css'; 
 import StyledButton from '../composent/StyledBouton.js';
 import EditIcon from '@mui/icons-material/Edit';

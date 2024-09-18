@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import { getUserInfo } from "../connexion/UserAPI.js";
-import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, getChapitreById } from './QuizzAPI.js';
+import { getUserInfo } from "../API/ProfileAPI.js";
+import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser } from '../API/QuizzAPI.js';
+import { getChapitreById } from '../API/CoursAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
