@@ -3,7 +3,6 @@ import './Profile.css'
 import { Select, InputLabel, FormControl, MenuItem, Modal, Box, Typography, Popover, Avatar } from "@mui/material";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
-import ppImage from '../composent/img/pp.png';
 import StyledButton from "../composent/StyledBouton";
 import { getListQuizzCreateForUser, getListQuizzStatForUser, getUserInfo, updateUserProfilePicture } from "./ProfileAPI";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +14,8 @@ export default function Profile() {
     const [listQuizz, setListQuizz] = useState([])
 
     const [quizz, setQuizz] = useState('')
-    const [profilePic, setProfilePic] = useState(ppImage)
-    const [imagePreviewUrl, setImagePreviewUrl] = useState(ppImage)
+    const [profilePic, setProfilePic] = useState('${process.env.PUBLIC_URL}/img/pp.png')
+    const [imagePreviewUrl, setImagePreviewUrl] = useState('${process.env.PUBLIC_URL}/img/pp.png')
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [id, setId] = useState(undefined);

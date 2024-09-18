@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Header.css'
-import ppImage from './img/pp.png';
-import logo from './img/logo_rond.png';
 import "@fontsource/nanum-pen-script";
 import "@fontsource/caveat"
 import "@fontsource/shadows-into-light"
@@ -40,7 +38,7 @@ function Header() {
         <div className="head">
             <Avatar
                 className="logo"
-                src={logo}
+                src={`${process.env.PUBLIC_URL}/logo_rond.png`}
                 alt="logo"
                 onClick={versPagePrincipale}
                 sx={{ width: {xs: 50, sm: 75, md: 100}, height: {xs: 50, sm: 75, md: 100} }}

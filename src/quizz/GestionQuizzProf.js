@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import stars_yellow from './img/star_full.png';
 import { getUserInfo } from "../connexion/UserAPI.js";
 import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser, getChapitreById } from './QuizzAPI.js';
 import './Quizz.css';
@@ -144,7 +143,7 @@ function GestionQuizzProf() {
                                                 whiteSpace: "nowrap",
                                                 textOverflow: "ellipsis"
                                             }}>{quiz.note} </Typography>
-                                            <img className='img_coeur' src={stars_yellow} alt='like' />
+                                            <img className='img_coeur' src={`${process.env.PUBLIC_URL}/star_full.png`} alt='like' />
                                         </Box>
                                         <StyledButton
                                             onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
