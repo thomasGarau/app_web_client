@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import { getUserInfo } from "../API/ProfileAPI.js";
-import { getQuizzParChap, deleteQuizz, getQuizzInfo, getListQuizzCreateForUser } from '../API/QuizzAPI.js';
-import { getChapitreById } from '../API/CoursAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
-import Question from './Question.js';
 import QuestionForum from '../composent/QuestionForum.js';
+import useErrorPopover from '../composent/useErrorPopover.js';
+import { delQuizz, fetchMyQuizz } from './quizz_services/GestionQuizzService.js';
+import { QuizList } from './gestion_quizz_components/QuizList.js';
+import { CreateModal } from './gestion_quizz_components/CreateModal.js';
 
 
 const style = {
@@ -24,7 +24,7 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     borderRadius: 2,
-    p: 4,
+    Typography: 4,
 };
 
 
@@ -33,27 +33,25 @@ function GestionQuizzProf() {
     const { id } = useParams();
     const [idUe, setIdUe] = useState('');
     const [quizzes, setQuizzes] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [UE, setUE] = useState('');
-    const handleOpen = () => setOpen(true);
-    const [idLabel, setIdLabel] = useState(undefined);
-    const handleClose = () => setOpen(false);
-    const [openPop, setOpenPop] = useState(false);
     const [listUE, setListUE] = useState([]);
-    const handleOpen2 = () => setOpen(true);
-    const handleClose2 = () => setOpen(false);
-    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [UE, setUE] = useState('');
+    const [openCreate, setOpenCreate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const handleOpenDelete = () => setOpenDelete(true);
+    const handleCloseDelete = () => setOpenDelete(false);
+    const handleOpenCreate = () => setOpenCreate(true);
+    const handleCloseCreate = () => setOpenCreate(false);
+
     const [showForum, setShowForum] = useState(false);
     const [forumId, setForumId] = useState('');
+    const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
-    const delQuizz = async (quizId) => {
-        try {
-            await deleteQuizz(quizId);
-            fetchMyQuizz();
-        } catch (error) {
-            console.error('Erreur lors de la suppression du quizz:', error);
-        }
+
+    const handleDelQuizz = async (quizId) => {
+        delQuizz(
+            quizId,
+            fetchMyQuizz(setQuizzes, setListUE, setIdUe, id)
+        )
     };
 
     const handleChangeUE = (event) => {
@@ -66,20 +64,11 @@ function GestionQuizzProf() {
 
     const handleToCreateQuizzAll = async () => {
         if (UE === '') {
-            setErrorMessage('Vous n\'avez pas sélectionné d\'UE!');
-            setErrorAnchorEl(document.getElementById('label-ue'));
-            setIdLabel('error-popover');
-            setOpenPop(true);
+            showErrorPopover('Vous n\'avez pas sélectionné d\'UE!', 'label-ue')
             return
         }
         navigate(`/create_quizz/${UE.id_ue}`);
     }
-
-    const handleClosePopover = () => {
-        setErrorAnchorEl(null);
-        setErrorMessage('');
-        setOpenPop(false);
-    };
 
     const handleShowForum = (id_quizz) => {
         setShowForum(false);
@@ -87,34 +76,8 @@ function GestionQuizzProf() {
         setShowForum(true);
     }
 
-
-    const fetchMyQuizz = async () => {
-        try {
-            if (id) {
-                const quizzsResponse = await getQuizzParChap(id);
-                setQuizzes(quizzsResponse[0]);
-                const responseInfo = await getChapitreById(id);
-                setIdUe(responseInfo[0].id_ue);
-            } else {
-                const quizzs = await getListQuizzCreateForUser();
-                const enhancedQuizzs = await Promise.all(quizzs.map(async (quizz) => {
-                    const chapitreInfo = await getChapitreById(quizz.id_chapitre);
-                    const note_moyenne = parseFloat(quizz.moyenne_note).toFixed(1);
-                    return { ...quizz, chapitreInfo, note: note_moyenne };
-                }));
-                setQuizzes(enhancedQuizzs);
-                const response_info = await getUserInfo();
-                setListUE(response_info.ue);
-            }
-
-        } catch (error) {
-            console.error('Erreur lors de la récupération des quizz:', error);
-        }
-    };
-
-
     useEffect(() => {
-        fetchMyQuizz();
+        fetchMyQuizz(setQuizzes, setListUE, setIdUe, id);
     }, [id]);
 
 
@@ -124,73 +87,16 @@ function GestionQuizzProf() {
             <div className='background-quizz-principale-container'>
                 <div className='base-container_quizz_principale'>
                     <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" } }} className='quizz-title'>Vos quizzes</Typography>
-                    <div className='container_quizzs'>
-                        {quizzes ? (
-                            quizzes.length > 0 ? (
-                                quizzes.map(quiz => (
-                                    <Box sx={{ flexWrap: { lg: 'nowrap', xs: 'wrap' }, height: { lg: '120px', xs: '220px' } }} key={quiz.id_quizz} className='container_quizz'>
-                                        <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_sujet' className='theme_quizz'>
-                                            <Typography sx={{
-                                                fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
-                                                overflow: "hidden",
-                                                whiteSpace: "nowrap",
-                                                textOverflow: "ellipsis"
-                                            }}>{quiz.label}</Typography>
-                                        </Box>
-                                        <Box sx={{ height: { md: '75px', sm: '62px', xs: '50px' } }} id='quizz_like' className='quizz_like'>
-                                            <Typography sx={{
-                                                fontSize: { xs: "0.7em", sm: "1em", md: "1.7em" },
-                                                overflow: "hidden",
-                                                whiteSpace: "nowrap",
-                                                textOverflow: "ellipsis"
-                                            }}>{quiz.note} </Typography>
-                                            <img className='img_coeur' src={`${process.env.PUBLIC_URL}/star_full.png`} alt='like' />
-                                        </Box>
-                                        <StyledButton
-                                            onClick={() => navigate(`/update_quizz/${quiz.id_quizz}`)}
-                                            width={200}
-                                            color={'white'}
-                                            content={"Modifier"}></StyledButton>
-                                            <StyledButton
-                                            onClick={() => handleShowForum(quiz.id_quizz)}
-                                            width={200}
-                                            color={'white'}
-                                            content={"Forum"}></StyledButton>
-                                        <StyledButton
-                                            onClick={handleOpen}
-                                            width={200}
-                                            color={'white'}
-                                            content={"Supprimer"}></StyledButton>
-                                        <Modal
-                                            open={open}
-                                            onClose={handleClose}
-                                            aria-labelledby="modal-modal-title"
-                                            aria-describedby="modal-modal-description"
-                                        >
-                                            <Box sx={style}>
-                                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                                    Voulez vous vraiment supprimer le quizz?
-                                                </Typography>
-                                                <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-                                                    <StyledButton
-                                                        onClick={() => { delQuizz(quiz.id_quizz); handleClose(); }}
-                                                        width={75}
-                                                        color={'primary'}
-                                                        content={"Oui"} />
-                                                    <StyledButton
-                                                        onClick={handleClose}
-                                                        width={75}
-                                                        color={'primary'}
-                                                        content={"Non"} />
-                                                </Box>
-                                            </Box>
-                                        </Modal>
-
-                                    </Box>
-                                ))
-                            ) : <p>Aucun quizz disponible.</p>
-                        ) : <p>Aucun quizz disponible</p>}
-                    </div>
+                    <QuizList
+                        quizzes={quizzes}
+                        navigate={navigate}
+                        handleOpenDelete={handleOpenDelete}
+                        handleDelQuizz={handleDelQuizz}
+                        handleCloseDelete={handleCloseDelete}
+                        openDelete={openDelete}
+                        style={style}
+                        handleShowForum={handleShowForum}
+                    ></QuizList>
                     {id && (
                         <StyledButton
                             onClick={handleToCreateQuizz}
@@ -199,66 +105,20 @@ function GestionQuizzProf() {
                     )}
                     {!id && (
                         <div>
-                        <StyledButton
-                        onClick={handleOpen2}
-                        color={'primary'}
-                        content={"Creer un quizz"} ></StyledButton>
-                    <Modal
-                        open={open}
-                        onClose={handleClose2}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Choississez une UE
-                            </Typography>
-                            <FormControl className="profile-select" sx={{ m: 1, width: "60%", alignItems: "center" }}>
-                                <InputLabel id="label-ue">UE</InputLabel>
-                                <Select
-                                    sx={{
-                                        width: "100%",
-                                        borderRadius: "10px",
-                                        backgroundColor: "#f0f0f0"
-                                    }}
-                                    labelId="label-ue"
-                                    id="demo-simple-select"
-                                    value={UE}
-                                    label="UE"
-                                    onChange={handleChangeUE}
-                                >
-                                    {listUE && listUE.map((ue, index) => (
-                                        <MenuItem key={index} value={ue}>
-                                            {ue.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-    
-                                <StyledButton
-                                    content={"Creer le quizz"}
-                                    width={"90%"}
-                                    color={"primary"}
-                                    onClick={handleToCreateQuizzAll} />
-                            </FormControl>
-                            <Popover
-                                id={id}
-                                open={openPop}
-                                anchorEl={errorAnchorEl}
-                                onClose={handleClosePopover}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                }}
-                            >
-                                <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
-                            </Popover>
-                        </Box>
-                    </Modal>
-                    </div>
+                            <StyledButton
+                                onClick={handleOpenCreate}
+                                color={'primary'}
+                                content={"Creer un quizz"} ></StyledButton>
+                            <CreateModal
+                                open={openCreate}
+                                handleClose={handleCloseCreate}
+                                UE={UE}
+                                listUE={listUE}
+                                handleChangeUE={handleChangeUE}
+                                handleToCreateQuizz={handleToCreateQuizz}
+                                style={style}
+                            ></CreateModal>
+                        </div>
                     )}
                 </div>
 
@@ -267,7 +127,7 @@ function GestionQuizzProf() {
                 )}
             </div>
         </div>
-        );
+    );
 }
 
 export default GestionQuizzProf;

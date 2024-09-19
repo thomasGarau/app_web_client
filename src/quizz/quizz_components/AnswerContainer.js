@@ -15,7 +15,6 @@ const AnswerContainer = ({
   removeReponse,
   id
 }) => {
-    console.log(type)
   return (
     <div className="answer-container" style={{ height: `${selected.reponses ? selected.reponses.length * 100 + 100 : 83 + 75}px`, overflowY: "auto", maxHeight: "60%" }}>
       <div style={{ display: "flex", flexDirection: "column", width: "70%", padding: "10px 0px" }}>

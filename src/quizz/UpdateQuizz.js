@@ -12,7 +12,6 @@ import { addQuestion, addReponse, changeQuestion, removeReponse, typeChange, val
 import useErrorPopover from "../composent/useErrorPopover";
 import { ajouterQuestionAuQuizz, updateQuestionduQuizz, updateQuizz } from "../API/CreateQuizzAPI";
 import { getChapParUE } from "../API/UeAPI";
-import { getTokenAndRole } from "../services/Cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "../API/QuizzAPI";
 
@@ -28,14 +27,14 @@ function UpdateQuizz() {
     const [delAnswer, setDelAnswer] = useState([]);
     const [type, setType] = useState('')
     const [radioCheck, setRadioCheck] = useState(0)
-    const [open, setOpen] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
     const [ogQuestion, setOgQuestion] = useState([]);
     const { errorMessage, errorAnchorEl, id, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
     const navigate = useNavigate()
 
     const toggleDrawer = (newOpen) => () => {
-        setOpen(newOpen);
+        setOpenDrawer(newOpen);
     };
 
 
@@ -196,7 +195,7 @@ function UpdateQuizz() {
         <div className="quizz-background" style={{ backgroundColor: "#C3D9FF", overflow: "auto" }}>
             <div className="container-create-quizz" style={{ display: "flex" }}>
                 <QuestionsDrawer
-                    open={open}
+                    open={openDrawer}
                     toggleDrawer={toggleDrawer}
                     questions={questions}
                     changeQuestion={handleChangeQuestion}
