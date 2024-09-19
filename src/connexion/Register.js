@@ -8,46 +8,49 @@ import './Connexion.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { Box, Checkbox, FormControlLabel, FormGroup, Modal, Popover, Typography } from '@mui/material';
 import GenConModal from '../composent/GenConModal.js';
+import PageContainer from './connexion_component/PageContainer.js';
+import AuthForm from './connexion_component/AuthForm.js';
+import PopoverError from '../composent/PopoverError.js';
+import useErrorPopover from '../composent/useErrorPopover.js';
 
 
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [id, setId] = useState(undefined);
-    const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [checkedGeneral, setCheckedGeneral] = useState(false);
     const [checkedTracking, setCheckedTracking] = useState(false);
     const handleCloseModal = () => setOpenModal(false);
+    const inputs = [
+        { type: "email", id: "email", name: "email", placeholder: "email...", value: email, required: true },
+        { type: "password", id: "password", name: "password", placeholder: "password...", value: password, required: true },
+        { type: "password", id: "confirmPassword", name: "confirmPassword", placeholder: "Confirm password...", value: confirmPassword, required: true }
+    ];
 
+    const values = { email, password, confirmPassword };
+    const setValues = (newValues) => {
+        setEmail(newValues.email);
+        setPassword(newValues.password);
+        setConfirmPassword(newValues.confirmPassword);
+    };
+    const { errorMessage, errorAnchorEl, id, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
     const navigate = useNavigate();
 
     const handleOpenModal = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            setErrorMessage('Veuillez saisir une adresse e-mail valide.');
-            setErrorAnchorEl(document.getElementById('email'));
-            setId('error-popover');
-            setOpen(true);
+            showErrorPopover('Veuillez saisir une adresse e-mail valide.', 'email');
             return;
         }
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{12,})/;
         if (password !== confirmPassword) {
-            setErrorMessage('Mot de passe différent! Veuillez réessayer.');
-            setErrorAnchorEl(document.getElementById('confirmPassword'));
-            setId('error-popover');
-            setOpen(true);
+            showErrorPopover('Mot de passe différent! Veuillez réessayer.', 'confirmPassword');
             console.error("Les mots de passe ne correspondent pas.");
             return;
         }
         if (!passwordRegex.test(password)) {
-            setErrorMessage('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.');
-            setErrorAnchorEl(document.getElementById('password'));
-            setId('error-popover');
-            setOpen(true);
+            showErrorPopover('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.', 'password');
             return;
         }
         setOpenModal(true);
@@ -75,18 +78,8 @@ function Register() {
             })
             .catch(error => {
                 setOpenModal(false);
-                console.error('Erreur lors de l\'inscription :', error);
-                setErrorMessage('Vous n\'êtes pas autorisé à vous inscrire, ou un compte avec cet email existe déjà.');
-                setErrorAnchorEl(document.getElementById('email'));
-                setId('error-popover');
-                setOpen(true);
+                showErrorPopover(('Erreur lors de l\'inscription :', error), 'email');
             });
-    };
-
-    const handleClosePopover = () => {
-        setErrorAnchorEl(null);
-        setErrorMessage('');
-        setOpen(false);
     };
 
     const toConnection = (e) => {
@@ -95,98 +88,31 @@ function Register() {
     };
 
     return (
-        <div className='background'>
-            <div className='base-container'>
-                <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" }, margin: "0px" }}>Inscription</Typography>
-                <div className='sub-container'>
-                    <input
-                        aria-describedby='error-popover'
-                        className='input-connexion'
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder='email...'
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        aria-describedby='error-popover'
-                        className='input-connexion'
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder='password..'
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <input
-                        aria-describedby='error-popover'
-                        className='input-connexion'
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        placeholder='Confirm password..'
-                        required
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                </div>
-                <div className='buttons-container'>
-                    <StyledButton
-                        color={"secondary"}
-                        onClick={toConnection}
-                        content={"Connexion"}>
-                    </StyledButton>
-                    <StyledButton
-                        className='valid-button button-connection'
-                        color={"primary"}
-                        content={"Valider"}
-                        onClick={handleOpenModal}>
-                    </StyledButton>
-                </div>
-                <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={errorAnchorEl}
-                    onClose={handleClosePopover}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                >
-                    <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                </Popover>
-                <GenConModal
-                    open={openModal}
-                    handleClose={handleCloseModal}
-                    title="Conditions Générales d'Utilisation de TrackMates"
-                >
-
-                    <Box sx={{ display: "flex", flexDirection: "column" }}>
-                        <FormGroup sx={{ paddingLeft: "20px" }}>
-                            <FormControlLabel control={<Checkbox checked={checkedGeneral}
-                                onChange={handleChangeGeneral} />} label="J'accepte les conditions générales d'utilisation" />
-                            <FormControlLabel control={<Checkbox checked={checkedTracking}
-                                onChange={handleChangeTracking} />} label="J'accepte que l'application enregistre des données pour un suivi personnalisé" />
-
-                        </FormGroup>
-                        <StyledButton
-                            isDisabled={!checkedGeneral}
-                            onClick={handleRegister}
-                            width={300}
-                            color={'primary'}
-                            content={"Valider l'inscription"} />
-                    </Box>
-
-                </GenConModal>
+        <PageContainer title="Inscription">
+            <AuthForm inputs={inputs} values={values} setValues={setValues} />
+            <div className='buttons-container'>
+                <StyledButton color={"secondary"} onClick={toConnection} content={"Connexion"} />
+                <StyledButton color={"primary"} onClick={handleOpenModal} content={"Valider"} />
             </div>
-        </div >
+            <PopoverError id={id} open={openAnchor} anchorEl={errorAnchorEl} onClose={handleClosePopover} errorMessage={errorMessage} />
+            <GenConModal open={openModal} handleClose={handleCloseModal} title="Conditions Générales d'Utilisation">
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <FormGroup sx={{ paddingLeft: "20px" }}>
+                        <FormControlLabel control={<Checkbox checked={checkedGeneral}
+                            onChange={handleChangeGeneral} />} label="J'accepte les conditions générales d'utilisation" />
+                        <FormControlLabel control={<Checkbox checked={checkedTracking}
+                            onChange={handleChangeTracking} />} label="J'accepte que l'application enregistre des données pour un suivi personnalisé" />
+
+                    </FormGroup>
+                    <StyledButton
+                        isDisabled={!checkedGeneral}
+                        onClick={handleRegister}
+                        width={300}
+                        color={'primary'}
+                        content={"Valider l'inscription"} />
+                </Box>
+            </GenConModal>
+        </PageContainer>
     );
 }
 

@@ -4,6 +4,10 @@ import StyledButton from '../composent/StyledBouton';
 import { createCookie } from '../services/Cookie';
 import { useNavigate } from 'react-router-dom';
 import { Authenticate, updatePassword } from '../API/UserAPI';
+import PageContainer from './connexion_component/PageContainer';
+import AuthForm from './connexion_component/AuthForm';
+import PopoverError from '../composent/PopoverError';
+import useErrorPopover from '../composent/useErrorPopover';
 
 function Reset() {
 
@@ -11,28 +15,34 @@ function Reset() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [numEtudiant, setNumEtudiant] = useState('');
   const [code, setCode] = useState('');
-  const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [id, setId] = useState(undefined);
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { errorMessage, errorAnchorEl, id, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
+
+  const inputs = [
+    { type: "text", id: "numEtudiant", name: "numEtudiant", placeholder: "N° étudiant", value: numEtudiant, required: true },
+    { type: "text", id: "code", name: "code", placeholder: "Le code reçu par mail", value: code, required: true },
+    { type: "password", id: "password", name: "password", placeholder: "Votre nouveau mot de passe", value: password, required: true },
+    { type: "password", id: "confirmPassword", name: "confirmPassword", placeholder: "Confirmer votre nouveau mot de passe", value: confirmPassword, required: true }
+  ];
+  const values = { numEtudiant, code, password, confirmPassword };
+  
+  const setValues = (newValues) => {
+    setNumEtudiant(newValues.numEtudiant);
+    setCode(newValues.code);
+    setPassword(newValues.password);
+    setConfirmPassword(newValues.confirmPassword);
+  };
 
   const handleReset = async (e) => {
     e.preventDefault();
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{12,})/;
     if (!passwordRegex.test(password)) {
-      setErrorMessage('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.');
-      setErrorAnchorEl(document.getElementById('password'));
-      setId('error-popover');
-      setOpen(true);
+      showErrorPopover('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.', 'password');
       return;
     }
     if (password !== confirmPassword) {
-      setErrorMessage('Mot de passe différent! Veuillez réessayer.');
-      setErrorAnchorEl(document.getElementById('confirmPassword'));
-      setId('error-popover');
-      setOpen(true);
+      showErrorPopover('Mot de passe différent! Veuillez réessayer.', 'confirmPassword');
       console.error("Les mots de passe ne correspondent pas.");
       return;
     }
@@ -47,90 +57,16 @@ function Reset() {
       }
     } catch (error) {
       console.error('Erreur lors de la modification du mot de passe :', error);
-      setErrorMessage('Erreur lors de la modification du mot de passe');
-      setErrorAnchorEl(document.getElementById('password'));
-      setId('error-popover');
-      setOpen(true);
+      showErrorPopover(('Erreur lors de la modification du mot de passe :', error), 'password');
     }
 
   };
 
-  const handleClosePopover = () => {
-    setErrorAnchorEl(null);
-    setErrorMessage('');
-    setOpen(false);
-  };
-
   return (
-    <div className='background'>
-      <div className='base-container'>
-        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" }, margin: "0px" }}>Reinitialiser le mot de passe</Typography>
-        <div className='sub-container'>
-          <input
-            className='input-connexion'
-            type="text"
-            id="numEtudiant"
-            name="numEtudiant"
-            placeholder='N° étudiant'
-            required
-            value={numEtudiant}
-            onChange={(e) => setNumEtudiant(e.target.value)}
-          />
-          <input
-            className='input-connexion'
-            type="text"
-            id="code"
-            name="code"
-            placeholder='Le code reçu par mail'
-            required
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-          />
-          <input
-            className='input-connexion'
-            type="password"
-            id="password"
-            name="password"
-            placeholder='Votre nouveau mot de passe'
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <input
-            className='input-connexion'
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            placeholder='Confirmer votre nouveau mot de passe'
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <StyledButton
-          color={"primary"}
-          content={"Valider"}
-          onClick={handleReset}>Valider
-        </StyledButton>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={errorAnchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-        </Popover>
-
-      </div>
-
-    </div>
+    <PageContainer title="Réinitialiser le mot de passe">
+      <AuthForm inputs={inputs} values={values} setValues={setValues} />
+      <StyledButton color={"primary"} onClick={handleReset} content={"Valider"} />
+      <PopoverError id={id} open={openAnchor} anchorEl={errorAnchorEl} onClose={handleClosePopover} errorMessage={errorMessage} />
+    </PageContainer>
   )
 } export default Reset;

@@ -1,19 +1,22 @@
 //dependances
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //modules
-import { Authenticate, getUserInfo } from '../API/UserAPI.js';
+import { Authenticate } from '../API/UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
-import { Link, Box, Popover, Typography } from '@mui/material';
+import { Link } from '@mui/material';
 import './Connexion.css';
 import "@fontsource/nanum-pen-script";
 import StyledButton from '../composent/StyledBouton.js';
 import { decodeJWT } from '../services/decode.js';
-
+import PageContainer from './connexion_component/PageContainer.js';
+import AuthForm from './connexion_component/AuthForm.js';
+import PopoverError from '../composent/PopoverError.js';
 
 
 function Connexion() {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorAnchorEl, setErrorAnchorEl] = useState(null);
@@ -21,15 +24,22 @@ function Connexion() {
   const [id, setId] = useState(undefined);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const inputs = [
+    { type: "text", id: "username", name: "username", placeholder: "N° Etudiant", value: username },
+    { type: "password", id: "password", name: "password", placeholder: "Mot de passe", value: password }
+  ];
+  const values = { username, password };
+  const setValues = (newValues) => {
+    setUsername(newValues.username);
+    setPassword(newValues.password);
+  };
 
-
-  //...
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       const data = await Authenticate(username, password);
-      const { token, days} = data;
+      const { token, days } = data;
       if (token) {
         const tokenInfo = decodeJWT(token);
         createCookie(token, days, tokenInfo.role);
@@ -67,65 +77,14 @@ function Connexion() {
   };
 
   return (
-    <div className='background'>
-      <div className='base-container'>
-        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" }, margin: "0px" }}>Connexion</Typography>
-        <div className='sub-container'>
-          <input
-            aria-describedby={id}
-            className='input-connexion'
-            type="text"
-            id="username"
-            name="username"
-            placeholder="N° Etudiant"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            aria-describedby={id}
-            className='input-connexion'
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Link sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }} color="#f5f5f5" href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
-        </div>
-        <div className='buttons-container'>
-          <StyledButton
-            color={"secondary"}
-            onClick={toRegister}
-            content={"Inscription"}>
-          </StyledButton>
-          <StyledButton
-            color={"primary"}
-            content={"Valider"}
-            onClick={handleLogin}
-          >
-            Valider
-          </StyledButton>
-        </div>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={errorAnchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-        </Popover>
-
+    <PageContainer title="Connexion">
+      <AuthForm inputs={inputs} values={values} setValues={setValues} />
+      <Link sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" }, color: "#000" }} href="/forgot_password" underline='always'>Mot de passe oublié?</Link>
+      <div className='buttons-container'>
+        <StyledButton color={"secondary"} onClick={toRegister} content={"Inscription"} />
+        <StyledButton color={"primary"} onClick={handleLogin} content={"Valider"} />
       </div>
-
-    </div>
+      <PopoverError id={id} open={open} anchorEl={errorAnchorEl} onClose={handleClosePopover} errorMessage={errorMessage} />
+    </PageContainer>
   );
 } export default Connexion;

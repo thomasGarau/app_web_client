@@ -3,11 +3,22 @@ import { Link, Box, Typography } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import { Retrieve } from '../API/UserAPI';
 import { useNavigate } from 'react-router-dom';
+import PageContainer from './connexion_component/PageContainer';
+import AuthForm from './connexion_component/AuthForm';
+import PopoverError from '../composent/PopoverError';
 
 function Forgot() {
   const [numEtudiant, setNumEtudiant] = useState('');
   const navigate = useNavigate();
+  const inputs = [
+    { type: "text", id: "numEtudiant", name: "numEtudiant", placeholder: "n° étudiant", value: numEtudiant }
+  ];
 
+  const values = { numEtudiant };
+
+  const setValues = (newValues) => {
+    handleChange(newValues.numEtudiant);
+  };
 
   const handleValidate = async () => {
     try {
@@ -30,28 +41,9 @@ function Forgot() {
 
 
   return (
-    <div className='background'>
-      <div className='base-container'>
-        <Typography sx={{ fontSize: { xs: "2em", sm: "3em", md: "4em" }, margin: "0px" }}>Mot de passe oublie</Typography>
-        <div className='sub-container'>
-          <input
-            className='input-connexion'
-            type="text"
-            id="numEtudiant"
-            name="numEtudiant"
-            placeholder="n° étudiant"
-            value={numEtudiant}
-            onChange={handleChange}
-          />
-        </div>
-        <StyledButton
-          color={"primary"}
-          content={"Valider"}
-          onClick={handleValidate}>Valider
-        </StyledButton>
-
-      </div>
-
-    </div>
+    <PageContainer title="Mot de passe oublié">
+      <AuthForm inputs={inputs} values={values} setValues={setValues} />
+      <StyledButton color={"primary"} onClick={handleValidate} content={"Valider"} />
+    </PageContainer>
   )
 } export default Forgot;
