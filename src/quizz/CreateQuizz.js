@@ -12,6 +12,7 @@ import AnswerOptions from "./quizz_components/AnswerOptions";
 import AnswerContainer from "./quizz_components/AnswerContainer";
 import { addQuestion, addReponse, changeQuestion, removeReponse, typeChange, validateQuizz, validateReponse } from "./quizz_services/QuizzService";
 import useErrorPopover from '../composent/useErrorPopover';
+import PopoverError from "../composent/PopoverError";
 
 function CreateQuizz() {
     const { idUe } = useParams();
@@ -187,22 +188,13 @@ function CreateQuizz() {
                         toggleDrawer={toggleDrawer}
                         estNegatif={estNegatif}
                         setEstNegatif={setEstNegatif} />
-                    <Popover
+                    <PopoverError
                         id={id}
                         open={openAnchor}
                         anchorEl={errorAnchorEl}
                         onClose={handleClosePopover}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                    </Popover>
+                        errorMessage={errorMessage}
+                    />
                 </div>
             </div>
         </div>

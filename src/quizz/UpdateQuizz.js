@@ -14,6 +14,7 @@ import { ajouterQuestionAuQuizz, updateQuestionduQuizz, updateQuizz } from "../A
 import { getChapParUE } from "../API/UeAPI";
 import { useNavigate, useParams } from "react-router-dom";
 import { getQuestionParQUizz, getQuizzInfo, getReponsesPourQuestion } from "../API/QuizzAPI";
+import PopoverError from "../composent/PopoverError";
 
 function UpdateQuizz() {
     const { quizId } = useParams();
@@ -85,7 +86,7 @@ function UpdateQuizz() {
         selected.reponses.map((reponse) => {
             if (reponse.contenu === '') {
                 showErrorPopover('Veuillez siasir un texte pour la réponse.', `reponse${reponse.id_reponse}`);
-                
+
                 return;
             };
         });
@@ -260,22 +261,13 @@ function UpdateQuizz() {
                             Valider la question
                         </Button>
                     </AnswerOptions>
-                    <Popover
+                    <PopoverError
                         id={id}
                         open={openAnchor}
                         anchorEl={errorAnchorEl}
                         onClose={handleClosePopover}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                    </Popover>
+                        errorMessage={errorMessage}
+                    />
                 </div>
             </div>
         </div>

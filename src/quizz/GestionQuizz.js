@@ -11,6 +11,7 @@ import useErrorPopover from '../composent/useErrorPopover.js';
 import { delQuizz, fetchMyQuizz } from './quizz_services/GestionQuizzService.js';
 import { QuizList } from './gestion_quizz_components/QuizList.js';
 import { CreateModal } from './gestion_quizz_components/CreateModal.js';
+import PopoverError from '../composent/PopoverError.js';
 
 
 const style = {
@@ -95,22 +96,13 @@ function GestionQuizz() {
                         handleToCreateQuizz={handleToCreateQuizz}
                         style={style}
                     ></CreateModal>
-                    <Popover
+                    <PopoverError
                         id={id}
                         open={openAnchor}
                         anchorEl={errorAnchorEl}
                         onClose={handleClosePopover}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                    >
-                        <Typography sx={{ Typography: 2 }}>{errorMessage}</Typography>
-                    </Popover>
+                        errorMessage={errorMessage}
+                    />
                 </div>
             </div>
         </div>
