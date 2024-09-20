@@ -114,21 +114,21 @@ function Question() {
                     
                     <Box className="reponse-container"
                         sx={{
-                        display: 'flex',           // Enable flexbox
-                        flexDirection: 'column',   // Stack children vertically
-                        alignItems: 'center',      // Center items horizontally
-                        width: '100%',             // Full width container
-                        p: 1                       // Padding around the box
+                        display: 'flex',           
+                        flexDirection: 'column',   
+                        alignItems: 'center',      
+                        width: '100%',             
+                        p: 1                       
                         }}>
                     {currentQuestion.answers.length > 0 ? currentQuestion.answers.map((answer) => (
                         <Button key={answer.id_reponse}
                         variant="contained"
                         sx={{
                           mb: 1,
-                          background: selectedAnswers.includes(answer.id_reponse) ? '#6998EA' : 'white', // Updated color names
+                          background: selectedAnswers.includes(answer.id_reponse) ? '#6998EA' : 'white', 
                           color: 'black',
                           '&:hover': {
-                            backgroundColor: '#6998EA', // Ensure consistency in color names
+                            backgroundColor: '#6998EA',
                           },
                           '&:focus': {
                             backgroundColor: '#6998EA', 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCoursParChap, addCours, editCours, deleteCours } from '../API/CoursAPI';
-import { recolteInteraction } from '../API/jMethodeAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,6 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { decodeJWT } from '../services/decode';
 import { getTokenAndRole } from '../services/Cookie';
+import useErrorPopover from '../composent/useErrorPopover';
+import PopoverError from '../composent/PopoverError';
+import { recolteInteraction } from '../API/jMethodeAPI';
 
 
 const style = {
@@ -41,8 +43,7 @@ function Study() {
     const [scroll, setScroll] = useState(0);
     const [contenu, setContenu] = useState('');
     const [sujet, setSujet] = useState('');
-    const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
+
     const [idStudy, setIdStudy] = useState(undefined);
     const [open, setOpen] = useState(false);
     const [currentCour, setCurrentCour] = useState(null);
@@ -50,15 +51,13 @@ function Study() {
     const [progression, setProgression] = useState(0);
     const clicRef = useRef(clic);
     const [editingCourseId, setEditingCourseId] = useState(null);
-    const [editedContent, setEditedContent] = useState('');
-    const [editedLabel, setEditedLabel] = useState('');
     const elapsedTimeRef = useRef(elapsedTime);
     const scrollRef = useRef(scroll);
     const progressionRef = useRef(progression);
     const startTimeRef = useRef(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
+    const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
 
     const fetchCours = async () => {
@@ -76,12 +75,10 @@ function Study() {
 
 
     useEffect(() => {
-
-
         fetchCours();
     }, [id]);
 
-    const isEditingCour = (cour) => {   
+    const isEditingCour = (cour) => {
         setEditingCourseId(cour.id_cours);
         setContenu(cour.contenu);
         setSujet(cour.label);
@@ -96,12 +93,6 @@ function Study() {
             console.error("Erreur lors de la suppression du cours :", error);
         }
     }
-
-    const handleClosePopover = () => {
-        setErrorAnchorEl(null);
-        setErrorMessage('');
-        setOpen(false);
-    };
 
     const handleCloseAdd = () => {
         setIsAdding(false);
@@ -151,10 +142,7 @@ function Study() {
     const handleChangeSujet = (e) => {
         const value = e.target.value;
         if (value.length > 100) {
-            setErrorMessage('Limite de caractère dépassée.');
-            setErrorAnchorEl(document.getElementById('sujet'));
-            setIdStudy('error-popover');
-            setOpen(true);
+            showErrorPopover('Limite de caractère dépassée.', 'sujet');
             return;
         }
         setSujet(value);
@@ -162,30 +150,18 @@ function Study() {
 
     const validateCourseInputs = (label, content) => {
         if (label.trim() === '') {
-            setErrorMessage('Le nom du cours est requis!');
-            setErrorAnchorEl(document.getElementById('sujet'));
-            setIdStudy('error-popover');
-            setOpen(true);
+            showErrorPopover('Le nom du cours est requis!', 'sujet');
             return false;
         } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
-            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
-            setErrorAnchorEl(document.getElementById('sujet'));
-            setIdStudy('error-popover');
-            setOpen(true);
+            showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'sujet');
             return false;
         }
 
         if (content.trim() === '') {
-            setErrorMessage('Le contenu du cours est requis!');
-            setErrorAnchorEl(document.getElementById('contenu'));
-            setIdStudy('error-popover');
-            setOpen(true);
+            showErrorPopover('Le contenu du cours est requis!', 'contenu');
             return false;
         } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(content)) {
-            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
-            setErrorAnchorEl(document.getElementById('contenu'));
-            setIdStudy('error-popover');
-            setOpen(true);
+            showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'contenu');
             return false;
         }
 
@@ -203,10 +179,8 @@ function Study() {
                 handleCloseAdd();
             } catch (error) {
                 console.error("Erreur lors de la création du cours :", error);
-                setErrorMessage('Erreur lors de la création du cours. Veuillez réessayer.');
-                setErrorAnchorEl(document.getElementById('sujet-add'));
-                setIdStudy('error-popover');
-                setOpen(true);
+                showErrorPopover('Erreur lors de la création du cours. Veuillez réessayer.', 'sujet-add');
+
             }
         }
 
@@ -223,20 +197,14 @@ function Study() {
                 handleCloseEdit();
             } catch (error) {
                 console.error("Erreur lors de la modification du cours :", error);
-                setErrorMessage('Erreur lors de la modification du cours. Veuillez réessayer.');
-                setErrorAnchorEl(document.getElementById('sujet-edit'));
-                setIdStudy('error-popover');
-                setOpen(true);
+                showErrorPopover('Erreur lors de la modification du cours. Veuillez réessayer.', 'sujet-edit');
             }
         }
 
     };
 
 
-
-
     useEffect(() => {
-        // Initialiser la référence useRef avec la date de début de session lorsque le composant est monté
         startTimeRef.current = new Date();
 
         const sendData = async () => {
@@ -245,9 +213,7 @@ function Study() {
             if (tokenInfo.consentement === 1) {
                 setElapsedTime(new Date());
                 try {
-                    // Calculer la durée de session en soustrayant la date de début de session de la date actuelle
                     const dureeSession = new Date() - startTimeRef.current;
-                    // Utiliser les valeurs actuelles des références useRef
                     await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
                     setElapsedTime(0);
                     setClic(0);
@@ -261,7 +227,6 @@ function Study() {
                 clearInterval(interval);
             }
 
-            // Retourner une fonction de nettoyage pour arrêter l'envoi de données lorsque le composant est démonté
             return () => clearInterval(interval);
         }
     }, [currentCour, id]);
@@ -273,8 +238,6 @@ function Study() {
         scrollRef.current = scroll;
         progressionRef.current = progression;
     }, [clic, elapsedTime, scroll, progression]);
-
-
 
     return (
         <div className='background-study'>
@@ -397,22 +360,13 @@ function Study() {
 
                         </Box>
                     </Modal>
-                        <Popover
-                            id={id}
-                            open={open}
+                        <PopoverError
+                            id={idEl}
+                            open={openAnchor}
                             anchorEl={errorAnchorEl}
                             onClose={handleClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                        >
-                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                        </Popover>
+                            errorMessage={errorMessage}
+                        />
                     </>
 
                 )}

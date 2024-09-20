@@ -13,15 +13,13 @@ import { decodeJWT } from '../services/decode.js';
 import PageContainer from './connexion_component/PageContainer.js';
 import AuthForm from './connexion_component/AuthForm.js';
 import PopoverError from '../composent/PopoverError.js';
+import useErrorPopover from '../composent/useErrorPopover.js';
 
 
 function Connexion() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorAnchorEl, setErrorAnchorEl] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [id, setId] = useState(undefined);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const inputs = [
@@ -33,6 +31,7 @@ function Connexion() {
     setUsername(newValues.username);
     setPassword(newValues.password);
   };
+  const { errorMessage, errorAnchorEl, id, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -48,27 +47,21 @@ function Connexion() {
       }
     } catch (error) {
       console.error('Erreur lors de l\'authentification :', error);
+      var message = '';
+      var id = '';
       if (!username.trim()) {
-        setErrorMessage('Veuillez remplir tous les champs.');
-        setErrorAnchorEl(document.getElementById('username'));
+        message = 'Veuillez remplir tous les champs.';
+        id = 'username';
       } else if (!password.trim()) {
-        setErrorMessage('Veuillez remplir tous les champs.');
-        setErrorAnchorEl(document.getElementById('password'));
+        message = 'Veuillez remplir tous les champs.';
+        id = 'password';
       } else {
-        setErrorMessage('Mot de passe invalide! Veuillez réessayer.');
-        setErrorAnchorEl(document.getElementById('password'));
+        message = 'Mot de passe invalide! Veuillez réessayer.';
+        id = 'password';
 
       }
-      setId('error-popover');
-      setOpen(true);
+      showErrorPopover(message, id);
     };
-  };
-
-
-  const handleClosePopover = () => {
-    setErrorAnchorEl(null);
-    setErrorMessage('');
-    setOpen(false);
   };
 
   const toRegister = async (e) => {
