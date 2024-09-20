@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getJMethod } from "../API/jMethodeAPI.js";
 import { getUe } from "../API/UeAPI.js";
-import { logout, getUserInfo } from "../API/ProfileAPI.js";
-import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
+import { getUserInfo } from "../API/ProfileAPI.js";
+import { getTokenAndRole } from "../services/Cookie.js";
 
 import "./home.css";
-import { Badge, IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography, Box, Modal } from "@mui/material";
+import { IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { DateCalendar, DayCalendarSkeleton, PickersDay } from '@mui/x-date-pickers';
+import { DateCalendar, DayCalendarSkeleton } from '@mui/x-date-pickers';
 import { decodeJWT } from "../services/decode.js";
 import ServerDay from "./ServerDay.js";
 

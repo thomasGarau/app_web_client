@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import PublicRoute from './services/PublicRoute';
 import Accueil from './principal/Acceuil';
-import Connexion from './connexion/Connexion';
 import Register from './connexion/Register';
 import Carte_mental from './carte_mental/Carte_mental';
 import Home from './home/home';
@@ -31,6 +30,7 @@ import GestionQuizzProf from './quizz/GestionQuizzProf'
 import RoleBasedRoute from './services/RoleBasedRoute';
 import AdminInterface from './admin/AdminInterface';
 import { useIdleTimer } from './services/inactive';
+import ConnexionContainer from './connexion/Connexion/ConnexionContainer';
 
 function App() {
 
@@ -40,7 +40,7 @@ function App() {
     <QuizProvider>
     <Router>
       <Routes> 
-        <Route path="/connexion" element={<PublicRoute><Layout><Connexion /></Layout></PublicRoute>} />
+        <Route path="/connexion" element={<PublicRoute><Layout><ConnexionContainer /></Layout></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Layout><Register /></Layout></PublicRoute>} />
         <Route path="/presentation" element={<PublicRoute><Layout><Presentation /></Layout></PublicRoute>} />
         <Route path="/forgot_password" element={<PublicRoute><Layout><Forgot /></Layout></PublicRoute>} />
