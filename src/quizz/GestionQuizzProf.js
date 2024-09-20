@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, Modal, Typography, FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
+import { Typography } from '@mui/material';
 import QuestionForum from '../composent/QuestionForum.js';
 import useErrorPopover from '../composent/useErrorPopover.js';
 import { delQuizz, fetchMyQuizz } from './quizz_services/GestionQuizzService.js';
 import { QuizList } from './gestion_quizz_components/QuizList.js';
 import { CreateModal } from './gestion_quizz_components/CreateModal.js';
-
+import {  useSelector } from 'react-redux';
 
 const style = {
     position: 'absolute',
@@ -42,10 +42,10 @@ function GestionQuizzProf() {
     const handleOpenCreate = () => setOpenCreate(true);
     const handleCloseCreate = () => setOpenCreate(false);
 
-    const [showForum, setShowForum] = useState(false);
-    const [forumId, setForumId] = useState('');
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
+    const showForumState = useSelector(state => state.forum.showForum);
+    const forumId = useSelector(state => state.forum.forumId);
 
     const handleDelQuizz = async (quizId) => {
         delQuizz(
@@ -70,12 +70,6 @@ function GestionQuizzProf() {
         navigate(`/create_quizz/${UE.id_ue}`);
     }
 
-    const handleShowForum = (id_quizz) => {
-        setShowForum(false);
-        setForumId(id_quizz);
-        setShowForum(true);
-    }
-
     useEffect(() => {
         fetchMyQuizz(setQuizzes, setListUE, setIdUe, id);
     }, [id]);
@@ -95,7 +89,6 @@ function GestionQuizzProf() {
                         handleCloseDelete={handleCloseDelete}
                         openDelete={openDelete}
                         style={style}
-                        handleShowForum={handleShowForum}
                     ></QuizList>
                     {id && (
                         <StyledButton
@@ -115,14 +108,19 @@ function GestionQuizzProf() {
                                 UE={UE}
                                 listUE={listUE}
                                 handleChangeUE={handleChangeUE}
-                                handleToCreateQuizz={handleToCreateQuizz}
+                                handleToCreateQuizz={handleToCreateQuizzAll}
+                                errorAnchorEl={errorAnchorEl}
+                                idEl={idEl}
+                                openAnchor={openAnchor}
+                                errorMessage={errorMessage}
+                                handleClosePopover={handleClosePopover}
                                 style={style}
                             ></CreateModal>
                         </div>
                     )}
                 </div>
 
-                {showForum && (
+                {showForumState && (
                     <QuestionForum id_quizz={forumId} />
                 )}
             </div>
