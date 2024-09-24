@@ -1,5 +1,4 @@
 import api from '../config/axiosConfig.js';
-import { getTokenAndRole } from '../services/Cookie.js';
 
 
 export const getCoursParChap = async (chap_id) => {

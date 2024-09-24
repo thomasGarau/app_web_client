@@ -5,6 +5,7 @@ import StyledButton from '../composent/StyledBouton';
 import { addForumCours, addForumQuizz } from '../API/ForumAPI';
 import { getCoursParChap } from '../API/CoursAPI';
 import { getQuizzInfo } from '../API/QuizzAPI';
+import { contenuRegex } from '../services/Regex';
 
 const CreateForum = () => {
     const navigate = useNavigate();
@@ -43,8 +44,8 @@ const CreateForum = () => {
             setErrorAnchorEl(document.getElementById('sujet'));
             setId('error-popover');
             setOpen(true);
-            return
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(sujet)) {
+            return;
+        } else if (!contenuRegex.test(sujet)) { // Utilisation de la regex importée
             setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('sujet'));
             setId('error-popover');
@@ -56,8 +57,15 @@ const CreateForum = () => {
             setErrorAnchorEl(document.getElementById('contenu'));
             setId('error-popover');
             setOpen(true);
-            return
+            return;
+        } else if (!contenuRegex.test(contenu)) { // Utilisation de la regex importée
+            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
+            setErrorAnchorEl(document.getElementById('contenu'));
+            setId('error-popover');
+            setOpen(true);
+            return;
         }
+
         try {
             if (id_chap) {
                 const response = await addForumCours(sujet, contenu, entityId);

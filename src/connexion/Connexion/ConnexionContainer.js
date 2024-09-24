@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Authenticate } from "../../API/UserAPI.js";
 import { decodeJWT } from "../../services/decode.js";
 import { createCookie } from "../../services/Cookie.js";
+import { passwordRegex, contenuRegex} from "../../services/Regex.js";
 
 function ConnexionContainer() {
 
@@ -24,6 +25,16 @@ function ConnexionContainer() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        if (!contenuRegex.test(username)) {
+            showErrorPopover('Veuillez saisir un numéro étudiant valide.', 'username');
+            return;
+        }
+        if (!passwordRegex.test(password)) {
+            showErrorPopover('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.', 'password');
+            return;
+        }
+        
 
         try {
             const data = await Authenticate(username, password);

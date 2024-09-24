@@ -8,6 +8,7 @@ import StyledButton from "../composent/StyledBouton";
 import { getMessageForum, ajouterMessageForum, closeForum } from '../API/ForumAPI';
 import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
+import { contenuRegex } from '../services/Regex';
 
 
 
@@ -75,7 +76,7 @@ function Forum() {
     };
 
     const submitMessage = async (e) => {
-        if (e.key === 'Enter' && newMessage.trim() !== '') {
+        if (e.key === 'Enter' && newMessage.trim() !== '' && contenuRegex.test(e.target.value)) {
             e.preventDefault();
             try {
                 await ajouterMessageForum(id_forum, newMessage);
@@ -90,7 +91,14 @@ function Forum() {
             setId('error-popover');
             setOpen(true);
             return
+        } else if (e.key === 'Enter' && !contenuRegex.test(e.target.value)) {
+            setErrorMessage('Votre message contient des caractères non autorisés!');
+            setErrorAnchorEl(document.getElementById('input-message'));
+            setId('error-popover');
+            setOpen(true);
+            return
         }
+
 
     };
 

@@ -8,6 +8,8 @@ import PageContainer from './connexion_component/PageContainer';
 import AuthForm from './connexion_component/AuthForm';
 import PopoverError from '../composent/PopoverError';
 import useErrorPopover from '../composent/useErrorPopover';
+import { passwordRegex } from '../services/Regex.js';
+
 
 function Reset() {
 
@@ -36,7 +38,6 @@ function Reset() {
 
   const handleReset = async (e) => {
     e.preventDefault();
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{12,})/;
     if (!passwordRegex.test(password)) {
       showErrorPopover('Le mot de passe doit contenir au moins une majuscule, un caractère spécial et faire 12 caractères ou plus.', 'password');
       return;

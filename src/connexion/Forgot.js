@@ -5,11 +5,14 @@ import { Retrieve } from '../API/UserAPI';
 import { useNavigate } from 'react-router-dom';
 import PageContainer from './connexion_component/PageContainer';
 import AuthForm from './connexion_component/AuthForm';
-import PopoverError from '../composent/PopoverError';
+import useErrorPopover from '../composent/useErrorPopover.js';
+import { contenuRegex } from '../services/Regex.js';
+
 
 function Forgot() {
   const [numEtudiant, setNumEtudiant] = useState('');
   const navigate = useNavigate();
+  const { errorMessage, errorAnchorEl, id, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
   const inputs = [
     { type: "text", id: "numEtudiant", name: "numEtudiant", placeholder: "n° étudiant", value: numEtudiant }
   ];
@@ -35,8 +38,14 @@ function Forgot() {
   };
 
   const handleChange = (e) => {
-    const { value } = e.target;
-    setNumEtudiant(e.target.value);
+    if(!contenuRegex.test(e.target.value)){
+        showErrorPopover('Veuillez saisir un numéro étudiant valide');
+            return;
+    }
+    else {
+      const { value } = e.target;
+      setNumEtudiant(e.target.value);
+    }
   }
 
 
