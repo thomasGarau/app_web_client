@@ -4,17 +4,20 @@ import { getCoursParChap, addCours, editCours, deleteCours } from '../API/CoursA
 import './Study.css';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DownloadIcon from '@mui/icons-material/Download';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../API/ProfileAPI';
 import StyledButton from '../composent/StyledBouton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
 import { decodeJWT } from '../services/decode';
 import { getTokenAndRole } from '../services/Cookie';
 import useErrorPopover from '../composent/useErrorPopover';
 import PopoverError from '../composent/PopoverError';
 import { recolteInteraction } from '../API/jMethodeAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import ResourceDisplay from './RessourcePlayer';
+import { setScroll } from '../Slice/pdfViewerSlice';
 
 
 const style = {
@@ -35,29 +38,36 @@ const style = {
 };
 
 function Study() {
-    const [cours, setCours] = useState([]);
-    const [courseIds, setCourseIds] = useState([]); // État pour stocker les identifiants des cours
-    const { id } = useParams(); // Si l'ID du chapitre est passé par le routeur
+    const [ressources, setRessources] = useState([]);
+    const [courseIds, setCourseIds] = useState([]);
+    const { id } = useParams();
     const [clic, setClic] = useState(0);
     const [role, setRole] = useState('');
-    const [scroll, setScroll] = useState(0);
+
     const [contenu, setContenu] = useState('');
     const [sujet, setSujet] = useState('');
-
-    const [idStudy, setIdStudy] = useState(undefined);
     const [open, setOpen] = useState(false);
     const [currentCour, setCurrentCour] = useState(null);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [progression, setProgression] = useState(0);
-    const clicRef = useRef(clic);
     const [editingCourseId, setEditingCourseId] = useState(null);
-    const elapsedTimeRef = useRef(elapsedTime);
-    const scrollRef = useRef(scroll);
-    const progressionRef = useRef(progression);
-    const startTimeRef = useRef(null);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
+
+    const scroll = useSelector((state) => state.pdfViewer.scroll);
+    const progression = useSelector((state) => state.pdfViewer.progression);
+    const dispatch = useDispatch();
+
+    const progressionRef = useRef(progression);
+    const scrollRef = useRef(scroll);
+    const clicRef = useRef(clic);
+    const elapsedTimeRef = useRef(elapsedTime);
+    const startTimeRef = useRef(null);
+
+    const ressourcePdf = { type: 'pdf', url: '/demo.pdf' }
+    const ressourceMp4 = { type: 'video', url: '/test.mp4' }
+    const ressourceYt = { type: 'video', url: 'https://www.youtube.com/watch?v=5YIyTF7izJk' }
+    const ressourceImg = { type: 'img', url: '/logo_rond.png' }
 
 
     const fetchCours = async () => {
@@ -65,11 +75,11 @@ function Study() {
             const response_info = await getUserInfo();
             setRole(response_info.role);
             const data = await getCoursParChap(id);
-            setCours(data);
+            setRessources(data);
             const ids = data.map(cour => cour.id_cours);
             setCourseIds(ids);
         } catch (error) {
-            console.error("Erreur lors de la récupération des cours :", error);
+            console.error("Erreur lors de la récupération des ressources :", error);
         }
     };
 
@@ -90,7 +100,7 @@ function Study() {
             deleteCours(id_cours);
             fetchCours();
         } catch (error) {
-            console.error("Erreur lors de la suppression du cours :", error);
+            console.error("Erreur lors de la suppression du ressources :", error);
         }
     }
 
@@ -102,36 +112,9 @@ function Study() {
         setIsEditing(false);
     };
 
-    const handleCurrentCour = async (event, expanded, id_cours) => {
-        if (expanded) {
-            setCurrentCour(id_cours);
-        } else {
-            try {
-                // Calculer la durée de session en soustrayant la date de début de session de la date actuelle
-                const dureeSession = new Date() - startTimeRef.current;
-                // Utiliser les valeurs actuelles des références useRef
-                await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
-                setElapsedTime(0);
-                setClic(0);
-                setScroll(0);
-            } catch (error) {
-                console.error("Erreur lors de la récolte des données:", error);
-            }
-            setCurrentCour(null);
-        }
-    }
-
-
     const incrementerClic = () => {
         setClic(prevClic => prevClic + 1);
 
-    };
-
-    const incrementerScroll = (event) => {
-        setScroll(prevScroll => prevScroll + 1);
-        const scrollPosition = event.target.scrollTop;
-        const totalHeight = event.target.scrollHeight;
-        setProgression(scrollPosition / (totalHeight - event.target.clientHeight) * 100);
     };
 
     const handleChangeContenu = (e) => {
@@ -150,7 +133,7 @@ function Study() {
 
     const validateCourseInputs = (label, content) => {
         if (label.trim() === '') {
-            showErrorPopover('Le nom du cours est requis!', 'sujet');
+            showErrorPopover('Le nom de la ressource est requis!', 'sujet');
             return false;
         } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
             showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'sujet');
@@ -158,7 +141,7 @@ function Study() {
         }
 
         if (content.trim() === '') {
-            showErrorPopover('Le contenu du cours est requis!', 'contenu');
+            showErrorPopover('Le contenu de la ressource est requis!', 'contenu');
             return false;
         } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(content)) {
             showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'contenu');
@@ -178,8 +161,8 @@ function Study() {
                 fetchCours();
                 handleCloseAdd();
             } catch (error) {
-                console.error("Erreur lors de la création du cours :", error);
-                showErrorPopover('Erreur lors de la création du cours. Veuillez réessayer.', 'sujet-add');
+                console.error("Erreur lors de la création de la ressource :", error);
+                showErrorPopover('Erreur lors de la création de la ressource. Veuillez réessayer.', 'sujet-add');
 
             }
         }
@@ -196,8 +179,8 @@ function Study() {
                 fetchCours();
                 handleCloseEdit();
             } catch (error) {
-                console.error("Erreur lors de la modification du cours :", error);
-                showErrorPopover('Erreur lors de la modification du cours. Veuillez réessayer.', 'sujet-edit');
+                console.error("Erreur lors de la modification de la ressource :", error);
+                showErrorPopover('Erreur lors de la modification de la ressource. Veuillez réessayer.', 'sujet-edit');
             }
         }
 
@@ -217,7 +200,7 @@ function Study() {
                     await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
                     setElapsedTime(0);
                     setClic(0);
-                    setScroll(0);
+                    dispatch(setScroll(0));
                 } catch (error) {
                     console.error("Erreur lors de la récolte des données:", error);
                 }
@@ -244,37 +227,47 @@ function Study() {
             <div className='sub_container_text_question'>
                 <div className='text-part'>
                     <h1 className='study-title'>Cours du chapitre</h1>
-                    {cours.length > 0 ? (
-                        cours.map(cour => (
-                            <Accordion onClick={incrementerClic} key={cour.id_cours} onChange={(event, expanded) => {
+                    {ressources.length > 0 ? (
+                        ressources.map(ressource => (
+                            <Accordion onClick={incrementerClic} key={ressource.id_cours} onChange={(event, expanded) => {
                             }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
 
-                                    <Typography>{cour.label}</Typography>
+                                    <Typography>{ressource.label}</Typography>
 
                                 </AccordionSummary>
-                                <AccordionDetails
+                                {/*<AccordionDetails
                                     onScroll={incrementerScroll}
                                     sx={{ overflowY: 'auto', maxHeight: '400px' }}>
 
                                     <Typography>{cour.contenu}</Typography>
 
-                                </AccordionDetails>
+                                </AccordionDetails>*/}
+                                <ResourceDisplay ressource={ressourceImg} />
+
                                 <AccordionActions>
-                                    {role === 'enseignant' && (
-                                        <div>
-                                            <div>
-                                                <div className='icon-study' onClick={() => isEditingCour(cour)}> <EditIcon /></div>
-                                                <div className='icon-study' onClick={() => deleteCour(cour.id_cours)}><DeleteIcon /></div>
-                                            </div>
+
+                                    <div>
+                                        {role === 'enseignant' && (
+                                            <>
+                                                <div className='icon-study' onClick={() => isEditingCour(ressource)}>
+                                                    <EditIcon />
+                                                </div><div className='icon-study' onClick={() => deleteCour(ressource.id_cours)}>
+                                                    <DeleteIcon />
+                                                </div>
+                                            </>
+                                        )}
+                                        <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
+                                            <DownloadIcon />
                                         </div>
-                                    )}
+                                    </div>
+
                                 </AccordionActions>
                             </Accordion>
 
                         ))
                     ) : (
-                        <p>Aucun cours disponible pour ce chapitre.</p>
+                        <p>Aucune ressource disponible pour ce chapitre.</p>
                     )}
                     <Popover
                         id={id}
@@ -295,7 +288,7 @@ function Study() {
                 </div>
                 {role === 'enseignant' && !isAdding && (
                     <StyledButton
-                        content={"Ajouter un cours"}
+                        content={"Ajouter une ressource"}
                         width={300}
                         color={"primary"}
                         onClick={() => setIsAdding(true)}
@@ -310,7 +303,7 @@ function Study() {
                         <Box sx={style}>
                             <TextField
                                 id='sujet-add'
-                                placeholder='Sujet du cours'
+                                placeholder='Sujet de la ressource'
                                 variant='standard'
                                 sx={{
 
@@ -332,7 +325,7 @@ function Study() {
 
                             </TextField>
                             <TextField
-                                placeholder='Contenu du cours'
+                                placeholder='Contenu de la ressource'
                                 variant='filled'
                                 aria-describedby={id}
                                 multiline
@@ -379,7 +372,7 @@ function Study() {
                     <Box sx={style}>
                         <TextField
                             id='sujet-edit'
-                            placeholder='Sujet du cours'
+                            placeholder='Sujet de la ressource'
                             variant='standard'
                             sx={{
 
@@ -401,7 +394,7 @@ function Study() {
 
                         </TextField>
                         <TextField
-                            placeholder='Contenu du cours'
+                            placeholder='Contenu de la ressource'
                             variant='filled'
                             aria-describedby={id}
                             multiline
