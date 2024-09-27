@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCoursParChap, addCours, editCours, deleteCours } from '../API/CoursAPI';
+import { getRessourceParChap, addRessource, editRessource, deleteRessourceApi, getRessourceById, addCoursProgression } from '../API/RessourceAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -18,7 +18,9 @@ import { recolteInteraction } from '../API/jMethodeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import ResourceDisplay from './RessourcePlayer';
 import { setScroll } from '../Slice/pdfViewerSlice';
+import { setPause, setTime } from '../Slice/videoSlice';
 
+const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
 const style = {
     position: 'absolute',
@@ -28,34 +30,35 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: { xs: '90%', sm: '70%', md: '50%' },
+    width: { xs: '80%', sm: '70%', md: '60%' },
     bgcolor: 'background.paper',
     border: '2px solid #133D56',
     boxShadow: 24,
     borderRadius: 2,
     Typography: 4,
-    height: '90vh',
+    height: '60vh',
+    minHeight: '500px'
 };
 
 function Study() {
     const [ressources, setRessources] = useState([]);
-    const [courseIds, setCourseIds] = useState([]);
     const { id } = useParams();
     const [clic, setClic] = useState(0);
     const [role, setRole] = useState('');
-
-    const [contenu, setContenu] = useState('');
-    const [sujet, setSujet] = useState('');
     const [open, setOpen] = useState(false);
-    const [currentCour, setCurrentCour] = useState(null);
+    const [currentRessource, setCurrentRessource] = useState(null);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [editingCourseId, setEditingCourseId] = useState(null);
     const [isAdding, setIsAdding] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [fileList, setFileList] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef(null);
+    const [expandedIndex, setExpandedIndex] = useState(-1);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
 
     const scroll = useSelector((state) => state.pdfViewer.scroll);
     const progression = useSelector((state) => state.pdfViewer.progression);
+    const pause = useSelector((state) => state.video.pause);
+    const videoTime = useSelector((state) => state.video.time);
     const dispatch = useDispatch();
 
     const progressionRef = useRef(progression);
@@ -63,6 +66,8 @@ function Study() {
     const clicRef = useRef(clic);
     const elapsedTimeRef = useRef(elapsedTime);
     const startTimeRef = useRef(null);
+    const videoTimeRef = useRef(videoTime);
+    const pauseRef = useRef(pause);
 
     const ressourcePdf = { type: 'pdf', url: '/demo.pdf' }
     const ressourceMp4 = { type: 'video', url: '/test.mp4' }
@@ -70,35 +75,22 @@ function Study() {
     const ressourceImg = { type: 'img', url: '/logo_rond.png' }
 
 
-    const fetchCours = async () => {
+    const fetchRessources = async () => {
         try {
             const response_info = await getUserInfo();
             setRole(response_info.role);
-            const data = await getCoursParChap(id);
-            setRessources(data);
-            const ids = data.map(cour => cour.id_cours);
-            setCourseIds(ids);
+            const data = await getRessourceParChap(id);
+            setRessources(data.cours);
+            console.log(ressources, id)
         } catch (error) {
             console.error("Erreur lors de la récupération des ressources :", error);
         }
     };
 
-
-    useEffect(() => {
-        fetchCours();
-    }, [id]);
-
-    const isEditingCour = (cour) => {
-        setEditingCourseId(cour.id_cours);
-        setContenu(cour.contenu);
-        setSujet(cour.label);
-        setIsEditing(true);
-    };
-
-    const deleteCour = (id_cours) => {
+    const deleteRessource = (id_cours) => {
         try {
-            deleteCours(id_cours);
-            fetchCours();
+            deleteRessourceApi(id_cours);
+            fetchRessources();
         } catch (error) {
             console.error("Erreur lors de la suppression du ressources :", error);
         }
@@ -108,43 +100,13 @@ function Study() {
         setIsAdding(false);
     };
 
-    const handleCloseEdit = () => {
-        setIsEditing(false);
-    };
-
     const incrementerClic = () => {
         setClic(prevClic => prevClic + 1);
-
     };
 
-    const handleChangeContenu = (e) => {
-        const value = e.target.value;
-        setContenu(value);
-    };
-
-    const handleChangeSujet = (e) => {
-        const value = e.target.value;
-        if (value.length > 100) {
-            showErrorPopover('Limite de caractère dépassée.', 'sujet');
-            return;
-        }
-        setSujet(value);
-    };
-
-    const validateCourseInputs = (label, content) => {
-        if (label.trim() === '') {
-            showErrorPopover('Le nom de la ressource est requis!', 'sujet');
-            return false;
-        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
-            showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'sujet');
-            return false;
-        }
-
-        if (content.trim() === '') {
-            showErrorPopover('Le contenu de la ressource est requis!', 'contenu');
-            return false;
-        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(content)) {
-            showErrorPopover('Caractère non autorisé. (Chiffre non autorisé)', 'contenu');
+    const validateRessourceAdd = () => {
+        if (fileList.length == 0) {
+            showErrorPopover('Vous devez avoir ajouter au moins une ressource!', 'sujet');
             return false;
         }
 
@@ -152,40 +114,53 @@ function Study() {
     };
 
 
-    const handleCreateCours = async () => {
-        if (validateCourseInputs(sujet, contenu)) {
-            try {
-                await addCours(sujet, contenu, parseInt(id));
-                setSujet('');
-                setContenu('');
-                fetchCours();
-                handleCloseAdd();
-            } catch (error) {
-                console.error("Erreur lors de la création de la ressource :", error);
-                showErrorPopover('Erreur lors de la création de la ressource. Veuillez réessayer.', 'sujet-add');
+    const handleAddResources = async () => {
+        if (validateRessourceAdd()) {
 
-            }
+            fileList.forEach(async (file) => {
+                try {
+                    console.log(file)
+                    await addRessource(file, file.name, parseInt(id));
+                } catch (error) {
+                    console.error("Erreur lors de la création de la ressource :", error);
+                    showErrorPopover(`Erreur lors de la création de la ressource ${file.name}. Veuillez réessayer.`, 'sujet-add');
+                }
+            });
+            fetchRessources();
+            handleCloseAdd();
+            setFileList([]);
         }
-
     };
 
-    const handleEditCours = async () => {
-        if (validateCourseInputs(sujet, contenu)) {
-            try {
-                console.log(sujet, contenu, id)
-                await editCours(editingCourseId, sujet, contenu);
-                setSujet('');
-                setContenu('');
-                fetchCours();
-                handleCloseEdit();
-            } catch (error) {
-                console.error("Erreur lors de la modification de la ressource :", error);
-                showErrorPopover('Erreur lors de la modification de la ressource. Veuillez réessayer.', 'sujet-edit');
-            }
-        }
-
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const files = Array.from(e.dataTransfer.files);
+        setFileList(prevFiles => [...prevFiles, ...files]);
     };
 
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleFileInputClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileUpload = (e) => {
+        const files = Array.from(e.target.files);
+        setFileList(prevFiles => [...prevFiles, ...files]);
+    };
+
+    const handleCancel = () => {
+        setFileList([]);
+        setIsAdding(false);
+    };
+
+    useEffect(() => {
+        fetchRessources();
+    }, [id]);
 
     useEffect(() => {
         startTimeRef.current = new Date();
@@ -197,74 +172,93 @@ function Study() {
                 setElapsedTime(new Date());
                 try {
                     const dureeSession = new Date() - startTimeRef.current;
-                    await recolteInteraction(currentCour, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
+                    if (videoExtensions.includes(currentRessource.type.split('.').pop().toLowerCase())) {
+                        // await recolteInteractionVideo(currentRessource.id_cours, parseInt(id), pauseRef.current, dureeSession, videoTimeRef.current, progressionRef.current);
+                        dispatch(setPause(0))
+                        dispatch(setTime(0))
+                    } else {
+                        await recolteInteraction(currentRessource.id_cours, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
+                        setClic(0);
+                        dispatch(setScroll(0));
+                    }
                     setElapsedTime(0);
-                    setClic(0);
-                    dispatch(setScroll(0));
                 } catch (error) {
                     console.error("Erreur lors de la récolte des données:", error);
                 }
             };
             const interval = setInterval(sendData, 180000);
-            if (currentCour === null) {
+            if (currentRessource === null) {
                 clearInterval(interval);
             }
 
             return () => clearInterval(interval);
         }
-    }, [currentCour, id]);
+    }, [currentRessource, id]);
+
+    const handleAccordionChange = async (index, ressource) => {
+        if (expandedIndex === index) {
+            try {
+                const progression = 100;
+                await addCoursProgression(ressource.id, progression);
+                console.log(`Progression pour ${ressource.id} mise à jour à ${progression}%`);
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour de la progression :", error);
+            }
+        }
+
+        // Ouvrir/fermer l'Accordion
+        setExpandedIndex(prevIndex => (prevIndex === index ? -1 : index));
+    };
 
 
-    useEffect(() => {
-        clicRef.current = clic;
-        elapsedTimeRef.current = elapsedTime;
-        scrollRef.current = scroll;
-        progressionRef.current = progression;
-    }, [clic, elapsedTime, scroll, progression]);
+    /*     useEffect(() => {
+            if (currentRessource) {
+                if (videoExtensions.includes(currentRessource.type.split('.').pop().toLowerCase())) {
+                    pauseRef.current = pause;
+                    videoTimeRef.current = videoTime;
+                }
+                else {
+                    clicRef.current = clic;
+                    scrollRef.current = scroll;
+                }
+                elapsedTimeRef.current = elapsedTime;
+                progressionRef.current = progression;
+            }
+    
+        }, [clic, elapsedTime, scroll, progression, pause, videoTime]); */
 
     return (
         <div className='background-study'>
             <div className='sub_container_text_question'>
                 <div className='text-part'>
-                    <h1 className='study-title'>Cours du chapitre</h1>
+                    <h1 className='study-title'>Ressource du chapitre</h1>
                     {ressources.length > 0 ? (
-                        ressources.map(ressource => (
-                            <Accordion onClick={incrementerClic} key={ressource.id_cours} onChange={(event, expanded) => {
-                            }}>
+                        ressources.map((ressource, index) => (
+                            <Accordion
+                                key={ressource.id}
+                                expanded={expandedIndex === index} // Vérifier si cet Accordion est ouvert
+                                onChange={() => handleAccordionChange(index, ressource)} // Mettre à jour l'état lors du changement
+                            >
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-
                                     <Typography>{ressource.label}</Typography>
-
                                 </AccordionSummary>
-                                {/*<AccordionDetails
-                                    onScroll={incrementerScroll}
-                                    sx={{ overflowY: 'auto', maxHeight: '400px' }}>
 
-                                    <Typography>{cour.contenu}</Typography>
-
-                                </AccordionDetails>*/}
-                                <ResourceDisplay ressource={ressourceImg} />
+                                {/* Affichage de la ressource dynamique */}
+                                <ResourceDisplay ressource={ressource} />
 
                                 <AccordionActions>
-
                                     <div>
                                         {role === 'enseignant' && (
-                                            <>
-                                                <div className='icon-study' onClick={() => isEditingCour(ressource)}>
-                                                    <EditIcon />
-                                                </div><div className='icon-study' onClick={() => deleteCour(ressource.id_cours)}>
-                                                    <DeleteIcon />
-                                                </div>
-                                            </>
+                                            <div className='icon-study' onClick={() => deleteRessource(ressource.id)}>
+                                                <DeleteIcon />
+                                            </div>
                                         )}
                                         <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
                                             <DownloadIcon />
                                         </div>
                                     </div>
-
                                 </AccordionActions>
                             </Accordion>
-
                         ))
                     ) : (
                         <p>Aucune ressource disponible pour ce chapitre.</p>
@@ -295,133 +289,78 @@ function Study() {
                     />
                 )}
                 {role === 'enseignant' && isAdding && (
-                    <><Modal
+                    <Modal
                         open={isAdding}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
-                            <TextField
-                                id='sujet-add'
-                                placeholder='Sujet de la ressource'
-                                variant='standard'
+                        <Box sx={style} onDrop={handleDrop} onDragOver={handleDragOver}>
+                            <Typography variant="h6" textAlign="center" mb={2}>
+                                Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner
+                            </Typography>
+
+                            <Box
                                 sx={{
-
-                                    width: "100%",
-
-                                }}
-                                inputProps={{
-                                    sx: {
-                                        padding: '10px',
-                                        fontSize: {
-                                            xs: "1em",
-                                            sm: "1.3em",
-                                            md: "1.7em"
-                                        }
-                                    }
-                                }}
-                                value={sujet}
-                                onChange={handleChangeSujet}>
-
-                            </TextField>
-                            <TextField
-                                placeholder='Contenu de la ressource'
-                                variant='filled'
-                                aria-describedby={id}
-                                multiline
-                                id='contenu'
-                                value={contenu}
-                                onChange={handleChangeContenu}
-                                rows={27}
-                                sx={{
+                                    border: isDragging ? '2px dashed #1976d2' : '2px dashed #ccc',
+                                    padding: '20px',
+                                    borderRadius: '10px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    width: '95%',
+                                    height: '200px',
                                     overflowY: 'auto',
-                                    width: '100%',
-                                    fontSize: {
-                                        xs: "0.8em", // Plus petite taille de police sur les petits écrans
-                                        sm: "1.2em",
-                                        md: "1.5em" // Taille normale sur les écrans plus larges
-                                    },
-
-                                }} />
-                            <Box>
-                                <StyledButton
-                                    content={"Ajouter"}
-                                    width={200}
-                                    color={"primary"}
-                                    onClick={handleCreateCours} />
+                                    textAlign: 'center',
+                                    bgcolor: isDragging ? '#f0f8ff' : 'background.paper',
+                                }}
+                                onClick={handleFileInputClick}
+                            >
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    style={{ display: 'none' }}
+                                    multiple
+                                    onChange={handleFileUpload}
+                                />
+                                {!fileList.length && (
+                                    <Typography variant="body1">
+                                        Glissez vos fichiers ici ou cliquez pour sélectionner
+                                    </Typography>
+                                )}
+                                {fileList.map((file, index) => (
+                                    <Typography key={index} variant="body2">
+                                        {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                                    </Typography>
+                                ))}
                             </Box>
-
+                            <Box mt={3} textAlign="center">
+                                <StyledButton
+                                    content={"Ajouter les ressources"}
+                                    width={300}
+                                    color={"primary"}
+                                    onClick={handleAddResources}
+                                />
+                                <StyledButton
+                                    content={"Annuler"}
+                                    width={300}
+                                    color={"secondary"}
+                                    onClick={handleCancel}
+                                    sx={{ mt: 2 }}
+                                />
+                            </Box>
+                            <PopoverError
+                                id={idEl}
+                                open={openAnchor}
+                                anchorEl={errorAnchorEl}
+                                onClose={handleClosePopover}
+                                errorMessage={errorMessage}
+                            />
                         </Box>
                     </Modal>
-                        <PopoverError
-                            id={idEl}
-                            open={openAnchor}
-                            anchorEl={errorAnchorEl}
-                            onClose={handleClosePopover}
-                            errorMessage={errorMessage}
-                        />
-                    </>
 
                 )}
                 <QuestionForum id_chap={id} role={role} />
-                <Modal
-                    open={isEditing}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <TextField
-                            id='sujet-edit'
-                            placeholder='Sujet de la ressource'
-                            variant='standard'
-                            sx={{
-
-                                width: "100%",
-
-                            }}
-                            inputProps={{
-                                sx: {
-                                    padding: '10px',
-                                    fontSize: {
-                                        xs: "1em",
-                                        sm: "1.3em",
-                                        md: "1.7em"
-                                    }
-                                }
-                            }}
-                            value={sujet}
-                            onChange={handleChangeSujet}>
-
-                        </TextField>
-                        <TextField
-                            placeholder='Contenu de la ressource'
-                            variant='filled'
-                            aria-describedby={id}
-                            multiline
-                            id='contenu'
-                            value={contenu}
-                            onChange={handleChangeContenu}
-                            rows={27}
-                            sx={{
-                                overflowY: 'auto',
-                                width: '100%',
-                                fontSize: {
-                                    xs: "0.8em", // Plus petite taille de police sur les petits écrans
-                                    sm: "1.2em",
-                                    md: "1.5em" // Taille normale sur les écrans plus larges
-                                },
-
-                            }} />
-                        <Box>
-                            <StyledButton
-                                content={"Valider"}
-                                width={200}
-                                color={"primary"}
-                                onClick={handleEditCours} />
-                        </Box>
-
-                    </Box>
-                </Modal>
             </div>
         </div>
     );

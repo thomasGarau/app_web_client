@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormControl, MenuItem, Select, Box, Typography, Popover } from "@mui/material";
 import StyledButton from '../composent/StyledBouton';
-import { addForumCours, addForumQuizz } from '../API/ForumAPI';
-import { getCoursParChap } from '../API/CoursAPI';
+import { addForumRessource, addForumQuizz, addForumCours } from '../API/ForumAPI';
+import { getRessourceParChap } from '../API/RessourceAPI';
 import { getQuizzInfo } from '../API/QuizzAPI';
 import { contenuRegex } from '../services/Regex';
 
@@ -24,7 +24,7 @@ const CreateForum = () => {
 
     useEffect(() => {
         if (id_chap) {
-            getCoursParChap(id_chap).then(data => {
+            getRessourceParChap(id_chap).then(data => {
                 setEntityId(data[0].id_cours);
                 setEntities(data);
             }).catch(error => console.error("Erreur lors de la récupération des cours :", error));
@@ -128,7 +128,7 @@ const CreateForum = () => {
                                     md: "2em"
                                 }
                             }}>
-                            {id_quizz ? "Quiz concerné :" : "Cours concernés :"}
+                            {id_quizz ? "Quiz concerné :" : "Ressource concernés :"}
                         </Typography>
                         <Select
                             id='entity_id'

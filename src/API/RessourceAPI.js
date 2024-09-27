@@ -1,11 +1,12 @@
 import api from '../config/axiosConfig.js';
 
 
-export const getCoursParChap = async (chap_id) => {
+export const getRessourceParChap = async (chap_id) => {
     try {
         const body = {
             id_chapitre: chap_id
         };
+        
         const response = await api.post(`/cours/allcours-chapitre`, body);
         return response.data;
     }
@@ -13,6 +14,22 @@ export const getCoursParChap = async (chap_id) => {
         throw error;
     }
 }
+
+export const getRessourceById = async (res_id) => {
+    try {
+        const body = {
+            id_study: res_id
+        };
+        const response = await api.post(`/cours/cours-id`, body, {
+            responseType: 'blob', 
+        });
+        return response.data; 
+    }
+    catch (error) {
+        console.error("Erreur lors de la récupération de la ressource :", error);
+        throw error;
+    }
+};
 
 export const getChapitre = async (chap_id) => {
     try {
@@ -42,7 +59,7 @@ export const getChapitreById = async (chapitreId) => {
 
 
 
-export const editCours = async (id, label, contenu) => {
+export const editRessource = async (id, label, contenu) => {
     try {
         const body = {
             id_study: id,
@@ -59,7 +76,7 @@ export const editCours = async (id, label, contenu) => {
     }
 }
 
-export const deleteCours = async (id) => {
+export const deleteRessourceApi = async (id) => {
     try {
         const body = {
             id_study: id
@@ -72,18 +89,37 @@ export const deleteCours = async (id) => {
     }
 }
 
-export const addCours = async ( label, contenu, id_chapitre) => {
+export const addCoursProgression = async (id, prog) => {
     try {
         const body = {
-            label: label,
-            contenu: contenu,
-            id_chapitre: id_chapitre
+            id_study: id,
+            progression: prog
         };
-        const response = await api.post(`/cours/add-cours`, body);
+        const response = await api.post(`/cours/add-cours-progression`, body);
         return response.data;
     }
     catch (error) {
         throw error;
     }
 }
+
+export const addRessource = async (file, label, id_chapitre) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file); // Ajout du fichier
+        formData.append('label', label); // Ajout du label
+        formData.append('chapitre', id_chapitre); // Ajout de l'id du chapitre
+
+        const response = await api.post(`/cours/add-cours`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 

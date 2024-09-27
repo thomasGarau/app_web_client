@@ -8,7 +8,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 
-const PDFViewer = ({ fileUrl }) => {
+const PDFViewer = ({ fileBlob }) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
     const viewerRef = useRef(null);
     const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const PDFViewer = ({ fileUrl }) => {
         <div ref={viewerRef} style={{ height: '750px', overflowY: 'scroll' }}>
             <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
                 <Viewer 
-                    fileUrl={fileUrl}
+                    fileUrl={fileBlob} // Utiliser l'URL Blob
                     plugins={[defaultLayoutPluginInstance]}
                 />
             </Worker>
