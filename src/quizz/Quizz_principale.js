@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import { getTokenAndRole } from '../services/Cookie.js';
 import { getQuizzParChap, getQuestionParQUizz } from '../API/QuizzAPI.js';
 import { getChapitreById } from '../API/RessourceAPI.js';
 import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
+import { getChapitreById } from '../API/CoursAPI.js';
+import { Box, Typography } from '@mui/material';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
 
@@ -12,7 +13,6 @@ function Quizz_principale() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('prof');
   const [quizzes, setQuizzes] = useState([]);
-  const [questions, setQuestions] = useState([]);
   const { id } = useParams();
   const [ueId, setUeId] = useState('');
 
