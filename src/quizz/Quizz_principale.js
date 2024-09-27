@@ -3,8 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
 import { getQuizzParChap, getQuestionParQUizz } from '../API/QuizzAPI.js';
 import { getChapitreById } from '../API/RessourceAPI.js';
-import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
-import { getChapitreById } from '../API/CoursAPI.js';
 import { Box, Typography } from '@mui/material';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
