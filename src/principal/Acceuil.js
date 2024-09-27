@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './principal.css';
 import "@fontsource/nanum-pen-script";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import StyledButton from '../composent/StyledBouton.js';
 import GenConModal from '../composent/GenConModal.js';
 

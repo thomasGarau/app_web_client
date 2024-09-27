@@ -1,83 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getChapParUE, ueInfo, addChapitre, updateChapitre, deleteChapitre } from '../API/UeAPI.js';
-import './Ue.css'; 
-import StyledButton from '../composent/StyledBouton.js';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import { Typography, Box, Popover, TextField } from '@mui/material';
+import ChapitreList from './composant/ChapitreList.js';
+import AddChapitreForm from './composant/AddChapitreForm.js';
+import StyledButton from '../composent/StyledBouton';
+import { contenuRegex } from '../services/Regex.js';
+import './Ue.css';
 
 function UeProf() {
     const [chapters, setChapters] = useState([]);
     const { id } = useParams();
     const [label, setLabel] = useState(''); 
     const navigate = useNavigate(); 
-    const [isAdding, setIAdding] = useState(false); 
+    const [isAdding, setIsAdding] = useState(false); 
     const [editChapterId, setEditChapterId] = useState(null);
     const [isEditing, setIsEditing] = useState(false); 
     const [nom, setNom] = useState('');
     const [open, setOpen] = useState(false);
-    
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
 
-    const fetchChapters = async () => {
-        try {
-            const chaptersData = await getChapParUE(id);
-            setChapters(chaptersData);
-            const ueData = await ueInfo(id); 
-            setLabel(ueData[0].label); 
-        } catch (error) {
-            console.error("Failed to fetch chapters:", error);
-        }
-    };
+    const validateChapInputs = (label) => {
+        if (!contenuRegex.test(label)) {
+           setErrorMessage('Caractère non autorisé.');
+           setErrorAnchorEl(document.getElementById('nom'));
+           setOpen(true);
+           return false;
+       }
+   
+       return true;
+   };
+
+   const fetchChapters = async () => {
+    try {
+        const chaptersData = await getChapParUE(id);
+        setChapters(chaptersData);
+        const ueData = await ueInfo(id); 
+        setLabel(ueData[0].label); 
+    } catch (error) {
+        console.error("Failed to fetch chapters:", error);
+    }
+};
 
     useEffect(() => {
         
         fetchChapters();
     }, [id]);
 
-    const validateChapInputs = (label) => {
-        if (label.trim() === '') {
-            setErrorMessage('Le nom du chapitre est requis!');
-            setErrorAnchorEl(document.getElementById('nom'));
-            setOpen(true);
-            return false;
-        } else if (!/^[a-zA-Z0-9 ,.!?'"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇç;:()\[\]{}\/*\-+=%$#@\^`~&]*$/.test(label)) {
-            setErrorMessage('Caractère non autorisé.');
-            setErrorAnchorEl(document.getElementById('nom'));
-            setOpen(true);
-            return false;
-        } else if (label.length > 20) {
-            setErrorMessage('Le nom du chapitre ne doit pas dépasser 20 caractères.');
-            setErrorAnchorEl(document.getElementById('nom'));
-            setOpen(true);
-            return false;
-        }
-    
-        return true;
-    };
-    
-    
-    const handleQuizClick = (chapterId) => {
-        navigate(`/gestion_quizz/prof/${chapterId}`);
-    };
-
-    const handleCourseClick = (chapterId) => {
-        navigate(`/etude/${chapterId}`);
-    };
-
-    const handleAddChapitre = () => {
-        setIAdding(true);
-    }
-
-    const handleClosePopover = () => {
-        setErrorAnchorEl(null);
-        setErrorMessage('');
-        setOpen(false);
-    };
+    const handleQuizClick = (chapterId) => navigate(`/gestion_quizz/prof/${chapterId}`);
+    const handleCourseClick = (chapterId) => navigate(`/etude/${chapterId}`);
 
     const editChap = (chapterId) => {
         setIsEditing(true);
@@ -85,8 +57,6 @@ function UeProf() {
         const chap = chapters.find(chap => chap.id_chapitre === chapterId);
         setNom(chap.label);
     };
-
-    
 
     const handleEditChapter = async (chapterId) => {
         if(validateChapInputs(nom)) {
@@ -104,7 +74,6 @@ function UeProf() {
             }
         }
     };
-    
 
     const deleteChap = (chapterId) => {
         try{
@@ -116,11 +85,12 @@ function UeProf() {
         }
     };
 
+    const handleAddChapitre = () => setIsAdding(true);
     const handleCreateChap = async () => {
         if(validateChapInputs(nom)) {
             try {
                 await addChapitre(nom, id);
-                setIAdding(false);
+                setIsAdding(false);
                 setNom('');
                 fetchChapters();
             }
@@ -131,115 +101,47 @@ function UeProf() {
                 setOpen(true);
             }
         }
-    }
+    };
+
+    const handleClosePopover = () => {
+        setErrorAnchorEl(null);
+        setErrorMessage('');
+        setOpen(false);
+    };
 
     return (
         <div className='background-ue-prof'>
             <div className='container-ue-prof'>
                 <h1>UE {label}</h1>
-                <div className="container-home-prof-ue">
-                    <div className='container-chap-chap-ue-prof'>
-                        {chapters.length > 0 ? (
-                            chapters.map((chapter) => (
-                                <div className='container-chap-ue-prof' key={chapter.id_chapitre}>
-                                    <div className='contenant-bouton-chap'>
-                                        {editChapterId != chapter.id_chapitre && (
-                                        <h4>{chapter.label}</h4>
-                                        )}
-                                        {editChapterId === chapter.id_chapitre ? (
-                                                <div className='icon-study' onClick={() => handleEditChapter(chapter.id_chapitre)}> <SaveIcon /></div>
-                                            ) : (
-                                                <div>
-                                                   <div className='icon-study' onClick={() => editChap(chapter.id_chapitre)}> <EditIcon /></div>
-                                                    <div className='icon-study' onClick={() => deleteChap(chapter.id_chapitre)}><DeleteIcon /></div>
-                                                </div>
-                                            )}
-                                        
-                                    </div>
-                                    {isEditing && editChapterId === chapter.id_chapitre ? (
-                                         <div className='edit-chapitre-form'>
-                                            <TextField
-                                                fullWidth
-                                                label="Nom du chapitre"
-                                                variant="outlined"
-                                                id='nom'
-                                                sx={{
-                                                    paddingBottom: '10px'
-                                                }}
-                                                value={nom}
-                                                onChange={(e) => setNom(e.target.value)}
-                                            />   
-                                            
-                                            <Popover
-                                                id={id}
-                                                open={open}
-                                                anchorEl={errorAnchorEl}
-                                                onClose={handleClosePopover}
-                                                anchorOrigin={{
-                                                    vertical: 'bottom',
-                                                    horizontal: 'center',
-                                                }}
-                                                transformOrigin={{
-                                                    vertical: 'top',
-                                                    horizontal: 'center',
-                                                }}
-                                            >
-                                                <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                                            </Popover>
-                                    </div>
-                                    ) : (
-                                        <div>
-                                            <p className="link-style" onClick={() => handleQuizClick(chapter.id_chapitre)}>Quizz du chap {chapter.label}</p>
-                                            <p className="link-style" onClick={() => handleCourseClick(chapter.id_chapitre)}>Cours du chap {chapter.label}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))
-                        ) : (
-                            <p>Aucun chapitre disponible pour cette UE.</p>
-                        )}
-                    </div>
-                </div>
+                <ChapitreList
+                    chapters={chapters}
+                    editChapterId={editChapterId}
+                    isEditing={isEditing}
+                    nom={nom}
+                    setNom={setNom}
+                    onEdit={editChap}
+                    onDelete={deleteChap}
+                    onSave={handleEditChapter}
+                    onQuizClick={handleQuizClick}
+                    onCourseClick={handleCourseClick}
+                    errorAnchorEl={errorAnchorEl}
+                    errorMessage={errorMessage}
+                    open={open}
+                    handleClosePopover={handleClosePopover}
+                />
                 {!isAdding && (
                     <StyledButton height={50} color={"primary"} onClick={handleAddChapitre} content={"Ajouter un chapitre"} />
-                )}  
+                )}
                 {isAdding && (
-                    <div className='create-chapitre-form'>
-                        <Box display="flex" flexWrap="wrap" alignItems="center" width="50%" padding="10px">
-                        <TextField
-                            label='Nom du chapitre'
-                            aria-describedby={id}
-                            type="text"
-                            id='nom'
-                            className='form-input'
-                            value={nom}
-                            onChange={(e) => setNom(e.target.value)}
-                        />
-
-                        </Box>
-                            <StyledButton
-                            content={"Ajouter"}
-                            width={200}
-                            color={"primary"}
-                            onClick={handleCreateChap}
-                        />
-                        <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={errorAnchorEl}
-                            onClose={handleClosePopover}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                        >
-                            <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
-                        </Popover>
-                </div>
+                    <AddChapitreForm
+                        nom={nom}
+                        setNom={setNom}
+                        handleCreateChap={handleCreateChap}
+                        errorAnchorEl={errorAnchorEl}
+                        open={open}
+                        handleClosePopover={handleClosePopover}
+                        errorMessage={errorMessage}
+                    />
                 )}
             </div>
         </div>

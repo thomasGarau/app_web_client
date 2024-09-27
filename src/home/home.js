@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getJMethod } from "../API/jMethodeAPI.js";
 import { getUe } from "../API/UeAPI.js";
 import { getUserInfo } from "../API/ProfileAPI.js";
-import { getTokenAndRole } from "../services/Cookie.js";
 
 import "./home.css";
 import { IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { DateCalendar, DayCalendarSkeleton } from '@mui/x-date-pickers';
-import { decodeJWT } from "../services/decode.js";
 import  MethodeJ  from "./composent/MethodeJ.js";
 
 
 function Home() {
-  const requestAbortController = useRef(null);
   const [isSecure] = useState(null);
   const [listUE, setListUE] = useState([]);
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { Registry } from '../API/UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, Checkbox, FormControlLabel, FormGroup, Modal, Popover, Typography } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import GenConModal from '../composent/GenConModal.js';
 import PageContainer from './connexion_component/PageContainer.js';
 import AuthForm from './connexion_component/AuthForm.js';

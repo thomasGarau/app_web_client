@@ -20,7 +20,6 @@ const CreateForum = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [id, setId] = useState(undefined);
     const [open, setOpen] = useState(false);
-    const [chapId, setChapId] = useState('');
 
     useEffect(() => {
         if (id_chap) {
@@ -32,7 +31,6 @@ const CreateForum = () => {
             getQuizzInfo(id_quizz).then(data => {
                 setEntityId(data.id_quizz);
                 setEntities([data]);
-                setChapId(data.id_chapitre);
             }).catch(error => console.error("Erreur lors de la récupération des quiz :", error));
         }
     }, [id_chap, id_quizz]);
