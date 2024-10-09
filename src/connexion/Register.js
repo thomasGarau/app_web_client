@@ -6,12 +6,13 @@ import { Registry } from '../API/UserAPI.js';
 import { createCookie } from '../services/Cookie.js';
 import './Connexion.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, Checkbox, FormControlLabel, FormGroup, Modal, Popover, Typography } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import GenConModal from '../composent/GenConModal.js';
 import PageContainer from './connexion_component/PageContainer.js';
 import AuthForm from './connexion_component/AuthForm.js';
 import PopoverError from '../composent/PopoverError.js';
 import useErrorPopover from '../composent/useErrorPopover.js';
+import { emailRegex, passwordRegex } from '../services/Regex.js';
 
 
 function Register() {
@@ -38,12 +39,10 @@ function Register() {
     const navigate = useNavigate();
 
     const handleOpenModal = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             showErrorPopover('Veuillez saisir une adresse e-mail valide.', 'email');
             return;
         }
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{12,})/;
         if (password !== confirmPassword) {
             showErrorPopover('Mot de passe différent! Veuillez réessayer.', 'confirmPassword');
             console.error("Les mots de passe ne correspondent pas.");

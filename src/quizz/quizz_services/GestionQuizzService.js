@@ -1,4 +1,4 @@
-import { getChapitreById } from "../../API/CoursAPI";
+import { getChapitreById } from "../../API/RessourceAPI";
 import { getUserInfo } from "../../API/ProfileAPI";
 import { deleteQuizz, getListQuizzCreateForUser, getQuizzParChap } from "../../API/QuizzAPI";
 

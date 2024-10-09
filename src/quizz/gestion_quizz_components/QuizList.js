@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { QuizzItem } from "./QuizItem";
 
-export const QuizList = ({ quizzes, navigate, handleOpenDelete, handleDelQuizz, handleCloseDelete, openDelete, style, handleShowForum = null }) => (
+export const QuizList = ({ quizzes, navigate, handleOpenDelete, handleDelQuizz, handleCloseDelete, openDelete, style }) => (
     <div className='container_quizzs'>
       {quizzes ? (
         quizzes.length > 0 ? (
@@ -15,7 +15,6 @@ export const QuizList = ({ quizzes, navigate, handleOpenDelete, handleDelQuizz, 
               handleCloseDelete={handleCloseDelete}
               openDelete={openDelete}
               style={style}
-              handleShowForum={handleShowForum}
             />
           ))
         ) : <Typography>Aucun quizz disponible.</Typography>

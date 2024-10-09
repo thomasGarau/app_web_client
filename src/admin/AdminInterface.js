@@ -33,11 +33,11 @@ function AdminInterface() {
     const [fileTextFormation, setFileTextFormation] = useState('');
     const [fileFormation, setFileFormation] = useState('');
     const [isDragging, setIsDragging] = useState(false); // State pour contrôler l'effet visuel du glisser-déposer
-    const [open, setOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
     const [buttonClicked, setButtonClicked] = useState('');
     const [openWarning, setOpenWarning] = useState(false);
-    const [alreadyOpened, setAlreadyOpened] = useState(false);
+    const [formationSent, setFormationSent] = useState(false);
 
     const navigate = useNavigate();
 
@@ -92,22 +92,16 @@ function AdminInterface() {
             return;
         }
 
-        setOpen(false);
+        setOpenSnackbar(false);
     };
 
     const openEleveWarning = () => {
-        if (alreadyOpened == true) {
+        if (!formationSent) {
             setButtonClicked('eleve');
             setOpenWarning(true);
-            setAlreadyOpened(false);
         }
-    };
-
-    const openFormationWarning = () => {
-        if (alreadyOpened == true) {
-            setButtonClicked('formation');
-            setOpenWarning(true);
-            setAlreadyOpened(false);
+        else {
+            sendDataEleve();
         }
     };
 
@@ -115,39 +109,21 @@ function AdminInterface() {
         setOpenWarning(false);
     };
 
-    const sendDataEleve = async () => {
+    const sendData = async (file, apiCall, successMessage) => {
         try {
             const formData = new FormData();
-            formData.append('file', fileEleve);
-            for (var key of formData.entries()) {
-            }
-            await addUser(formData);
-            setMessage('Etudiants ajoutés avec succès');
-            setOpen(true);
+            formData.append('file', file);
+            await apiCall(formData);
+            setMessage(successMessage);
+            setOpenSnackbar(true);
             handleCloseWarning();
         } catch (error) {
-            console.error('Erreur à l\'ajout de nouveaux étudiant', error);
+            console.error('Erreur à l\'envoi de données', error);
         }
     }
 
-    const sendDataFormation = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('file', fileFormation);
-            for (var key of formData.entries()) {
-            }
-            await addFormation(formData);
-            setMessage('Formation ajoutée avec succès');
-            setOpen(true);
-            handleCloseWarning();
-        } catch (error) {
-            console.error('Erreur à l\'ajout de nouvelles formations', error);
-        }
-    }
-
-    useEffect(() => {
-    }, [isDragging]);
-
+    const sendDataEleve = () => sendData(fileEleve, addUser, 'Étudiants ajoutés avec succès');
+    const sendDataFormation = () => {sendData(fileFormation, addFormation, 'Formation ajoutée avec succès'); setFormationSent(true)};
 
     const action = (
         <React.Fragment>
@@ -167,16 +143,16 @@ function AdminInterface() {
 
     async function handleDisconnection() {
         try {
-            const { token, role } = getTokenAndRole();
-            await logout(token)
-            eraseCookie();
+            const { token } = getTokenAndRole();
+            await logout(token);
         } catch (error) {
             console.error('Erreur lors de la déconnexion :', error);
-            throw error;
         } finally {
+            eraseCookie();
             navigate('/');
         }
     }
+
 
     return (
         <div style={{ backgroundColor: "#C3D9FF", height: '100%', position: 'relative' }} onDragOver={handleDragOver} onDrop={handleDrop} >
@@ -258,7 +234,7 @@ function AdminInterface() {
                 <StyledButton
                     content={"Envoyer"}
                     color={"primary"}
-                    onClick={openFormationWarning}
+                    onClick={sendDataFormation}
                 />
             </Box>
             <Box sx={{ position: 'absolute', bottom: { xs: '50px', md: '10%' }, left: '50%', transform: 'translate(-50%, 50%)', textAlign: 'center' }}>
@@ -270,7 +246,7 @@ function AdminInterface() {
                 />
             </Box>
             <Snackbar
-                open={open}
+                open={openSnackbar}
                 autoHideDuration={6000}
                 onClose={handleClose}
                 message={message}
@@ -291,14 +267,10 @@ function AdminInterface() {
                     <Box sx={{ display: "flex" }}>
                         <StyledButton
                             width={300}
-                            content={"Annuler"}
+                            content={"D'accord"}
                             color={"secondary"}
                             onClick={handleCloseWarning} />
-                        <StyledButton
-                            width={300}
-                            content={"Envoyer"}
-                            color={"primary"}
-                            onClick={buttonClicked === 'eleve' ? sendDataEleve : sendDataFormation} />
+
                     </Box>
 
 

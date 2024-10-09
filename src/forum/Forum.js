@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, IconButton, ButtonGroup, Popover, Typography } from '@mui/material';
-import Icon from '@mdi/react';
-import { mdiCommentPlus, mdiAlert } from '@mdi/js';
+import { Popover, Typography } from '@mui/material';
 import './Forum.css';
 import StyledButton from "../composent/StyledBouton";
 import { getMessageForum, ajouterMessageForum, closeForum } from '../API/ForumAPI';
 import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
+import { contenuRegex } from '../services/Regex';
 
 
 
@@ -15,7 +14,6 @@ function Forum() {
     const { id_forum } = useParams();
     const [discussions, setDiscussions] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [forumInfo, setForumInfo] = useState({});
     const [isOwner, setIsOwner] = useState(false);
     const [titreForum, setTitreForum] = useState('');
     const [isClosed, setIsClosed] = useState(false);
@@ -50,7 +48,6 @@ function Forum() {
         });
         setTitreForum(data.forum_information.forum_label);
         setDiscussions(sortedMessages);
-        setForumInfo(data.forum_information);
         setIsOwner(data.forum_information.forum_id_utilisateur === id_utilisateur);
     }
 
@@ -75,7 +72,7 @@ function Forum() {
     };
 
     const submitMessage = async (e) => {
-        if (e.key === 'Enter' && newMessage.trim() !== '') {
+        if (e.key === 'Enter' && newMessage.trim() !== '' && contenuRegex.test(e.target.value)) {
             e.preventDefault();
             try {
                 await ajouterMessageForum(id_forum, newMessage);
@@ -90,7 +87,14 @@ function Forum() {
             setId('error-popover');
             setOpen(true);
             return
+        } else if (e.key === 'Enter' && !contenuRegex.test(e.target.value)) {
+            setErrorMessage('Votre message contient des caractères non autorisés!');
+            setErrorAnchorEl(document.getElementById('input-message'));
+            setId('error-popover');
+            setOpen(true);
+            return
         }
+
 
     };
 

@@ -16,8 +16,8 @@ export const getJMethod = async () => {
 export const recolteInteraction = async (currentCour, chap_id, clic, dureeSession, scroll, progression) => {
     try {
         const body = {
-            cours: currentCour,
             chapitre: chap_id,
+            cours: currentCour,
             dureeSession: dureeSession,
             clics: clic,
             scrolls: scroll,

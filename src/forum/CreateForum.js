@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FormControl, MenuItem, Select, Box, Typography, Popover } from "@mui/material";
 import StyledButton from '../composent/StyledBouton';
-import { addForumCours, addForumQuizz } from '../API/ForumAPI';
-import { getCoursParChap } from '../API/CoursAPI';
+import { addForumRessource, addForumQuizz, addForumCours } from '../API/ForumAPI';
+import { getRessourceParChap } from '../API/RessourceAPI';
 import { getQuizzInfo } from '../API/QuizzAPI';
+import { contenuRegex } from '../services/Regex';
 
 const CreateForum = () => {
     const navigate = useNavigate();
@@ -19,11 +20,10 @@ const CreateForum = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [id, setId] = useState(undefined);
     const [open, setOpen] = useState(false);
-    const [chapId, setChapId] = useState('');
 
     useEffect(() => {
         if (id_chap) {
-            getCoursParChap(id_chap).then(data => {
+            getRessourceParChap(id_chap).then(data => {
                 setEntityId(data[0].id_cours);
                 setEntities(data);
             }).catch(error => console.error("Erreur lors de la récupération des cours :", error));
@@ -31,7 +31,6 @@ const CreateForum = () => {
             getQuizzInfo(id_quizz).then(data => {
                 setEntityId(data.id_quizz);
                 setEntities([data]);
-                setChapId(data.id_chapitre);
             }).catch(error => console.error("Erreur lors de la récupération des quiz :", error));
         }
     }, [id_chap, id_quizz]);
@@ -43,8 +42,8 @@ const CreateForum = () => {
             setErrorAnchorEl(document.getElementById('sujet'));
             setId('error-popover');
             setOpen(true);
-            return
-        } else if (!/^[a-zA-ZÀ-ÿ\s-]*$/.test(sujet)) {
+            return;
+        } else if (!contenuRegex.test(sujet)) { // Utilisation de la regex importée
             setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
             setErrorAnchorEl(document.getElementById('sujet'));
             setId('error-popover');
@@ -56,8 +55,15 @@ const CreateForum = () => {
             setErrorAnchorEl(document.getElementById('contenu'));
             setId('error-popover');
             setOpen(true);
-            return
+            return;
+        } else if (!contenuRegex.test(contenu)) { // Utilisation de la regex importée
+            setErrorMessage('Caractère non autorisé. (Chiffre non autorisé)');
+            setErrorAnchorEl(document.getElementById('contenu'));
+            setId('error-popover');
+            setOpen(true);
+            return;
         }
+
         try {
             if (id_chap) {
                 const response = await addForumCours(sujet, contenu, entityId);
@@ -120,7 +126,7 @@ const CreateForum = () => {
                                     md: "2em"
                                 }
                             }}>
-                            {id_quizz ? "Quiz concerné :" : "Cours concernés :"}
+                            {id_quizz ? "Quiz concerné :" : "Ressource concernés :"}
                         </Typography>
                         <Select
                             id='entity_id'

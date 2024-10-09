@@ -7,7 +7,6 @@ export const getUserInfo = async () => {
     }
     try {
         const response = await api.get(`/user/getUserInfo`, body);
-        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {
@@ -19,7 +18,6 @@ export const updateUserProfilePicture = async (image) => {
 
     try {
         const response = await api.put(`/user/updateUserProfilePicture`, image);
-        console.log("réponse : ", response);
         return response.data;
     }
     catch (error) {

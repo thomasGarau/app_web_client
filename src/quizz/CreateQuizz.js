@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Typography, Popover } from "@mui/material";
 import Textarea from '@mui/joy/Textarea';
 import "./CreateQuizz.css";
 import { createQuizz } from "../API/CreateQuizzAPI";

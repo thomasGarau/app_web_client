@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "@fontsource/nanum-pen-script";
-import { getListQuizzCreateForUser, deleteQuizz } from '../API/QuizzAPI.js';
-import { getChapitreById } from '../API/CoursAPI.js';
 import './Quizz.css';
 import StyledButton from '../composent/StyledBouton.js';
-import { Box, FormControl, InputLabel, MenuItem, Modal, Popover, Select, Typography } from '@mui/material';
-import { getUe } from '../API/UeAPI.js';
+import { Typography } from '@mui/material';
 import useErrorPopover from '../composent/useErrorPopover.js';
 import { delQuizz, fetchMyQuizz } from './quizz_services/GestionQuizzService.js';
 import { QuizList } from './gestion_quizz_components/QuizList.js';

@@ -1,28 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getJMethod } from "../API/jMethodeAPI.js";
 import { getUe } from "../API/UeAPI.js";
-import { logout, getUserInfo } from "../API/ProfileAPI.js";
-import { eraseCookie, getTokenAndRole } from "../services/Cookie.js";
+import { getUserInfo } from "../API/ProfileAPI.js";
 
 import "./home.css";
-import { Badge, IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography, Box, Modal } from "@mui/material";
+import { IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { DateCalendar, DayCalendarSkeleton, PickersDay } from '@mui/x-date-pickers';
-import { decodeJWT } from "../services/decode.js";
-import ServerDay from "./ServerDay.js";
+import  MethodeJ  from "./composent/MethodeJ.js";
 
 
 function Home() {
-  const requestAbortController = useRef(null);
   const [isSecure] = useState(null);
   const [listUE, setListUE] = useState([]);
-  const [listJMethod, setListJMethod] = useState([]);
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [highlightedDays, setHighlightedDays] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [month, setMonth] = useState(new Date().getMonth());
   const [role, setRole] = useState('');
 
   const handleListItemClick = (id) => {
@@ -32,52 +23,6 @@ function Home() {
   const handleListItemClickProf = (id) => {
     navigate(`/ueProf/${id}`);
   };
-
-  function importAll(r) {
-    let images = {};
-    r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
-    return images
-  }
-
-
-  const fetchJMethod = async () => {
-    setIsLoading(true);
-    const controller = new AbortController();
-    try {
-      const { token, role } = await getTokenAndRole();
-      const tokenInfo = decodeJWT(token);
-      if (tokenInfo.consentement === 1) {
-        try {
-          const JMethod = await getJMethod();
-          console.log(JMethod);
-          setListJMethod(JMethod);
-          requestAbortController.current = controller;
-        } catch (error) {
-          console.error('Erreur lors de la méthode des J:', error);
-        }
-      }
-    }
-    catch (error) {
-      console.error('Erreur lors de la récupération du token :', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    const filteredDates = listJMethod
-      .filter(JMethod => new Date(JMethod.date).getMonth() === month)
-      .map(JMethod => new Date(JMethod.date));
-
-    const days = filteredDates.map(date => date.getDate());
-    setHighlightedDays(days);
-
-    return () => {
-      requestAbortController.current?.abort();
-    };
-  }, [listJMethod, month]);
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,22 +39,9 @@ function Home() {
       } catch (error) {
         console.error('Erreur lors de la récupération des UE:', error);
       }
-      fetchJMethod();
     };
     fetchData();
   }, [role]);
-
-
-  useEffect(() => {
-    fetchJMethod(month);
-    return () => requestAbortController.current?.abort();
-  }, [month]);
-
-  const handleMonthChange = (date) => {
-    setMonth(date.$M)
-    fetchJMethod(date.$M);
-  };
-
 
 
   const filteredListUE = listUE.filter(ue =>
@@ -237,28 +169,8 @@ function Home() {
                   </ListItem>
                 ))}
               </List>
-
-
             </div>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <Typography style={{ fontFamily: "Shadows Into Light", fontSize: "xx-large" }}>Methode des j</Typography>
-              <DateCalendar
-                sx={{ width: { xs: "250px", lg: "330px", md: "100%", sm: "100%" }, margin: { sm: "0px 20px" }, height: "100%" }}
-                loading={isLoading}
-                onMonthChange={handleMonthChange}
-                renderLoading={() => <DayCalendarSkeleton />}
-                slots={{
-                  day: ServerDay,
-                }}
-                slotProps={{
-                  day: {
-                    highlightedDays,
-                    listJMethod,
-                  },
-                }}
-              />
-
-            </div>
+            <MethodeJ />
           </div>
           {isSecure}
 
