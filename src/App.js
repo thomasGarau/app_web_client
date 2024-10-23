@@ -61,6 +61,7 @@ function App() {
         <Route path="/quiz-completed/:quizId" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><QuizzFin /></Layout></RoleBasedRoute>} />
         <Route path="/quiz/:quizId/question/:questionId" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Question /></Layout> </RoleBasedRoute> }/>
         <Route path="/quiz/:quizId/question-handler" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><QuestionHandler /> </Layout> </RoleBasedRoute> } />
+        <Route path="/carte_mentale/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Carte_mental /></Layout> </RoleBasedRoute> }/>
         
         <Route path="/gestion_quizz/prof/:id" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
         <Route path="/gestion_quizz/prof/" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
