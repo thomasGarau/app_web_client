@@ -31,6 +31,7 @@ import RoleBasedRoute from './services/RoleBasedRoute';
 import AdminInterface from './admin/AdminInterface';
 import { useIdleTimer } from './services/inactive';
 import ConnexionContainer from './connexion/Connexion/ConnexionContainer';
+import FlashcardsDisplayer from './flashcards/FlashcardsDisplayer';
 
 function App() {
 
@@ -49,6 +50,8 @@ function App() {
 
         <Route path="/ue/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><Ue /></Layout></RoleBasedRoute>} />
         <Route path="/quizz/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Quizz_principale /> </Layout></RoleBasedRoute>} />
+        <Route path="/etude/:id" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Study/></Layout> </RoleBasedRoute> }/>
+        <Route path="/flash_cards/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><FlashcardsDisplayer/></Layout> </RoleBasedRoute> }/>
         <Route path="/gestion_quizz" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><GestionQuizz /> </Layout></RoleBasedRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuizz /> </Layout></RoleBasedRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId/:questionId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuestion /> </Layout></RoleBasedRoute>} />
@@ -64,7 +67,7 @@ function App() {
         <Route path="/ueProf/:id" element={ <RoleBasedRoute allowedRoles={['enseignant']}> <Layout><UeProf/></Layout> </RoleBasedRoute> }/>
 
         <Route path="/forum/:id_forum" element={ <RoleBasedRoute allowedRoles={['etudiant', 'enseignant']}> <Layout><Forum/></Layout> </RoleBasedRoute> }/>
-        <Route path="/etude/:id" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Study/></Layout> </RoleBasedRoute> }/>
+        
         <Route path="/create_quizz/:idUe" element={ <RoleBasedRoute  allowedRoles={['enseignant', 'etudiant']}> <Layout><CreateQuizz/></Layout> </RoleBasedRoute> }/>
         <Route path="/update_quizz/:quizId" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><UpdateQuizz/></Layout> </RoleBasedRoute> }/>
         <Route path="/home" element={<RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Home /></Layout> </RoleBasedRoute> } />
