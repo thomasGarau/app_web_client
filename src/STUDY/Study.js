@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getRessourceParChap, addRessource, editRessource, deleteRessourceApi, getRessourceById, addCoursProgression } from '../API/RessourceAPI';
 import './Study.css';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DownloadIcon from '@mui/icons-material/Download';
 import QuestionForum from '../composent/QuestionForum';
@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ResourceDisplay from './RessourcePlayer';
 import { setScroll } from '../Slice/pdfViewerSlice';
 import { setPause, setTime } from '../Slice/videoSlice';
+import FlashCardDrawer from './FlashcardsDrawer';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
@@ -54,6 +55,8 @@ function Study() {
     const fileInputRef = useRef(null);
     const [expandedIndex, setExpandedIndex] = useState(-1);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
+    const [isFlashcardOpen, setFlashcardOpen] = useState(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const scroll = useSelector((state) => state.pdfViewer.scroll);
     const progression = useSelector((state) => state.pdfViewer.progression);
@@ -158,6 +161,16 @@ function Study() {
         setIsAdding(false);
     };
 
+    const handleSaveFlashCard = (flashCard) => {
+        // Logique pour enregistrer la flashcard
+        console.log('Flashcard enregistrée:', flashCard);
+        // Ici, tu peux appeler une API pour sauvegarder la flashcard
+    };
+
+    const handleToggleFlashcard = () => {
+        setFlashcardOpen(prev => !prev);
+    };
+
     useEffect(() => {
         fetchRessources();
     }, [id]);
@@ -230,7 +243,9 @@ function Study() {
     return (
         <div className='background-study'>
             <div className='sub_container_text_question'>
+
                 <div className='text-part'>
+                
                     <h1 className='study-title'>Ressource du chapitre</h1>
                     {ressources.length > 0 ? (
                         ressources.map((ressource, index) => (
@@ -360,6 +375,7 @@ function Study() {
                     </Modal>
 
                 )}
+                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
                 <QuestionForum id_chap={id} role={role} />
             </div>
         </div>

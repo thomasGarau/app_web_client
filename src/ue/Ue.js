@@ -41,6 +41,10 @@ export default function Ue() {
         if(selectedChapter) navigate(`/quizz/${selectedChapter}`);
     }
 
+    function handleFlashcardsClick() {
+        if(selectedChapter) navigate(`/flash_cards/${selectedChapter}`);
+    }
+
     return (
         <div className='ue-container'>
             <div className="chapters-container">
@@ -63,6 +67,7 @@ export default function Ue() {
                     <StyledButton content={"Cours"} color={"primary"} onClick={handleCourseClick} disabled={!selectedChapter}/>
                     <StyledButton content={"Quizz"} color={"primary"} onClick={handleQuizzClick} disabled={!selectedChapter}/>
                     <StyledButton content={"Create"} color={"primary"} onClick={() => console.log('Create')} disabled={!selectedChapter}/>
+                    <StyledButton content={"FlashCards"} color={"primary"} onClick={handleFlashcardsClick} disabled={!selectedChapter}/>
                 </div>
             )}
         </div>
