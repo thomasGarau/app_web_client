@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { Box, Button, TextField, Accordion, AccordionSummary, AccordionDetails, Typography, Select, MenuItem } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StyledButton from '../composent/StyledBouton';
 
-const FlashCardDrawer = ({ onSave }) => {
+const FlashCardDrawer = ({ onSave, collections }) => {
     const [recto, setRecto] = useState('');
     const [verso, setVerso] = useState('');
     const [expanded, setExpanded] = useState(false); // État pour gérer si l'accordion est étendu ou non
+    const [selectedCollection, setSelectedCollection] = useState(''); // Sélection de la collection
 
     const handleSave = () => {
-        if (recto && verso) {
-            onSave({ recto, verso });
+        if (recto && verso && selectedCollection) {
+            onSave({ recto, verso, collectionId: selectedCollection });
             setRecto(''); // Réinitialiser le formulaire après sauvegarde
             setVerso('');
+            setSelectedCollection(''); // Réinitialiser la sélection de collection
         }
     };
 
@@ -28,11 +30,9 @@ const FlashCardDrawer = ({ onSave }) => {
                 top: '40%',
                 transform: 'translateY(-50%)',
                 zIndex: 1000,
-                width: expanded ? {xl: '200px', sm: '400px'} : '50px', 
-                transition: '0.3s ease', 
-                maxHeight: "64px"
-
-                
+                width: expanded ? { xl: '200px', sm: '400px' } : '50px',
+                transition: '0.3s ease',
+                maxHeight: '64px',
             }}
         >
             <Accordion
@@ -43,24 +43,23 @@ const FlashCardDrawer = ({ onSave }) => {
                     '&:before': {
                         display: 'none',
                     },
-                    borderRadius: expanded ? '20px 0px 0px 20px !important' : '50px 0px 0px 50px !important', 
+                    borderRadius: expanded ? '20px 0px 0px 20px !important' : '50px 0px 0px 50px !important',
                     backgroundColor: '#f0f0f0',
-                    transition: 'border-radius 0.3s ease', 
+                    transition: 'border-radius 0.3s ease',
                 }}
             >
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{transform: 'rotate(0.25turn)'}}/>}
+                    expandIcon={<ExpandMoreIcon sx={{ transform: 'rotate(0.25turn)' }} />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{
                         borderRadius: expanded ? '20px 0px 0px 0px !important' : '50px 0px 0px 0px !important',
                     }}
                 >
-                    <Typography>{expanded ? "Créer Flashcard" : null}</Typography> 
+                    <Typography>{expanded ? "Créer Flashcard" : null}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Box
-                    sx={{display: 'flex', flexDirection: 'column', alignItems:'center'}}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <TextField
                             label="Recto"
                             variant="outlined"
@@ -77,7 +76,24 @@ const FlashCardDrawer = ({ onSave }) => {
                             onChange={(e) => setVerso(e.target.value)}
                             sx={{ mb: 2 }}
                         />
-                        <StyledButton content={"Enregistrer"} width={250} color={"primary"} onClick={handleSave}/>
+
+                        {/* Select pour choisir une collection */}
+                        <Select
+                            value={selectedCollection}
+                            onChange={(e) => setSelectedCollection(e.target.value)}
+                            displayEmpty
+                            fullWidth
+                            sx={{ mb: 2 }}
+                        >
+                            <MenuItem value="" disabled>Sélectionnez une collection</MenuItem>
+                            {collections.map((collection) => (
+                                <MenuItem key={collection.id} value={collection.id}>
+                                    {collection.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+
+                        <StyledButton content={"Enregistrer"} width={250} color={"primary"} onClick={handleSave} />
                     </Box>
                 </AccordionDetails>
             </Accordion>

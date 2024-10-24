@@ -375,7 +375,7 @@ function Study() {
                     </Modal>
 
                 )}
-                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
+                <FlashCardDrawer open={isFlashcardOpen} collections={/* liste de collection*/ undefined} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
                 <QuestionForum id_chap={id} role={role} />
             </div>
         </div>

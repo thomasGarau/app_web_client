@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import React from 'react';
 
-export default function FlashcardsFooter({ onNewClick, onEditClick, consultingMode }) {
+export default function FlashcardsFooter({ onNewClick, onEditClick, onDelClick, delMode, editingMode }) {
     return (
         <Box
             sx={{
@@ -13,14 +13,14 @@ export default function FlashcardsFooter({ onNewClick, onEditClick, consultingMo
                 justifyContent: { xs: 'center', sm: 'space-evenly' },
                 flexDirection: { xs: 'column', sm: 'row' },
                 backgroundColor: '#093146',
-                height: '200px',
+                height: { xs: '100px', sm: '150px'},
                 alignItems: 'center',
                 gap: '10px',
-                padding: '10px'
             }}
         >
             <StyledButton content={"Nouvelle flashcards"} color={"primary"} onClick={onNewClick} />
-            <StyledButton content={consultingMode ? "Editer flashcards" : "Consulter flashcards"} color={consultingMode ? "primary" : "secondary"} onClick={onEditClick} />
+            <StyledButton content={"Supprimer flashcards"} color={delMode ? "#cc0000" : "primary"} onClick={onDelClick} />
+            <StyledButton content={editingMode ? "Editer flashcards" : "Consulter flashcards"} color={editingMode ?  "secondary" : "primary"} onClick={onEditClick} />
         </Box>
     );
 }
