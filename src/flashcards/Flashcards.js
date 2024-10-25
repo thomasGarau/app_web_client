@@ -1,7 +1,7 @@
 import React from 'react';
-import { CardContent, Typography, Box } from '@mui/material';
+import { CardContent, Typography, Box, TextField } from '@mui/material';
 
-export default function Flashcards({ data, isFlipped, onClick }) {
+export default function Flashcards({ data, isFlipped, onClick, isEditing, onChangeRecto, onChangeVerso }) {
     return (
         <Box
             sx={{
@@ -10,7 +10,7 @@ export default function Flashcards({ data, isFlipped, onClick }) {
                 height: '200px',
                 cursor: 'pointer',
             }}
-            onClick={onClick}
+            onClick={onClick} // Appel pour basculer la rotation
         >
             <Box
                 sx={{
@@ -27,6 +27,7 @@ export default function Flashcards({ data, isFlipped, onClick }) {
                     },
                 }}
             >
+                {/* Recto */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -38,15 +39,40 @@ export default function Flashcards({ data, isFlipped, onClick }) {
                         justifyContent: 'center',
                         backgroundColor: '#f5f5f5',
                         borderRadius: '10px',
+                        transform: 'rotateY(0deg)', // Toujours face avant
                     }}
                 >
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                            {data.recto}
-                        </Typography>
-                    </CardContent>
+                    {isEditing ? (
+                        <CardContent sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <TextField
+                                rows={4}
+                                variant="outlined"
+                                value={data.recto}
+                                onChange={(e) => onChangeRecto(e.target.value)}
+                                fullWidth
+                                multiline
+                                label="Recto"
+                                onClick={(e) => e.stopPropagation()}
+                                InputProps={{
+                                    sx: {
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        textAlign: "center"
+                                    }
+                                }}
+                            />
+                        </CardContent>
+                    ) : (
+                        <CardContent>
+                            <Typography variant="h5" component="div">
+                                {data.recto}
+                            </Typography>
+                        </CardContent>
+                    )}
                 </Box>
 
+                {/* Verso */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -56,16 +82,39 @@ export default function Flashcards({ data, isFlipped, onClick }) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: '#eeeeee',
+                        backgroundColor: '#d1e0e0',
                         borderRadius: '10px',
-                        transform: 'rotateY(180deg)',
+                        transform: 'rotateY(180deg)', // Rotation arrière
                     }}
                 >
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                            {data.verso}
-                        </Typography>
-                    </CardContent>
+                    {isEditing ? (
+                        <CardContent sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <TextField
+                                rows={4}
+                                variant="outlined"
+                                value={data.verso}
+                                onChange={(e) => onChangeVerso(e.target.value)}
+                                fullWidth
+                                multiline
+                                label="Verso"
+                                onClick={(e) => e.stopPropagation()}
+                                InputProps={{
+                                    sx: {
+                                        height: "100%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        textAlign: "center"
+                                    }
+                                }}
+                            />
+                        </CardContent>
+                    ) : (
+                        <CardContent>
+                            <Typography variant="h5" component="div">
+                                {data.verso}
+                            </Typography>
+                        </CardContent>
+                    )}
                 </Box>
             </Box>
         </Box>

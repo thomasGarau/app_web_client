@@ -4,6 +4,7 @@ import FlashcardsFooter from './FlashcardsFooter';
 import FlashCardsModal from './FlashcardsModal';
 import FlashcardsBox from './FlashcardsBox';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { handleCloseModal, handleFlipCard } from './FlashcardsUtils';
 
 export default function FlashcardsDisplayer({ flashCardsList, collectionName, collectionId, onUpdateFlashcards, visibility, onUpdateVisibility, deleteCollection }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,9 +29,8 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
         setIsModalOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedFlashCard(null);
+    const callCloseModal = () => {
+        handleCloseModal(setIsModalOpen, setSelectedFlashCard)
     };
 
     const handleSaveFlashCard = (newFlashCard) => {
@@ -52,12 +52,8 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
         setDeleteMode(false);
     };
 
-    const handleFlipCard = (index) => {
-        setFlashCards((prevList) =>
-            prevList.map((card, i) =>
-                i === index ? { ...card, isFlipped: !card.isFlipped } : card
-            )
-        );
+    const callFlipCard = (index) => {
+        handleFlipCard(index, setFlashCards)
     };
 
     const handleDeleteCard = (index) => {
@@ -85,7 +81,7 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
                 justifyContent: 'space-between'
             }}>
                 <Typography variant='h4' sx={{ marginLeft: '16px' }}>Flashcards de la collection {collectionName}</Typography>
-                <Box sx={{ display: 'flex', flex: 1}}>
+                <Box sx={{ display: 'flex', flex: 1 }}>
                     <Button onClick={() => deleteCollection(collectionId)} sx={{ position: 'relative', left: 0, margin: '0px 20px' }}>
                         <DeleteIcon style={{ fill: "#000" }} />
                     </Button>
@@ -103,7 +99,7 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
             </Box>
             <FlashcardsBox
                 handleDeleteCard={handleDeleteCard}
-                handleFlipCard={handleFlipCard}
+                handleFlipCard={callFlipCard}
                 handleOpenModal={handleOpenModal}
                 consultingMode={consultingMode}
                 deleteMode={deleteMode}
@@ -136,8 +132,10 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
             />
             {/* Modal pour ajouter ou éditer une flashcard */}
             <FlashCardsModal
+                onClick={callFlipCard}
+                isEditing={editingMode}
                 open={isModalOpen}
-                onClose={handleCloseModal}
+                onClose={callCloseModal}
                 flashCardData={selectedFlashCard}
                 onSave={handleSaveFlashCard}
             />

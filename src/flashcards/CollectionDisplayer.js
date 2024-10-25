@@ -61,7 +61,6 @@ const CollectionDisplayer = () => {
     const deleteCollection = (collectionId) => {
         const updatedCollections = collections.filter(collection => collection.id !== collectionId);
         setCollections(updatedCollections);
-        // Si la collection supprimée était l'onglet sélectionné, on remet le premier onglet à la sélection
         setSelectedTab((prevTab) => (prevTab >= updatedCollections.length ? 0 : prevTab));
     };
 
@@ -78,10 +77,13 @@ const CollectionDisplayer = () => {
                 {collections.map((collection) => (
                     <Tab wrapped key={collection.id} label={collection.name} />
                 ))}
-                <Button style={{ transition: "0.2s" }} onClick={addCollection}>
-                    <AddIcon style={{ fill: "#000" }} />
-                </Button>
+                <Tab
+                    icon={<AddIcon style={{ fill: "#000" }} />}
+                    onClick={addCollection}
+                    aria-label="Add Collection"
+                />
             </Tabs>
+
 
             {/* Affichage des flashcards de la collection sélectionnée */}
             {collections.map((collection, index) => (
