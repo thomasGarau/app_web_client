@@ -86,11 +86,12 @@ const FlashCardDrawer = ({ onSave, collections }) => {
                             sx={{ mb: 2 }}
                         >
                             <MenuItem value="" disabled>Sélectionnez une collection</MenuItem>
-                            {collections.map((collection) => (
+                            {collections && collections.map((collection) => (
                                 <MenuItem key={collection.id} value={collection.id}>
                                     {collection.name}
                                 </MenuItem>
                             ))}
+                            
                         </Select>
 
                         <StyledButton content={"Enregistrer"} width={250} color={"primary"} onClick={handleSave} />

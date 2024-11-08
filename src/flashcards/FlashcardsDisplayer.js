@@ -43,7 +43,6 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
         } else {
             setFlashCards((prevList) => [...prevList, newFlashCard]);
         }
-        handleCloseModal();
     };
 
     const handleChangeMode = () => {
@@ -68,7 +67,7 @@ export default function FlashcardsDisplayer({ flashCardsList, collectionName, co
         setEditingMode(false);
     };
 
-    const handlePageChange = (event, value) => {
+    const handlePageChange = (_, value) => {
         setCurrentPage(value);
     };
 
