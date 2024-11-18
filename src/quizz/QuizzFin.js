@@ -6,6 +6,7 @@ import RatingStars from '../composent/RatingStars.js';
 import StyledButton from '../composent/StyledBouton.js';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../API/ProfileAPI';
+import StyledBox from '../composent/StyledBox.js';
 
 function QuizzFin() {
     const { quizId } = useParams();
@@ -59,8 +60,8 @@ function QuizzFin() {
         <div className='quiz-final-background'>
             <div className='quiz-final-summary'>
                 <div className='quiz-final-button-top'>
-                    <StyledButton content={"Quizz"} width={"25%"} fontSize={"1.5em"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
-                    <p className='theme_quiz-final'>{label}</p>
+                    <StyledButton content={"Quizz"} fontSize={"1.5em"} onClick={() => navigate(`/quizz/${chap_id}`)}/>
+                    <StyledBox content={label} fontSize={"1.5em"}/>
                 </div>
                 <div className='quiz-final-score'>
                     <div className='quiz-final-demi-cercle'>

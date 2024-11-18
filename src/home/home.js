@@ -203,7 +203,7 @@ function Home() {
                 ))}
               </List>
             </div>
-            <Box sx={{ display: { xl: "flex", sm: "block" }}}>
+            <Box sx={{ display: "flex", flexDirection: "column"}}>
               <MethodeJ />
               <Box sx={{display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
                 <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={handleOpenModal} />

@@ -10,23 +10,23 @@
     align-items: center;
 }
 
-.base-container_quizz_principale { 
+.base-container_quizz_principale {
     background-color: #f5f5f5;
     color: rgba(0, 0, 0, 0.87);
     -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-radius: 20px;
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     display: flex;
-    flex-flow : column;
+    flex-flow: column;
     align-items: center;
     width: 86%;
     justify-content: flex-start;
-    padding : 0.5%;
+    padding: 0.5%;
     margin-bottom: 20px;
 }
 
-.background-quizz-principale-container{
+.background-quizz-principale-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,109 +37,112 @@
 
 }
 
-.container_quizz{
+.container_quizz {
     background-color: #133D56;
-        color: rgba(0, 0, 0, 0.87);
-        -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-        border-radius: 38px;
-        box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-evenly;
-        width: 85%;
-        height: 120px;
-        margin-bottom: 10px;
+    color: rgba(0, 0, 0, 0.87);
+    -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 38px;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 85%;
+    height: 120px;
+    margin-bottom: 10px;
 
 }
 
-.container_quizzs{
+.container_quizzs {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-flow : column;
+    flex-flow: column;
     align-items: center;
     overflow: auto;
     scrollbar-width: thin;
 }
 
-.item_quizz, .theme_quizz, .quizz_like{
+.item_quizz,
+.theme_quizz,
+.quizz_like {
     background-color: white;
     border-radius: 38px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin : 2%;
+    margin: 2%;
 }
 
-.item_quizz{
+.item_quizz {
     width: 20%;
     height: 70%;
 }
 
-.quizz_like{
+.quizz_like {
     padding: 0px 10px;
 }
 
-.theme_quizz{
+.theme_quizz {
     width: 25%;
     height: 70%;
 }
 
-.theme_quizz p{
+.theme_quizz p {
     padding-left: 4%;
     padding-right: 4%;
     word-wrap: break-word;
 }
 
 
-.btn_quizz, .btn_quizz_creer{
-    width : 20%;
+.btn_quizz,
+.btn_quizz_creer {
+    width: 20%;
     height: 80px;
     background-color: white;
-    color : black;
+    color: black;
     border-radius: 38px;
     border: none;
     font-weight: lighter;
 }
 
-.btn_quizz_creer{
+.btn_quizz_creer {
     background-color: #133D56;
     color: #f5f5f5;
     font-weight: lighter;
 }
 
-.btn_quizz_creer:hover{
+.btn_quizz_creer:hover {
     background-color: #C3D9FF;
-    color : black;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
+    color: black;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.4), 0 17px 50px 0 rgba(0, 0, 0, 0.3);
 }
 
-.btn_quizz:hover{
+.btn_quizz:hover {
     background-color: #C3D9FF;
-    color : black;
+    color: black;
     border: 1px solid #133D56;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
-    
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.4), 0 17px 50px 0 rgba(0, 0, 0, 0.3);
+
 }
 
-.img_coeur{
-    width : auto;
-    height : 50%;
+.img_coeur {
+    width: auto;
+    height: 50%;
 }
 
 
 
-.Nom_Quizz{
+.Nom_Quizz {
     font-size: 50px;
-    margin : 1%;
+    margin: 1%;
     width: auto;
     font-weight: lighter;
 }
 
-.quizz_type{
+.quizz_type {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -149,7 +152,7 @@
     justify-content: space-evenly;
 }
 
-.quiz-final-background{
+.quiz-final-background {
     background-color: #C3D9FF;
     width: 100%;
     height: 100%;
@@ -162,15 +165,15 @@
 }
 
 .quiz-final-summary {
-    display: flex ;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     width: 100vw;
     height: 100%;
-    overflow-x :hidden;
+    overflow-x: hidden;
     background-color: #C3D9FF;
-    padding-top : 150px;
+    padding-top: 150px;
 }
 
 .quiz-final-button-top {
@@ -183,11 +186,11 @@
     margin-top: 10px;
 }
 
-.quiz-final-sujet-quizz{
+.quiz-final-sujet-quizz {
     background-color: white;
 }
 
-.theme_quiz-final{
+.theme_quiz-final {
     width: 20%;
     height: 80px;
     background-color: white;
@@ -197,26 +200,26 @@
     align-items: center;
     justify-content: center;
     font-size: 1.5em;
-    margin : 2%;
-    
+    margin: 2%;
+
 }
 
-.btn_quiz-final{
-    width : 20%;
+.btn_quiz-final {
+    width: 20%;
     height: 80px;
     background-color: white;
-    color : black;
+    color: black;
     border-radius: 38px;
     border: none;
     font-weight: lighter;
 }
 
-.btn_quiz-final:hover{
-    color : black;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.4), 0 17px 50px 0 rgba(0,0,0,0.3); 
+.btn_quiz-final:hover {
+    color: black;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.4), 0 17px 50px 0 rgba(0, 0, 0, 0.3);
 }
 
-.quiz-final-score{
+.quiz-final-score {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -227,57 +230,62 @@
 }
 
 .quiz-final-demi-cercle {
-   width: 50vw;               /* Utilisez viewport width pour la largeur */
-        height: 27.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
-        max-width: 400px;          /* Limite maximale pour la largeur */
-        max-height: 300px;         /* Limite maximale pour la hauteur */
-        background: white;
-        border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
-        border-top-right-radius: 25vw;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
+    width: 50vw;
+    height: 25vw;
+    max-width: 400px;
+    max-height: 300px;
+    background: white;
+    border-top-left-radius: 25vw;
+    border-top-right-radius: 25vw;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 
 .quiz-final-demi-cercle-vide {
-    width: 37.5vw;             /* Réduisez proportionnellement la largeur */
-    height: 21.875vw;          /* Réduisez proportionnellement la hauteur */
-    max-width: 300px;          /* Limite maximale pour la largeur */
-    max-height: 200px;         /* Limite maximale pour la hauteur */
+    width: 75%;
+    height: 75%;
+    max-width: 300px;
+    max-height: 200px;
     background: white;
-    border-top-left-radius: 18.75vw; /* Adaptez le rayon à la largeur */
-    border-top-right-radius: 18.75vw;
-    border: 5px solid #133D56; /* Adaptez la taille de la bordure */
+    border-top-left-radius: 25vw;
+    border-top-right-radius: 25vw;
+    border: 5px solid #133D56;
     border-bottom: none;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-  .quiz-final-demi-cercle-vide p{
+.quiz-final-demi-cercle-vide p {
     font-size: 5em;
-    margin : 0;
-  }
+    margin: 0;
+}
 
-@media (max-width: 600px){
-    .quiz-final-score{
+@media (max-width: 600px) {
+    .quiz-final-score {
         height: 80%;
     }
 
-    .quiz-final-demi-cercle-vide p{
+    .quiz-final-demi-cercle-vide p {
         font-size: 2.5em;
     }
 
     .quiz-final-demi-cercle {
-        width: 50vw;               /* Utilisez viewport width pour la largeur */
-        height: 27.5vw;            /* Gardez une hauteur proportionnelle à la largeur */
-        max-width: 400px;          /* Limite maximale pour la largeur */
-        max-height: 300px;         /* Limite maximale pour la hauteur */
+        width: 50vw;
+        /* Utilisez viewport width pour la largeur */
+        height: 27.5vw;
+        /* Gardez une hauteur proportionnelle à la largeur */
+        max-width: 400px;
+        /* Limite maximale pour la largeur */
+        max-height: 300px;
+        /* Limite maximale pour la hauteur */
         background: white;
-        border-top-left-radius: 25vw; /* Adaptez le rayon à la largeur */
+        border-top-left-radius: 25vw;
+        /* Adaptez le rayon à la largeur */
         border-top-right-radius: 25vw;
         display: flex;
         align-items: flex-end;
         justify-content: center;
     }
-  }
+}
