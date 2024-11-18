@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Avatar, Typography, Popover } from "@mui/material";
+import { Avatar, Typography, Popover, Backdrop, CircularProgress } from "@mui/material";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import CakeIcon from '@mui/icons-material/Cake';
 import StyledButton from "../../composent/StyledBouton";
@@ -14,7 +14,8 @@ export default function UserInfo() {
     const fileInputRef = useRef(null);
     const [errorAnchorEl, setErrorAnchorEl] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
-    const [open, setOpen] = useState(false);
+    const [openPopOver, setOpenPopOver] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
     const [id, setId] = useState(undefined);
 
     const handleUpload = () => {
@@ -33,6 +34,7 @@ export default function UserInfo() {
         const sendImage = async () => {
             if (picture.pictureAsFile) {
                 try {
+                    setOpenBackdrop(true);
                     const formData = new FormData();
                     formData.append('path', picture.pictureAsFile);
                     await updateUserProfilePicture(formData);
@@ -40,10 +42,11 @@ export default function UserInfo() {
                     window.location.reload();
                 } catch (error) {
                     console.error('Error uploading profile picture:', error);
-                }
+                }            
             }
+            setOpenBackdrop(false);
         };
-        sendImage();
+        sendImage();      
     }, [picture]);
 
     useEffect(() => {
@@ -62,7 +65,7 @@ export default function UserInfo() {
     const handleClosePopover = () => {
         setErrorAnchorEl(null);
         setErrorMessage('');
-        setOpen(false);
+        setOpenPopOver(false);
     };
 
     return (
@@ -91,7 +94,7 @@ export default function UserInfo() {
 
             <Popover
                 id={id}
-                open={open}
+                open={openPopOver}
                 anchorEl={errorAnchorEl}
                 onClose={handleClosePopover}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -99,6 +102,12 @@ export default function UserInfo() {
             >
                 <Typography sx={{ p: 2 }}>{errorMessage}</Typography>
             </Popover>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }
