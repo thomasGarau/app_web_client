@@ -1,4 +1,4 @@
-.container-carte-mentale {
+.container-carte-mentale, .container-create-cm {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

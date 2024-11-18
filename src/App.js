@@ -33,6 +33,7 @@ import { useIdleTimer } from './services/inactive';
 import ConnexionContainer from './connexion/Connexion/ConnexionContainer';
 import FlashcardsDisplayer from './flashcards/FlashcardsDisplayer';
 import CollectionDisplayer from './flashcards/CollectionDisplayer';
+import Create_CM from './carte_mental/Create_CM';
 
 function App() {
 
@@ -63,6 +64,7 @@ function App() {
         <Route path="/quiz/:quizId/question/:questionId" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Question /></Layout> </RoleBasedRoute> }/>
         <Route path="/quiz/:quizId/question-handler" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><QuestionHandler /> </Layout> </RoleBasedRoute> } />
         <Route path="/carte_mentale/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Carte_mental /></Layout> </RoleBasedRoute> }/>
+        <Route path="/creer_carte_mentale/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Create_CM /></Layout> </RoleBasedRoute> }/>
         
         <Route path="/gestion_quizz/prof/:id" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
         <Route path="/gestion_quizz/prof/" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
