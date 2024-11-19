@@ -1,25 +1,31 @@
-import React, { useState } from 'react';
-import { Box, Button, TextField, Accordion, AccordionSummary, AccordionDetails, Typography, Select, MenuItem } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, Select, MenuItem } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StyledButton from '../composent/StyledBouton';
+import Flashcards from '../flashcards/Flashcards';
 
 const FlashCardDrawer = ({ onSave, collections }) => {
     const [recto, setRecto] = useState('');
     const [verso, setVerso] = useState('');
-    const [expanded, setExpanded] = useState(false); // État pour gérer si l'accordion est étendu ou non
-    const [selectedCollection, setSelectedCollection] = useState(''); // Sélection de la collection
+    const [expanded, setExpanded] = useState(false);
+    const [selectedCollection, setSelectedCollection] = useState('');
+    const [flipped, setFlipped] = useState(false);
 
     const handleSave = () => {
         if (recto && verso && selectedCollection) {
             onSave({ recto, verso, collectionId: selectedCollection });
-            setRecto(''); // Réinitialiser le formulaire après sauvegarde
+            setRecto(''); 
             setVerso('');
-            setSelectedCollection(''); // Réinitialiser la sélection de collection
+            setSelectedCollection(''); 
         }
     };
 
     const handleToggleAccordion = () => {
-        setExpanded(!expanded); // Bascule l'état d'ouverture/fermeture de l'accordion
+        setExpanded(!expanded);
+    };
+
+    const handleFlip = () => {
+        setFlipped((prev) => !prev);
     };
 
     return (
@@ -60,21 +66,13 @@ const FlashCardDrawer = ({ onSave, collections }) => {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <TextField
-                            label="Recto"
-                            variant="outlined"
-                            fullWidth
-                            value={recto}
-                            onChange={(e) => setRecto(e.target.value)}
-                            sx={{ mb: 2 }}
-                        />
-                        <TextField
-                            label="Verso"
-                            variant="outlined"
-                            fullWidth
-                            value={verso}
-                            onChange={(e) => setVerso(e.target.value)}
-                            sx={{ mb: 2 }}
+                        <Flashcards
+                            data={{ recto, verso }}
+                            isFlipped={flipped}
+                            isEditing={true}
+                            onChangeRecto={(newRecto) => setRecto(newRecto)}
+                            onChangeVerso={(newVerso) => setVerso(newVerso)}
+                            onClick={handleFlip}
                         />
 
                         {/* Select pour choisir une collection */}
@@ -91,7 +89,7 @@ const FlashCardDrawer = ({ onSave, collections }) => {
                                     {collection.name}
                                 </MenuItem>
                             ))}
-                            
+
                         </Select>
 
                         <StyledButton content={"Enregistrer"} width={250} color={"primary"} onClick={handleSave} />

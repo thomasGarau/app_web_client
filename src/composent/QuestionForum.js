@@ -5,7 +5,7 @@ import StyledButton from '../composent/StyledBouton';
 import { getForumByCours, getForumByQuizz } from "../API/ForumAPI.js";
 
 function QuestionForum(props) {
-    const { id_chap, id_quizz, role } = props; 
+    const { id_chap, id_quizz, role } = props;
     const [forums, setForums] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -23,17 +23,17 @@ function QuestionForum(props) {
                 } else if (id_quizz) {
                     data = await getForumByQuizz(id_quizz);
                 }
-                if(data === null || data === undefined) return;
+                if (data === null || data === undefined) return;
                 const sortedForums = data.sort((a, b) => {
                     if (a.etat === "0" && b.etat === "1") return 1;
                     if (a.etat === "1" && b.etat === "0") return -1;
-        
+
                     // Si les états sont identiques, comparer par date (les plus récents en premier)
                     const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
                     return dateB - dateA; // Tri décroissant par date
                 });
-        
+
                 setForums(sortedForums);
             } catch (error) {
                 console.error("Erreur lors de la récupération des forums :", error);
@@ -74,71 +74,77 @@ function QuestionForum(props) {
             <div className="question-title-button" style={{
                 display: "flex",
                 justifyContent: "space-between",
-                padding : "0px",
+                padding: "0px",
                 paddingTop: "10px",
                 alignItems: "center",
                 borderTop: "2vh solid #d9d9d9",
             }} >
                 <Typography variant="h3" className="forum-component-title">Forums</Typography>
                 {role === "etudiant" && (
-                <StyledButton
-                    width={'175px'}
-                    content={"Poser une question"}
-                    color={"primary"}
-                    fontSize={"1.2em"}
-                    onClick={handleCreateForum}
-                /> )}
+                    <StyledButton
+                        width={'175px'}
+                        content={"Poser une question"}
+                        color={"primary"}
+                        fontSize={"1.2em"}
+                        onClick={handleCreateForum}
+                    />)}
             </div>
             <List className='button-ul'>
                 {forums.length > 0 ? (
                     forums.map(forum => (
                         <Button key={forum.id_forum} sx={{ width: "100%" }} onClick={() => toForum(forum.id_forum)}>
-                            <ListItem className="list-button" 
-                            sx={{ 
-                                width: "100%", 
-                                padding : "2px",
-                                fontSize: {
-                                    xs: "0.8em",
-                                    sm: "1em",
-                                    md: "1.2em"
-                                }
+                            <ListItem className="list-button"
+                                sx={{
+                                    width: "25%",
+                                    padding: "2px",
+                                    fontSize: {
+                                        xs: "0.8em",
+                                        sm: "1em",
+                                        md: "1.2em"
+                                    }
                                 }}>
-                                <ListItemText primaryTypographyProps={{ fontSize: "1em" }} primary={forum.label} />
+                                <ListItemText primaryTypographyProps={{
+                                    fontSize: "1em",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden",  
+                                    whiteSpace: "nowrap", 
+                                    width: "100%" 
+                                }} primary={forum.label || 'N/A'} />
                             </ListItem>
-                            <ListItem className="list-button" 
-                            sx={{ 
-                                width: "100%",
-                                padding : "2px",
-                                fontSize: {
-                                    xs: "0.8em",
-                                    sm: "1em",
-                                    md: "1.2em"
-                                }
+                            <ListItem className="list-button"
+                                sx={{
+                                    width: "25%",
+                                    padding: "2px",
+                                    fontSize: {
+                                        xs: "0.8em",
+                                        sm: "1em",
+                                        md: "1.2em"
+                                    }
                                 }}>
                                 <ListItemText primaryTypographyProps={{ fontSize: "1em" }} primary={`${forum.nom} ${forum.prenom}`} />
                             </ListItem>
-                            <ListItem className="list-button" 
-                            sx={{ 
-                                width: "75%",
-                                padding : "2px",
-                                fontSize: {
-                                    xs: "0.8em",
-                                    sm: "1em",
-                                    md: "1.2em"
-                                }
+                            <ListItem className="list-button"
+                                sx={{
+                                    width: "25%",
+                                    padding: "2px",
+                                    fontSize: {
+                                        xs: "0.8em",
+                                        sm: "1em",
+                                        md: "1.2em"
+                                    }
                                 }}>
                                 <ListItemText primaryTypographyProps={{ fontSize: "1em" }} primary={forum ? formatDate(forum.date) : 'N/A'} />
                             </ListItem>
-                            <ListItem className="list-button" 
-                            sx={{ 
-                                width: "50%",
-                                padding : "2px",
-                                fontSize: {
-                                    xs: "0.8em",
-                                    sm: "1em",
-                                    md: "1.2em"
-                                }
-                                 }}>
+                            <ListItem className="list-button"
+                                sx={{
+                                    width: "25%",
+                                    padding: "2px",
+                                    fontSize: {
+                                        xs: "0.8em",
+                                        sm: "1em",
+                                        md: "1.2em"
+                                    }
+                                }}>
                                 <ListItemText primaryTypographyProps={{ fontSize: "1em" }} primary={getForumStatus(forum.etat)} />
                             </ListItem>
                         </Button>
