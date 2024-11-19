@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Box, Button } from '@mui/material';
 import Flashcards from './Flashcards';
+import StyledButton from '../composent/StyledBouton';
 
 const styleEdit = {
     position: 'absolute',
@@ -9,10 +10,14 @@ const styleEdit = {
     transform: 'translate(-50%, -50%)',
     width: 600,
     height: 300,
-    bgcolor: 'background.paper',
+    bgcolor: '#093146',
     border: '2px solid #000',
+    borderRadius: 10,
     boxShadow: 24,
     p: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
 };
 
 const styleConsult = {
@@ -63,9 +68,8 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
                     onClick={handleFlip}
                 />
                 {isEditing ?
-                    <Button variant="contained" color="primary" onClick={handleSave} sx={{ mt: 2 }}>
-                        Enregistrer
-                    </Button> : null}
+                    <StyledButton variant="contained" color={"secondary"} content={"Enregistrer"} onClick={handleSave} />
+                         : null}
 
             </Box>
         </Modal>
