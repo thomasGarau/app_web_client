@@ -7,6 +7,7 @@ import StyledButton from '../composent/StyledBouton.js';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../API/ProfileAPI';
 import StyledBox from '../composent/StyledBox.js';
+import { Typography } from '@mui/material';
 
 function QuizzFin() {
     const { quizId } = useParams();
@@ -66,7 +67,7 @@ function QuizzFin() {
                 <div className='quiz-final-score'>
                     <div className='quiz-final-demi-cercle'>
                         <div className='quiz-final-demi-cercle-vide'>
-                            <p>{finalScore}%</p>
+                            <Typography>{finalScore}%</Typography>
                         </div>
                     </div>
                     <RatingStars quizId={quizId} />
