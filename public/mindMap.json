@@ -1,0 +1,34 @@
+{
+  "title": "Nbjhbk",
+  "nodes": [
+    {
+      "id": "1",
+      "type": "custom",
+      "label": "blablba",
+      "color": "#289a5f",
+      "position": {
+        "x": 321.5,
+        "y": -81
+      }
+    },
+    {
+      "id": "2",
+      "type": "custom",
+      "label": "bloublou",
+      "color": "#c21e1e",
+      "position": {
+        "x": 177.70764907090563,
+        "y": 9.937456647123128
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-1-2",
+      "source": "1",
+      "target": "2",
+      "sourceHandle": null,
+      "targetHandle": null
+    }
+  ]
+}

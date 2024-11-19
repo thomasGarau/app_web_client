@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import ReactFlow, {
     addEdge,
     MiniMap,
@@ -6,61 +6,22 @@ import ReactFlow, {
     Background,
     useEdgesState,
     useNodesState,
-    Handle,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import './Carte_mentale.css';
-import { Edit as EditIcon } from '@mui/icons-material';
-
-const CustomNode = ({ data, id, isConnectable, onClick }) => {
-    return (
-        <div
-            className="custom-node"
-            onClick={() => onClick(id)} // Sélectionne le nœud
-            style={{
-                padding: '10px',
-                borderRadius: '5px',
-                backgroundColor: data.color || '#ffffff',
-                border: '1px solid #ccc',
-                textAlign: 'center',
-                cursor: 'pointer',
-            }}
-        >
-            <input
-                type="text"
-                value={data.label}
-                onChange={(e) => data.onLabelChange(e.target.value, id)}
-                style={{
-                    border: 'none',
-                    padding: '5px',
-                    borderRadius: '4px',
-                    textAlign: 'center',
-                    backgroundColor: 'transparent',
-                    color: '#000',
-                }}
-            />
-            <Handle
-                type="target"
-                position="top"
-                isConnectable={isConnectable}
-                style={{ background: '#555' }}
-            />
-            <Handle
-                type="source"
-                position="bottom"
-                isConnectable={isConnectable}
-                style={{ background: '#555' }}
-            />
-        </div>
-    );
-};
+import NodeControls from './composents/NodeControls';
+import TitleEditor from './composents/TitleEditor';
+import CustomNode from './composents/CustomNode';
+import { toPng } from 'html-to-image';
 
 export default function Create_CM() {
     const [title, setTitle] = useState('Nouvelle carte mentale');
     const [isEditing, setIsEditing] = useState(false);
     const [nodeIdCounter, setNodeIdCounter] = useState(2);
-    const [selectedNodeId, setSelectedNodeId] = useState(null); // ID du nœud sélectionné
+    const [selectedNodeId, setSelectedNodeId] = useState(null);
     const [selectedColor, setSelectedColor] = useState('#ffffff');
+    const [showMiniMap, setShowMiniMap] = useState(true);
+    const [showControls, setShowControls] = useState(true);
 
     const [nodes, setNodes, onNodesChange] = useNodesState([
         {
@@ -76,6 +37,7 @@ export default function Create_CM() {
     ]);
 
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const reactFlowWrapper = useRef(null);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -107,26 +69,22 @@ export default function Create_CM() {
         setNodeIdCounter((count) => count + 1);
     };
 
-    
-
     const handleNodeClick = (nodeId) => {
-        // Trouve le nœud correspondant dans la liste
-        const node = nodes.find((n) => n.id === nodeId);
-    
-        // Vérifie si le nœud existe
-        if (!node) {
-            console.error(`Node with ID ${nodeId} not found.`);
-            return;
-        }
-    
-        // Met à jour la couleur sélectionnée avec celle du nœud cliqué
-        setSelectedNodeId(nodeId);
-        setSelectedColor(node.data.color || '#ffffff'); // Utilise une couleur par défaut si nécessaire
+        setNodes((currentNodes) => {
+            const node = currentNodes.find((n) => n.id === nodeId);
+            if (!node) {
+                console.error(`Node with ID ${nodeId} not found.`);
+                return currentNodes;
+            }
+            setSelectedNodeId(nodeId);
+            setSelectedColor(node.data.color || '#ffffff');
+            return currentNodes;
+        });
     };
     
 
     const handleNodeColorChange = (color) => {
-        setSelectedColor(color); // Met à jour la couleur sélectionnée
+        setSelectedColor(color);
         if (selectedNodeId) {
             setNodes((nds) =>
                 nds.map((node) =>
@@ -165,9 +123,7 @@ export default function Create_CM() {
 
         const mentalMapJSON = JSON.stringify(mentalMap, null, 2);
 
-        // Télécharger le JSON ou l'afficher dans la console
-        console.log(mentalMapJSON);
-
+        // Télécharger le JSON
         const blob = new Blob([mentalMapJSON], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -175,6 +131,28 @@ export default function Create_CM() {
         link.download = `${title}.json`;
         link.click();
         URL.revokeObjectURL(url);
+
+        // Enregistrer la carte mentale comme image
+        if (reactFlowWrapper.current) {
+            setShowMiniMap(false);
+            setShowControls(false);
+            setTimeout(() => {
+                toPng(reactFlowWrapper.current)
+                    .then((dataUrl) => {
+                        const imgLink = document.createElement('a');
+                        imgLink.href = dataUrl;
+                        imgLink.download = `${title}.png`;
+                        imgLink.click();
+                        setShowMiniMap(true);
+                        setShowControls(true);
+                    })
+                    .catch((err) => {
+                        console.error('Erreur lors de la capture de l\'image:', err);
+                        setShowMiniMap(true);
+                        setShowControls(true);
+                    });
+            }, 100);
+        }
     };
 
     const nodeTypes = useMemo(
@@ -184,73 +162,29 @@ export default function Create_CM() {
         [selectedColor]
     );
 
+    
+
     return (
-        <div className="container-create-cm" style={{ display: 'flex', flexDirection: 'row', width: '100%'  }}>
-            {/* Palette de couleurs */}
-            <div className="palette-container" style={{ display:'flex', flexDirection:"column", width:'20%', height:'100%', justifyContent:'center', margin :'20px' }}>
-                <input
-                    type="color"
-                    value={selectedColor}
-                    onChange={(e) => handleNodeColorChange(e.target.value)}
-                    style={{
-                        width: '100%',
-                        height: '40px',
-                        cursor: 'pointer',
-                        border: 'none',
-                    }}
+        <div className="container-create-cm" style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            <NodeControls
+                selectedColor={selectedColor}
+                onColorChange={handleNodeColorChange}
+                onAddNode={handleAddNode}
+                onSave={handleSave}
+            />
+            <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <TitleEditor
+                    title={title}
+                    isEditing={isEditing}
+                    onEditClick={handleEditClick}
+                    onTitleChange={handleTitleChange}
+                    onBlur={handleBlur}
                 />
-                <button
-                    style={{
-                        margin: '10px 0',
-                        padding: '10px 20px',
-                        backgroundColor: '#4caf50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                    }}
-                    onClick={handleAddNode}
+                <div
+                    ref={reactFlowWrapper}
+                    className="reactflow-container"
+                    style={{ height: '70%', width: '70%', backgroundColor: '#ffffff' }}
                 >
-                    Ajouter une idée
-                </button>
-                <button
-                    style={{
-                        margin: '10px 0',
-                        padding: '10px 20px',
-                        backgroundColor: '#2196F3',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                    }}
-                    onClick={handleSave}
-                >
-                    Enregistrer
-                </button>
-            </div>
-            {/* Contenu principal */}
-            <div style={{ height: '100%', width: '100%', display:"flex", flexDirection:"column", alignItems:'center' }}>
-                <div className="titre-carte-mentale">
-                    {isEditing ? (
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={handleTitleChange}
-                            onBlur={handleBlur}
-                            autoFocus
-                        />
-                    ) : (
-                        <h1>
-                            {title}
-                            <EditIcon
-                                className="edit-icon"
-                                onClick={handleEditClick}
-                                style={{ cursor: 'pointer', marginLeft: '10px' }}
-                            />
-                        </h1>
-                    )}
-                </div>
-                <div className="reactflow-container" style={{ height: '70%', width: '70%' }}>
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
@@ -260,9 +194,8 @@ export default function Create_CM() {
                         nodeTypes={nodeTypes}
                         fitView
                     >
-                        <MiniMap />
-                        <Controls />
-                        <Background color="#aaa" gap={16} />
+                        {showMiniMap && <MiniMap />}
+                        {showControls && <Controls />}
                     </ReactFlow>
                 </div>
             </div>
