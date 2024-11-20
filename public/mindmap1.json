@@ -1,0 +1,40 @@
+{
+        "id_carte_mentale": 1,
+        "date": "2024-01-02",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 1",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 1A",
+                    "color": "#20a35c",
+                    "position": {
+                        "x": -344.2698338684104,
+                        "y": 174.5209653704402
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 1B",
+                    "color": "#3df178",
+                    "position": {
+                        "x": 31.0338351962273,
+                        "y": -220.78444409927675
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-1",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    }

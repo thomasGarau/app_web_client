@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import ReactFlow, {
     addEdge,
     MiniMap,
@@ -14,41 +15,77 @@ import TitleEditor from './composents/TitleEditor';
 import CustomNode from './composents/CustomNode';
 import { toPng } from 'html-to-image';
 
-export default function Create_CM() {
+export default function Edit_CM() {
+    const { id_chap, id_CM } = useParams(); 
     const [title, setTitle] = useState('Nouvelle carte mentale');
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [nodeIdCounter, setNodeIdCounter] = useState(2);
     const [selectedNodeId, setSelectedNodeId] = useState(null);
     const [selectedColor, setSelectedColor] = useState('#ffffff');
     const [showMiniMap, setShowMiniMap] = useState(true);
     const [showControls, setShowControls] = useState(true);
-
-    const [nodes, setNodes, onNodesChange] = useNodesState([
-        {
-            id: '1',
-            type: 'custom',
-            data: {
-                label: 'Idée principale',
-                color: '#ffffff',
-                onLabelChange: handleNodeLabelChange,
-            },
-            position: { x: 250, y: 5 },
-        },
-    ]);
-
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const reactFlowWrapper = useRef(null);
 
-    const handleEditClick = () => {
-        setIsEditing(true);
-    };
+    useEffect(() => {
+        if (id_CM) {
+            // Charger les données de la carte mentale existante
+            fetch(`${process.env.PUBLIC_URL}/mindmap1.json`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du chargement de la carte mentale');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Données de la carte mentale:', data);
+                    const details = data.details || {};
+                    setTitle(details.title || 'Carte mentale');
+                    setNodes(
+                        details.nodes.map((node) => ({
+                            id: node.id,
+                            type: node.type || 'default',
+                            data: {
+                                label: node.label,
+                                color: node.color,
+                                onLabelChange: handleNodeLabelChange,
+                            },
+                            position: node.position,
+                        }))
+                    );
+                    setEdges(details.edges || []);
+                    setNodeIdCounter(details.nodes.length + 1);
+                })
+                .catch((error) => {
+                    console.error('Erreur lors du chargement de la carte mentale:', error);
+                });
+        } else {
+            // Initialiser une nouvelle carte mentale
+            setTitle('Nouvelle carte mentale');
+            setNodes([
+                {
+                    id: '1',
+                    type: 'custom',
+                    data: {
+                        label: 'Idée principale',
+                        color: '#ffffff',
+                        onLabelChange: handleNodeLabelChange,
+                    },
+                    position: { x: 250, y: 5 },
+                },
+            ]);
+            setEdges([]);
+            setNodeIdCounter(2);
+        }
+    }, [id_CM]);
 
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-    };
-
-    const handleBlur = () => {
-        setIsEditing(false);
+    const handleNodeLabelChange = (newLabel, nodeId) => {
+        setNodes((nds) =>
+            nds.map((node) =>
+                node.id === nodeId ? { ...node, data: { ...node.data, label: newLabel } } : node
+            )
+        );
     };
 
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
@@ -94,14 +131,6 @@ export default function Create_CM() {
         }
     };
 
-    function handleNodeLabelChange(newLabel, nodeId) {
-        setNodes((nds) =>
-            nds.map((node) =>
-                node.id === nodeId ? { ...node, data: { ...node.data, label: newLabel } } : node
-            )
-        );
-    }
-
     const handleSave = () => {
         const mentalMap = {
             title,
@@ -123,7 +152,6 @@ export default function Create_CM() {
 
         const mentalMapJSON = JSON.stringify(mentalMap, null, 2);
 
-        // Télécharger le JSON
         const blob = new Blob([mentalMapJSON], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -132,7 +160,6 @@ export default function Create_CM() {
         link.click();
         URL.revokeObjectURL(url);
 
-        // Enregistrer la carte mentale comme image
         if (reactFlowWrapper.current) {
             setShowMiniMap(false);
             setShowControls(false);
@@ -153,6 +180,8 @@ export default function Create_CM() {
                     });
             }, 100);
         }
+
+
     };
 
     const nodeTypes = useMemo(
@@ -161,8 +190,6 @@ export default function Create_CM() {
         }),
         [selectedColor]
     );
-
-    
 
     return (
         <div className="container-create-cm" style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
@@ -176,9 +203,9 @@ export default function Create_CM() {
                 <TitleEditor
                     title={title}
                     isEditing={isEditing}
-                    onEditClick={handleEditClick}
-                    onTitleChange={handleTitleChange}
-                    onBlur={handleBlur}
+                    onEditClick={() => setIsEditing(true)}
+                    onTitleChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setIsEditing(false)}
                 />
                 <div
                     ref={reactFlowWrapper}

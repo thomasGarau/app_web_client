@@ -1,34 +1,402 @@
-{
-  "title": "Nbjhbk",
-  "nodes": [
+[
     {
-      "id": "1",
-      "type": "custom",
-      "label": "blablba",
-      "color": "#289a5f",
-      "position": {
-        "x": 321.5,
-        "y": -81
-      }
+        "id_carte_mentale": 1,
+        "date": "2024-01-02",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 1",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 1A",
+                    "color": "#20a35c",
+                    "position": {
+                        "x": -344.2698338684104,
+                        "y": 174.5209653704402
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 1B",
+                    "color": "#3df178",
+                    "position": {
+                        "x": 31.0338351962273,
+                        "y": -220.78444409927675
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-1",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
     },
     {
-      "id": "2",
-      "type": "custom",
-      "label": "bloublou",
-      "color": "#c21e1e",
-      "position": {
-        "x": 177.70764907090563,
-        "y": 9.937456647123128
-      }
-    }
-  ],
-  "edges": [
+        "id_carte_mentale": 2,
+        "date": "2024-01-03",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 2",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 2A",
+                    "color": "#6a3a61",
+                    "position": {
+                        "x": -168.132548344349,
+                        "y": -263.86140391228963
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 2B",
+                    "color": "#763880",
+                    "position": {
+                        "x": 69.75303815661891,
+                        "y": 474.68520681527514
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-2",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
     {
-      "id": "reactflow__edge-1-2",
-      "source": "1",
-      "target": "2",
-      "sourceHandle": null,
-      "targetHandle": null
+        "id_carte_mentale": 3,
+        "date": "2024-01-04",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 3",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 3A",
+                    "color": "#24bd39",
+                    "position": {
+                        "x": -66.67431955256808,
+                        "y": 160.10143293039403
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 3B",
+                    "color": "#33703c",
+                    "position": {
+                        "x": 223.05032592503414,
+                        "y": -382.179602979025
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-3",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 4,
+        "date": "2024-01-05",
+        "visibilite": "private",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 4",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 4A",
+                    "color": "#27c247",
+                    "position": {
+                        "x": -258.1711507170605,
+                        "y": 455.22607855708054
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 4B",
+                    "color": "#3045d4",
+                    "position": {
+                        "x": -79.52533522410931,
+                        "y": -161.20400633850727
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-4",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 5,
+        "date": "2024-01-06",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 5",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 5A",
+                    "color": "#546f26",
+                    "position": {
+                        "x": -82.8758709278494,
+                        "y": -451.89545151625754
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 5B",
+                    "color": "#c86bb2",
+                    "position": {
+                        "x": -460.0467873678997,
+                        "y": -39.80701229020258
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-5",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 6,
+        "date": "2024-01-07",
+        "visibilite": "private",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 6",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 6A",
+                    "color": "#224561",
+                    "position": {
+                        "x": -220.5042224237439,
+                        "y": 83.35806381843827
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 6B",
+                    "color": "#13e2db",
+                    "position": {
+                        "x": 101.40581148668923,
+                        "y": -278.5918567858254
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-6",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 7,
+        "date": "2024-01-08",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 7",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 7A",
+                    "color": "#6b8a47",
+                    "position": {
+                        "x": 75.32743107543968,
+                        "y": 48.027454650874574
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 7B",
+                    "color": "#142947",
+                    "position": {
+                        "x": -353.1397463805873,
+                        "y": 308.3373869315791
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-7",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 8,
+        "date": "2024-01-09",
+        "visibilite": "private",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 8",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 8A",
+                    "color": "#5a364f",
+                    "position": {
+                        "x": 459.9238075057041,
+                        "y": 102.40562158158662
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 8B",
+                    "color": "#f93424",
+                    "position": {
+                        "x": -485.28230345053936,
+                        "y": -340.36172733706246
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-8",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 9,
+        "date": "2024-01-10",
+        "visibilite": "public",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 9",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 9A",
+                    "color": "#a8ad83",
+                    "position": {
+                        "x": -54.33935262698964,
+                        "y": 157.89957463977908
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 9B",
+                    "color": "#99b878",
+                    "position": {
+                        "x": 30.639849932410584,
+                        "y": 422.3992363919625
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-9",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
+    },
+    {
+        "id_carte_mentale": 10,
+        "date": "2024-01-11",
+        "visibilite": "private",
+        "id_chapitre": 18,
+        "details": {
+            "title": "Carte mentale 10",
+            "nodes": [
+                {
+                    "id": "1",
+                    "type": "custom",
+                    "label": "Node 10A",
+                    "color": "#451f47",
+                    "position": {
+                        "x": -27.45126884844916,
+                        "y": 293.7166069119313
+                    }
+                },
+                {
+                    "id": "2",
+                    "type": "custom",
+                    "label": "Node 10B",
+                    "color": "#dd9632",
+                    "position": {
+                        "x": -20.670767252298106,
+                        "y": 188.88908208433713
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "id": "reactflow__edge-1-2-10",
+                    "source": "1",
+                    "target": "2",
+                    "sourceHandle": null,
+                    "targetHandle": null
+                }
+            ]
+        }
     }
-  ]
-}
+]
