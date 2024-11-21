@@ -60,7 +60,7 @@ export default function Edit_CM() {
                 .catch((error) => {
                     console.error('Erreur lors du chargement de la carte mentale:', error);
                 });
-        } else {
+        } else if (id_chap) {
             // Initialiser une nouvelle carte mentale
             setTitle('Nouvelle carte mentale');
             setNodes([
@@ -77,6 +77,8 @@ export default function Edit_CM() {
             ]);
             setEdges([]);
             setNodeIdCounter(2);
+        } else {
+            console.error('Erreur: ID du chapitre ou de la carte mentale non spécifié.');
         }
     }, [id_CM]);
 
@@ -192,14 +194,14 @@ export default function Edit_CM() {
     );
 
     return (
-        <div className="container-create-cm" style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+        <div className="container-create-cm" >
             <NodeControls
                 selectedColor={selectedColor}
                 onColorChange={handleNodeColorChange}
                 onAddNode={handleAddNode}
                 onSave={handleSave}
             />
-            <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className='container-edit-title' >
                 <TitleEditor
                     title={title}
                     isEditing={isEditing}
@@ -210,7 +212,6 @@ export default function Edit_CM() {
                 <div
                     ref={reactFlowWrapper}
                     className="reactflow-container"
-                    style={{ height: '70%', width: '70%', backgroundColor: '#ffffff' }}
                 >
                     <ReactFlow
                         nodes={nodes}

@@ -8,7 +8,9 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import CustomNode from './composents/CustomNode';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
+import StyledButton from '../composent/StyledBouton';
+
 
 function Voir_CM() {
     const {id_CM} = useParams();
@@ -17,6 +19,8 @@ function Voir_CM() {
     const [title, setTitle] = useState('');
     const [image, setImage] = useState(null);
     const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
+    const [imgUrl, setImgUrl] = useState('https://res.cloudinary.com/dcyjnrgxh/image/upload/v1715891093/image-ue/on8waw6k2tptixnavlbb.png');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`${process.env.PUBLIC_URL}/mindmap1.json`)
@@ -39,12 +43,57 @@ function Voir_CM() {
             });
     }, []);
 
+    function navEditCM() {
+        navigate(`/edit_carte_mentale/${id_CM}`);
+    }
+
+    function handleDownloadImg() {
+        const imageUrl = imgUrl; // Chemin local ou distant
+        fetch(imageUrl).then((response) => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération de l\'image');
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((error) => console.error('Erreur lors du téléchargement de l\'image:', error));
+    }
+    
+    
+
+
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-            <h1>{title}</h1>
-            <div style={{ height: '70vh', width: '80%' }}>
-                <img src={image} alt="Carte mentale" style={{ width: '50%'}} />
+        <div className='container_voir_cm'>
+            <div className='container-voir-cm-boutons'>
+                <StyledButton
+                        content={"Modifier la carte mentale"}
+                        color={"primary"}
+                        onClick={navEditCM}
+                        width={199}
+                        fontSize={"1em"}
+                />
+                <StyledButton
+                    content={"Télécharger la carte mentale"}
+                    color={"primary"}
+                    onClick={handleDownloadImg}
+                    width={199}
+                    fontSize={"1em"}
+                    
+                />
+            </div>
+            <div className='container-voir-cm-image'>
+                <h1>{title}</h1>
+                <img src='https://coccibel.fr/wp-content/uploads/2023/09/carteMentale-couv.png' alt="Carte mentale" style={{ width: '50%'}} />
             </div>
         </div>
     );
