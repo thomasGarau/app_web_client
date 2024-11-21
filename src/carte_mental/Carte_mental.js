@@ -1,23 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import './Carte_mentale.css';
-import { Pagination } from '@mui/material';
+import { Pagination, Badge } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
+import { jwtDecode } from 'jwt-decode';
+import { getTokenAndRole } from '../services/Cookie';
+import PeopleIcon from '@mui/icons-material/People';
 
 function Carte_mental() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [cartes, setCartes] = useState([]);
+  const [cartesAutresUtilisateurs, setCartesAutresUtilisateurs] = useState([]);
   const [page, setPage] = useState(1);
+  const [pageAutres, setPageAutres] = useState(1); // Nouvelle pagination pour autres utilisateurs
   const itemsPerPage = 2;
+  const [id_utilisateur, setId_utilisateur] = useState(undefined);
 
   function handleCreateCmClick() {
     navigate(`/creer_carte_mentale/${id}`);
   }
 
+  async function fetchData(params) {
+      const { token, role } = await getTokenAndRole();
+      const decodedToken = jwtDecode(token);
+      setId_utilisateur(decodedToken.id_etudiant);
+      console.log('id_utilisateur:', id_utilisateur);
+  }
+
   // Gestion de la pagination
   const handleChangePage = (event, value) => {
     setPage(value);
+  };
+
+  const handleChangePageAutres = (event, value) => {
+    setPageAutres(value);
   };
 
   // Pagination des cartes mentales
@@ -26,12 +43,22 @@ function Carte_mental() {
     page * itemsPerPage
   );
 
+  const paginatedCartesAutres = cartesAutresUtilisateurs.slice(
+    (pageAutres - 1) * itemsPerPage,
+    pageAutres * itemsPerPage
+  );
+
   useEffect(() => {
-    // Charger le fichier JSON local
-    fetch(`${process.env.PUBLIC_URL}/mindmap.json`)
+    fetchData();
+    fetch(`${process.env.PUBLIC_URL}/mindMap.json`)
       .then((response) => response.json())
       .then((data) => setCartes(data))
       .catch((error) => console.error("Erreur lors du chargement des cartes mentales :", error));
+
+    fetch(`${process.env.PUBLIC_URL}/mindmapother.json`)
+      .then((response) => response.json())
+      .then((data) => setCartesAutresUtilisateurs(data))
+      .catch((error) => console.error("Erreur lors du chargement des cartes mentales des autres utilisateurs :", error));
   }, []);
 
   // Gestion du clic sur une carte mentale
@@ -48,21 +75,44 @@ function Carte_mental() {
         <div className='container-left-carte-mentale'>
           <h3>Vos cartes mentales</h3>
           <div className='container-element-carte-mentale'>
-            {paginatedCartes.map((carte) => (
-              <div
-                key={carte.id_carte_mentale}
-                className='element-carte-mentale'
-                onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
-                style={{ cursor: 'pointer' }} // Indicateur visuel pour le clic
-              >
-                <p>{carte.details.title}</p>
-                <img
-                  src={`${process.env.PUBLIC_URL}/cartementale.png`}
-                  alt="Carte mentale"
-                />
-              </div>
-            ))}
-          </div>
+          {paginatedCartes.map((carte) => ( 
+            <div style={{width : '200px'}} > 
+            <Badge
+              key={carte.id_carte_mentale}
+              badgeContent={
+                <PeopleIcon fontSize="small" />
+            }
+            invisible={carte.id_createur === id_utilisateur} // Masquer le badge si l'utilisateur est le créateur
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            sx={{
+              "& .MuiBadge-badge": {
+                backgroundColor: '#133D56', // Couleur de fond personnalisée
+                color: '#ffffff', // Couleur du texte ou de l'icône à l'intérieur
+                height: "20px", // Taille fixe pour le badge
+                minWidth: "20px", // Largeur minimale pour le badge
+              },
+            }}
+          >
+            <div
+              className='element-carte-mentale'
+              onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
+              style={{ cursor: 'pointer', position: 'relative' }}
+            >
+              <p>{carte.title}</p>
+              <img
+                src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                alt="Carte mentale"
+                style={{ borderRadius: '8px' }}
+              />
+            </div>
+          </Badge>
+
+            </div>
+          ))}
+        </div>
           <Pagination
             count={Math.ceil(cartes.length / itemsPerPage)}
             page={page}
@@ -74,18 +124,34 @@ function Carte_mental() {
         <div className='container-right-carte-mentale'>
           <h3>Cartes mentales d'autres utilisateurs</h3>
           <div className='container-element-carte-mentale'>
-            <div className='element-carte-mentale'>
-              <img src={`${process.env.PUBLIC_URL}/cartementale.png`} alt="carte mentale" />
-            </div>
-            <Pagination count={10} shape="rounded" />
+            {paginatedCartesAutres.map((carte) => (
+              <div
+                key={carte.id_carte_mentale}
+                className='element-carte-mentale'
+                onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
+                style={{ cursor: 'pointer' }}
+              >
+                <p>{carte.title}</p>
+                <img
+                  src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                  alt="Carte mentale"
+                />
+              </div>
+            ))}
           </div>
+          <Pagination
+            count={Math.ceil(cartesAutresUtilisateurs.length / itemsPerPage)}
+            page={pageAutres}
+            onChange={handleChangePageAutres}
+            shape="rounded"
+          />
         </div>
       </div>
       <StyledButton 
         content={"Créer une carte mentale"}
         color={"primary"}
         onClick={handleCreateCmClick}
-       />
+      />
     </div>
   );
 }

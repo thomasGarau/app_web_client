@@ -54,6 +54,7 @@ export default function UserInfo() {
             try {
                 const user = await getUserInfo();
                 setUser(user);
+                console.log(user);
                 setRole(user.role);
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations utilisateurs:', error);
