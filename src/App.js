@@ -68,8 +68,8 @@ function App() {
         <Route path="/quiz/:quizId/question-handler" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><QuestionHandler /> </Layout> </RoleBasedRoute> } />
         <Route path="/carte_mentale/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Carte_mental /></Layout> </RoleBasedRoute> }/>
         <Route path="/creer_carte_mentale/:id_chap" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Edit_CM /></Layout> </RoleBasedRoute> }/>
-        <Route path="/voir_carte_mentale/:id" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Voir_CM /></Layout> </RoleBasedRoute> }/>
-        <Route path="/edit_carte_mentale/:id_chap/:id_CM" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Edit_CM /></Layout> </RoleBasedRoute> }/>
+        <Route path="/voir_carte_mentale/:id_CM" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Voir_CM /></Layout> </RoleBasedRoute> }/>
+        <Route path="/edit_carte_mentale/:id_CM" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Edit_CM /></Layout> </RoleBasedRoute> }/>
 
         <Route path="/gestion_quizz/prof/:id" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />
         <Route path="/gestion_quizz/prof/" element={<RoleBasedRoute allowedRoles={['enseignant']}> <Layout><GestionQuizzProf /> </Layout></RoleBasedRoute>} />

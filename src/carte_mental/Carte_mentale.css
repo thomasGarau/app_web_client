@@ -1,6 +1,16 @@
-.container-carte-mentale, .container-create-cm {
+.container-carte-mentale {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+
+.container-create-cm, .container_voir_cm{
+  display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
@@ -61,7 +71,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 33%;
+    width: 100%;
     background-color: white;
     border-radius: 20px;
     margin-top: 10px;
@@ -74,6 +84,35 @@
 
 .element-carte-mentale p {
   margin : 5px;
+}
+
+
+.container-edit-title, .container-voir-cm-image {
+  height: 100%;
+  width: 80%;
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-voir-cm-image{
+  justify-content: center;
+  
+}
+
+.reactflow-container {
+  height: 70%;
+  width: 70%;
+  background-color: #ffffff;
+}
+
+.container-voir-cm-boutons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 20%;
+  height: 100%;
 }
 
 
