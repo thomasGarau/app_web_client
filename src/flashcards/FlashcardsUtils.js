@@ -6,7 +6,17 @@ export const handleFlipCard = (index, setFlashCards) => {
     );
 };
 
-export const handleCloseModal = (setIsModalOpen, setSelectedFlashCard) => {
+export const handleCloseModal = (setIsModalOpen, setSelectedFlashCard, MODES, setCurrentMode) => {
     setIsModalOpen(false);
     setSelectedFlashCard(null);
+    setCurrentMode(MODES.CONSULTING);
+};
+
+export const handleOpenModal = (setSelectedFlashCard, setCurrentMode, setIsModalOpen, MODES, flashCard = null) => {
+    if (flashCard) {
+        setSelectedFlashCard(flashCard);
+    } else {
+        setCurrentMode(MODES.CREATING);
+    }
+    setIsModalOpen(true);
 };

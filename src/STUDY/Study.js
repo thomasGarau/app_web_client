@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRessourceParChap, addRessource, editRessource, deleteRessourceApi, getRessourceById, addCoursProgression } from '../API/RessourceAPI';
+import { getRessourceParChap, addRessource,deleteRessourceApi,  addCoursProgression } from '../API/RessourceAPI';
 import './Study.css';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, AccordionActions, Box, Popover, TextField, Modal, Button } from '@mui/material';
+import { Accordion, AccordionSummary, Typography, AccordionActions, Box, Popover, Modal, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DownloadIcon from '@mui/icons-material/Download';
 import QuestionForum from '../composent/QuestionForum';
@@ -20,6 +20,10 @@ import ResourceDisplay from './RessourcePlayer';
 import { setScroll } from '../Slice/pdfViewerSlice';
 import { setPause, setTime } from '../Slice/videoSlice';
 import FlashCardDrawer from './FlashcardsDrawer';
+import CommentIcon from '@mui/icons-material/Comment';
+import AnnotationDrawer from '../annotation/AnnotationDrawer';
+import AddAnnotationModal from '../annotation/AddAnnotationModal';
+import { createFlashcard } from '../API/FlashcardsAPI';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
@@ -56,7 +60,17 @@ function Study() {
     const [expandedIndex, setExpandedIndex] = useState(-1);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
     const [isFlashcardOpen, setFlashcardOpen] = useState(false);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [resourceIdAddAnnotation, setResourceIdAddAnnotation] = useState(null);
+    const [drawerState, setDrawerState] = useState({
+        isOpen: false,
+        activeResourceId: null
+    });
+    const [sessionData, setSessionData] = useState({
+        startTime: null,
+        elapsedTime: 0,
+    });
+    const [selectedAnnotation, setSelectedAnnotation] = useState(null);
+    const [openAddAnnotation, setOpenAddAnnotation] = useState(false);
 
     const scroll = useSelector((state) => state.pdfViewer.scroll);
     const progression = useSelector((state) => state.pdfViewer.progression);
@@ -78,26 +92,25 @@ function Study() {
     const ressourceImg = { type: 'img', url: '/logo_rond.png' }
 
 
-    const fetchRessources = async () => {
+    const fetchRessources = useCallback(async () => {
         try {
             const response_info = await getUserInfo();
             setRole(response_info.role);
             const data = await getRessourceParChap(id);
             setRessources(data.cours);
-            console.log(ressources, id)
         } catch (error) {
             console.error("Erreur lors de la récupération des ressources :", error);
         }
-    };
+    }, [id]);
 
-    const deleteRessource = (id_cours) => {
+    const deleteRessource = useCallback(async (id_cours) => {
         try {
-            deleteRessourceApi(id_cours);
-            fetchRessources();
+            await deleteRessourceApi(id_cours);
+            await fetchRessources();
         } catch (error) {
-            console.error("Erreur lors de la suppression du ressources :", error);
+            console.error("Erreur lors de la suppression de la ressource:", error);
         }
-    }
+    }, []);
 
     const handleCloseAdd = () => {
         setIsAdding(false);
@@ -161,68 +174,119 @@ function Study() {
         setIsAdding(false);
     };
 
-    const handleSaveFlashCard = (flashCard) => {
-        // Logique pour enregistrer la flashcard
-        console.log('Flashcard enregistrée:', flashCard);
-        // Ici, tu peux appeler une API pour sauvegarder la flashcard
+    const handleSaveFlashCard = async (question, reponse, visibilite) => {
+        try {
+            await createFlashcard(id, question, reponse, visibilite);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleToggleFlashcard = () => {
         setFlashcardOpen(prev => !prev);
     };
 
+    const handleDrawerOpen = useCallback((resourceId) => {
+        setDrawerState({
+            isOpen: true,
+            activeResourceId: resourceId
+        });
+    }, []);
+
+    const handleDrawerClose = useCallback(() => {
+        setDrawerState({
+            isOpen: false,
+            activeResourceId: null
+        });
+    }, [drawerState]);
+
+    const addAnnotation = () => {
+        setResourceIdAddAnnotation(drawerState.activeResourceId);
+        handleDrawerClose();
+        setOpenAddAnnotation(true);
+    };
+
     useEffect(() => {
         fetchRessources();
-    }, [id]);
+    }, [fetchRessources]);
 
-    useEffect(() => {
-        startTimeRef.current = new Date();
+    const isVideoResource = useCallback((resource) => {
+        return videoExtensions.includes(resource.type.split('.').pop().toLowerCase());
+    }, []);
 
-        const sendData = async () => {
-            const { token, role } = await getTokenAndRole();
-            const tokenInfo = decodeJWT(token);
-            if (tokenInfo.consentement === 1) {
-                setElapsedTime(new Date());
-                try {
-                    const dureeSession = new Date() - startTimeRef.current;
-                    if (videoExtensions.includes(currentRessource.type.split('.').pop().toLowerCase())) {
-                        // await recolteInteractionVideo(currentRessource.id_cours, parseInt(id), pauseRef.current, dureeSession, videoTimeRef.current, progressionRef.current);
-                        dispatch(setPause(0))
-                        dispatch(setTime(0))
-                    } else {
-                        await recolteInteraction(currentRessource.id_cours, parseInt(id), clicRef.current, dureeSession, scrollRef.current, progressionRef.current);
-                        setClic(0);
-                        dispatch(setScroll(0));
-                    }
-                    setElapsedTime(0);
-                } catch (error) {
-                    console.error("Erreur lors de la récolte des données:", error);
-                }
-            };
-            const interval = setInterval(sendData, 180000);
-            if (currentRessource === null) {
-                clearInterval(interval);
-            }
+    const handleVideoInteraction = useCallback(async (resource, duration) => {
+        const data = {
+            id_cours: resource.id_cours,
+            chapitre_id: parseInt(id),
+            pause: pauseRef.current,
+            duration,
+            videoTime: videoTimeRef.current,
+            progression: progressionRef.current
+        };
 
-            return () => clearInterval(interval);
-        }
-    }, [currentRessource, id]);
+        dispatch(setPause(0));
+        dispatch(setTime(0));
+    }, [id, dispatch]);
 
-    const handleAccordionChange = async (index, ressource) => {
+    const handleGeneralInteraction = useCallback(async (resource, duration) => {
+        const data = {
+            id_cours: resource.id_cours,
+            chapitre_id: parseInt(id),
+            clicks: clicRef.current,
+            duration,
+            scroll: scrollRef.current,
+            progression: progressionRef.current
+        };
+
+        setClic(0);
+        dispatch(setScroll(0));
+        await recolteInteraction(data);
+    }, [id, dispatch]);
+
+    const handleAccordionChange = useCallback(async (index, ressource) => {
         if (expandedIndex === index) {
             try {
                 const progression = 100;
                 await addCoursProgression(ressource.id, progression);
-                console.log(`Progression pour ${ressource.id} mise à jour à ${progression}%`);
             } catch (error) {
                 console.error("Erreur lors de la mise à jour de la progression :", error);
             }
         }
-
-        // Ouvrir/fermer l'Accordion
         setExpandedIndex(prevIndex => (prevIndex === index ? -1 : index));
-    };
+    }, [expandedIndex]);
 
+    useEffect(() => {
+        if (!currentRessource) return;
+
+        const startTime = new Date();
+        setSessionData(prev => ({ ...prev, startTime }));
+
+        const sendData = async () => {
+            const { token, role } = await getTokenAndRole();
+            const tokenInfo = decodeJWT(token);
+
+            if (tokenInfo.consentement !== 1) return;
+
+            try {
+                const dureeSession = new Date() - sessionData.startTime;
+
+                if (isVideoResource(currentRessource)) {
+                    await handleVideoInteraction(currentRessource, dureeSession);
+                } else {
+                    await handleGeneralInteraction(currentRessource, dureeSession);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récolte des données:", error);
+            }
+        };
+
+        const interval = setInterval(sendData, 180000);
+
+        return () => {
+            clearInterval(interval);
+            sendData().catch(console.error);
+        };
+    }, [currentRessource, id]);
 
     /*     useEffect(() => {
             if (currentRessource) {
@@ -243,34 +307,40 @@ function Study() {
     return (
         <div className='background-study'>
             <div className='sub_container_text_question'>
-
+                <AnnotationDrawer
+                    open={drawerState.isOpen}
+                    drawerClose={handleDrawerClose}
+                    setSelectedAnnotation={setSelectedAnnotation}
+                    addAnnotation={addAnnotation}
+                    resourceId={drawerState.activeResourceId} />
                 <div className='text-part'>
-                
+
                     <h1 className='study-title'>Ressource du chapitre</h1>
                     {ressources.length > 0 ? (
                         ressources.map((ressource, index) => (
                             <Accordion
                                 key={ressource.id}
-                                expanded={expandedIndex === index} // Vérifier si cet Accordion est ouvert
-                                onChange={() => handleAccordionChange(index, ressource)} // Mettre à jour l'état lors du changement
+                                expanded={expandedIndex === index}
+                                onChange={() => handleAccordionChange(index, ressource)}
                             >
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                                     <Typography>{ressource.label}</Typography>
                                 </AccordionSummary>
-
-                                {/* Affichage de la ressource dynamique */}
                                 <ResourceDisplay ressource={ressource} />
 
-                                <AccordionActions>
-                                    <div>
-                                        {role === 'enseignant' && (
-                                            <div className='icon-study' onClick={() => deleteRessource(ressource.id)}>
-                                                <DeleteIcon />
-                                            </div>
-                                        )}
-                                        <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
-                                            <DownloadIcon />
+                                <AccordionActions sx={{ display: 'flex' }}>
+                                    {role === 'enseignant' && (
+                                        <div className='icon-study' onClick={() => deleteRessource(ressource.id)}>
+                                            <DeleteIcon />
                                         </div>
+                                    )}
+                                    <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
+                                        <DownloadIcon />
+                                    </div>
+                                    <div className='icon-study' onClick={(e) => {
+                                        handleDrawerOpen(ressource.id);
+                                    }} >
+                                        <CommentIcon />
                                     </div>
                                 </AccordionActions>
                             </Accordion>
@@ -375,7 +445,8 @@ function Study() {
                     </Modal>
 
                 )}
-                <FlashCardDrawer open={isFlashcardOpen} collections={/* liste de collection*/ undefined} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
+                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
+                <AddAnnotationModal open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
                 <QuestionForum id_chap={id} role={role} />
             </div>
         </div>

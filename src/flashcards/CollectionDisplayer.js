@@ -1,110 +1,174 @@
-import React, { useState } from 'react';
-import { Box, Tabs, Tab, IconButton, Button } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { createFlashcard, deleteFlashcard, getAllFlashcards, getUserFlashcards, updateFlashcard } from '../API/FlashcardsAPI';
 import FlashcardsDisplayer from './FlashcardsDisplayer';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import FlashCardsModal from './FlashcardsModal';
+import FlashcardsFooter from './FlashcardsFooter';
+import { getTokenAndRole } from '../services/Cookie';
+import { jwtDecode } from 'jwt-decode';
+import StyledButton from '../composent/StyledBouton';
 
 const CollectionDisplayer = () => {
-    const [collections, setCollections] = useState([
-        {
-            id: 1, name: 'Collection 1', visibility: 'public', flashcards: [
-                { recto: "au pif", verso: "Et ouais", isFlipped: false },
-                { recto: "migate...", verso: "...no gokui", isFlipped: false },
-                { recto: "Gear", verso: "5th", isFlipped: false },
-            ]
-        },
-        {
-            id: 2, name: 'Collection 2', visibility: 'private', flashcards: [
-                { recto: "au pif", verso: "Et ouais", isFlipped: false },
-                { recto: "Kamehame...", verso: "...HAAAAAAAAAA!!!!", isFlipped: false },
-            ]
-        },
-    ]);
+    const MODES = {
+        CONSULTING: 'consulting',
+        EDITING: 'editing',
+        DELETING: 'deleting',
+        CREATING: 'creating'
+    };
+    const { id_chap } = useParams();
+    const [user, setUser] = useState(null);
+    const [flashcards, setFlashcards] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedFlashCard, setSelectedFlashCard] = useState(null);
+    const [currentMode, setCurrentMode] = useState(MODES.CONSULTING);
+    const navigate = useNavigate();
 
-    const [selectedTab, setSelectedTab] = useState(0);
 
-    const handleTabChange = (event, newValue) => {
-        setSelectedTab(newValue);
+    useEffect(() => {
+        fetchMyCollection();
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        const { token, role } = await getTokenAndRole();
+        const decodedToken = jwtDecode(token);
+        setUser(decodedToken.id_etudiant);
+    }
+
+    const fetchMyCollection = async () => {
+        try {
+            const response = await getUserFlashcards(id_chap);
+
+            const processedFlashcards = response.map(flashcard => {
+                if (flashcard.visibilite === 'orphelin') {
+                    return { ...flashcard, orphan: true };
+                }
+                return flashcard;
+            });
+
+            setFlashcards(processedFlashcards);
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
     };
 
-    const updateCollectionFlashcards = (collectionId, updatedFlashcards) => {
-        setCollections((prevCollections) =>
-            prevCollections.map((collection) =>
-                collection.id === collectionId
-                    ? { ...collection, flashcards: updatedFlashcards }
-                    : collection
-            )
+    useEffect(() => {
+        fetchMyCollection();
+    }, [id_chap]);
+
+
+    const newFlashcard = async (question, reponse, visibilite) => {
+        try {
+            await createFlashcard(id_chap, question, reponse, visibilite);
+            await fetchMyCollection();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const removeFlashcard = async (id_flashcard) => {
+        try {
+            await deleteFlashcard(id_flashcard);
+            await fetchMyCollection();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const toSearch = () => {
+        navigate(`/search_flashcards/${id_chap}`);
+    };
+
+
+    const handleUpdateFlashcard = async (id_flashcard, question, reponse) => {
+        try {
+            await updateFlashcard(id_flashcard, question, reponse);
+            await fetchMyCollection();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleNewFlashcard = () => {
+        setCurrentMode(MODES.CREATING);
+        setIsModalOpen(true);
+    };
+
+    const handleChangeMode = useCallback(() => {
+        setCurrentMode((mode) => {
+            const newMode = mode === MODES.CONSULTING ? MODES.EDITING : MODES.CONSULTING;
+            return newMode;
+        });
+    }, []);
+
+
+
+    const handleDeleteMode = useCallback(() => {
+        setCurrentMode(mode =>
+            mode === MODES.DELETING ? MODES.CONSULTING : MODES.DELETING
         );
+    }, []);
+
+    const handleOpenModal = (flashCard = null) => {
+        if (flashCard) {
+            setSelectedFlashCard(flashCard);
+
+        } else {
+            setCurrentMode(MODES.CREATING);
+        }
+        setIsModalOpen(true);
+
     };
 
-    const handleUpdateVisibility = (collectionId, newVisibility) => {
-        setCollections((prevCollections) =>
-            prevCollections.map((collection) =>
-                collection.id === collectionId
-                    ? { ...collection, visibility: newVisibility }
-                    : collection
-            )
-        );
-    };
-
-    const addCollection = () => {
-        const newCollection = {
-            id: collections.length + 1,
-            name: `Collection ${collections.length + 1}`,
-            visibility: 'private',
-            flashcards: []
-        };
-        setCollections([...collections, newCollection]);
-        setSelectedTab(collections.length);
-    };
-
-    const deleteCollection = (collectionId) => {
-        const updatedCollections = collections.filter(collection => collection.id !== collectionId);
-        setCollections(updatedCollections);
-        setSelectedTab((prevTab) => (prevTab >= updatedCollections.length ? 0 : prevTab));
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedFlashCard(null);
+        setCurrentMode(MODES.CONSULTING);
     };
 
     return (
-        <Box sx={{ width: '100%', position: 'relative', top: '150px' }}>
-            {/* Les onglets pour chaque collection */}
-            <Tabs
-                value={selectedTab}
-                onChange={handleTabChange}
-                variant="scrollable"
-                scrollButtons="auto"
-                sx={{ marginBottom: 2, borderBottom: 1, borderColor: 'divider' }}
-            >
-                {collections.map((collection) => (
-                    <Tab wrapped key={collection.id} label={collection.name} />
-                ))}
-                <Tab
-                    icon={<AddIcon style={{ fill: "#000" }} />}
-                    onClick={addCollection}
-                    aria-label="Add Collection"
+        <Box sx={{ position: 'relative', top: 150, width: '100%' }}>
+            <Box sx={{
+                display: 'flex', justifyContent: 'space-around', marginBottom: 2, alignItems: 'center'
+            }}>
+                <Typography variant="h4" gutterBottom>
+                    Ma collection de flashcards
+                </Typography>
+                <StyledButton content={'Chercher des flashcards'} width={350} color={'primary'} onClick={toSearch} />
+            </Box>
+            {flashcards && (
+                <FlashcardsDisplayer
+                    flashCardsList={ flashcards}
+                    currentMode={currentMode}
+                    handleOpenModal={handleOpenModal}
+                    handleDeleteCard={removeFlashcard}
+                    onRemoveFromCollection={fetchMyCollection}
                 />
-            </Tabs>
+            )}
 
+            {/* Footer avec les options */}
+            <FlashcardsFooter
+                onNewClick={handleNewFlashcard}
+                onEditClick={handleChangeMode}
+                onDelClick={handleDeleteMode}
+                currentMode={currentMode}
+                flashCardsList={flashcards}
+            />
 
-            {/* Affichage des flashcards de la collection sélectionnée */}
-            {collections.map((collection, index) => (
-                <Box
-                    key={collection.id}
-                    role="tabpanel"
-                    hidden={selectedTab !== index}
-                >
-                    {collections[selectedTab] && (
-                        <FlashcardsDisplayer
-                            flashCardsList={collections[selectedTab].flashcards}
-                            collectionName={collections[selectedTab].name}
-                            collectionId={collections[selectedTab].id}
-                            onUpdateFlashcards={updateCollectionFlashcards}
-                            visibility={collections[selectedTab].visibility}
-                            onUpdateVisibility={handleUpdateVisibility}
-                            deleteCollection={deleteCollection}
-                        />
-                    )}
-                </Box>
-            ))}
+            {/* Modal pour ajouter ou éditer une flashcard */}
+            <FlashCardsModal
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={selectedFlashCard == null ? newFlashcard : handleUpdateFlashcard}
+                flashCardData={selectedFlashCard}
+                isEditing={
+                    selectedFlashCard != null &&
+                    selectedFlashCard.id_utilisateur == user
+                    && currentMode === MODES.EDITING
+                    || currentMode === MODES.CREATING
+                }
+            />
         </Box>
     );
 };

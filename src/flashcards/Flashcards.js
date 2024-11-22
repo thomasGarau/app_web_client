@@ -1,16 +1,84 @@
-import React from 'react';
-import { CardContent, Typography, Box, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { CardContent, Typography, Box, TextField, Card } from '@mui/material';
+import FavoriteButton from '../composent/FavoriteButton';
+import { addFlashCardToCollection, getUserFlashcards, removeFlashCardToCollection } from '../API/FlashcardsAPI';
+import { getTokenAndRole } from '../services/Cookie';
+import { jwtDecode } from 'jwt-decode';
+import { useParams } from 'react-router-dom';
 
-export default function Flashcards({ data, isFlipped, onClick, isEditing, onChangeRecto, onChangeVerso }) {
+export default function Flashcards({ data, isFlipped, onClick, isEditing, onChangeQuestion, onChangeReponse, height = null, onRemoveFromCollection = null }) {
+
+    const { id_chap } = useParams();
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [flashcards, setFlashcards] = useState([]);
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const { token, role } = await getTokenAndRole();
+                const decodedToken = jwtDecode(token);
+                setUser(decodedToken);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        const checkIfFavorite = async () => {
+            if (!user || !data.id_flashcard || !id_chap) return;
+            
+            setIsLoading(true);
+            try {
+                const response = await getUserFlashcards(id_chap);
+                const flashcardsArray = Array.isArray(response) ? response : [];
+                setFlashcards(flashcardsArray);
+                
+                const isInCollection = flashcardsArray.some(
+                    flashcard => flashcard.id_flashcard === data.id_flashcard
+                    && user.id_etudiant !== data.id_utilisateur
+                );
+                setIsFavorite(isInCollection);
+            } catch (error) {
+                console.error('Error checking favorite status:', error);
+                setIsFavorite(false);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkIfFavorite();
+    }, [id_chap, user, data.id_flashcard]);
+
+    const handleToggleFavorite = async () => {
+        if (isLoading) return;
+        
+        try {
+            if (isFavorite) {
+                await removeFlashCardToCollection(data.id_flashcard);
+                onRemoveFromCollection();
+                setIsFavorite(false);
+            } else {
+                await addFlashCardToCollection(data.id_flashcard);
+                setIsFavorite(true);
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    };
+
     return (
         <Box
             sx={{
                 perspective: '1000px',
                 width: '100%',
-                height: '200px',
+                height: height == null ? '200px' : height,
                 cursor: 'pointer',
             }}
-            onClick={onClick} // Appel pour basculer la rotation
+            onClick={onClick}
         >
             <Box
                 sx={{
@@ -27,8 +95,8 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                     },
                 }}
             >
-                {/* Recto */}
-                <Box
+                {/* Question */}
+                <Card
                     sx={{
                         position: 'absolute',
                         width: '100%',
@@ -39,7 +107,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                         justifyContent: 'center',
                         backgroundColor: '#f5f5f5',
                         borderRadius: '10px',
-                        transform: 'rotateY(0deg)', // Toujours face avant
+                        transform: 'rotateY(0deg)',
                     }}
                 >
                     {isEditing ? (
@@ -47,11 +115,11 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={data.recto}
-                                onChange={(e) => onChangeRecto(e.target.value)}
+                                value={data.question}
+                                onChange={(e) => onChangeQuestion(e.target.value)}
                                 fullWidth
                                 multiline
-                                label="Recto"
+                                label="Question"
                                 onClick={(e) => e.stopPropagation()}
                                 InputProps={{
                                     sx: {
@@ -66,14 +134,22 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                     ) : (
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                {data.recto}
+                                {data.question}
                             </Typography>
                         </CardContent>
                     )}
-                </Box>
+                    {user !== null && data.id_utilisateur !== user.id_etudiant && (
+                        <FavoriteButton
+                            
+                            isFavorite={isFavorite}
+                            onToggleFavorite={handleToggleFavorite}
+                        />
+                    )}
 
-                {/* Verso */}
-                <Box
+                </Card>
+
+                {/* Reponse */}
+                <Card
                     sx={{
                         position: 'absolute',
                         width: '100%',
@@ -84,7 +160,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                         justifyContent: 'center',
                         backgroundColor: '#d1e0e0',
                         borderRadius: '10px',
-                        transform: 'rotateY(180deg)', // Rotation arrière
+                        transform: 'rotateY(180deg)',
                     }}
                 >
                     {isEditing ? (
@@ -92,11 +168,11 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={data.verso}
-                                onChange={(e) => onChangeVerso(e.target.value)}
+                                value={data.reponse}
+                                onChange={(e) => onChangeReponse(e.target.value)}
                                 fullWidth
                                 multiline
-                                label="Verso"
+                                label="Reponse"
                                 onClick={(e) => e.stopPropagation()}
                                 InputProps={{
                                     sx: {
@@ -111,11 +187,17 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                     ) : (
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                {data.verso}
+                                {data.reponse}
                             </Typography>
                         </CardContent>
                     )}
-                </Box>
+                    {user !== null && data.id_utilisateur !== user.id_etudiant && (
+                        <FavoriteButton
+                            isFavorite={isFavorite}
+                            onToggleFavorite={handleToggleFavorite}
+                        />
+                    )}
+                </Card>
             </Box>
         </Box>
     );

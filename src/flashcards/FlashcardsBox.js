@@ -3,7 +3,8 @@ import StyledButton from '../composent/StyledBouton';
 import React from 'react';
 import Flashcards from './Flashcards';
 
-export default function FlashcardsBox({ flashCards, consultingMode, deleteMode, handleFlipCard, handleDeleteCard, handleOpenModal, currentPage, handlePageChange, totalCards, cardsPerPage }) {
+export default function FlashcardsBox({ flashCards, currentMode, setSelectedFlashcard, handleDeleteCard, handleOpenModal, id_chap=null, onRemoveFromCollection = null }) {
+    
     return (
         <Box>
             <Box
@@ -19,22 +20,22 @@ export default function FlashcardsBox({ flashCards, consultingMode, deleteMode, 
                     padding: { xs: '16px 0px', sm: '16px' }
                 }}
             >
-                {flashCards.map((flashCard, index) => (
-                    <Flashcards
-                        key={index}
-                        data={flashCard}
-                        isFlipped={flashCard.isFlipped}
-                        onClick={() => {
-                            if (consultingMode) {
-                                handleFlipCard(index);
-                            } else if (deleteMode) {
-                                handleDeleteCard(index);
-                            } else {
-                                handleOpenModal(flashCard);
-                            }
-                        }}
-                    />
-                ))}
+                {flashCards != null ? (
+                    flashCards.map((flashCard, index) => (
+                        <Flashcards
+                            key={index}
+                            data={flashCard}
+                            isFlipped={flashCard.isFlipped}
+                            id_chap={id_chap}
+                            onRemoveFromCollection={onRemoveFromCollection}
+                            onClick={
+                                currentMode == 'deleting' ?
+                                    () => handleDeleteCard(flashCard.id_flashcard) :
+                                    () => handleOpenModal(flashCard, setSelectedFlashcard)}
+                        />
+                    ))
+                ) : null}
+
             </Box>
         </Box>
     );

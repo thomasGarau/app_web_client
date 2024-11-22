@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Box, Button } from '@mui/material';
-import Flashcards from './Flashcards';
+import { Modal, Box, RadioGroup, Radio, FormControlLabel } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
+import Flashcards from './Flashcards';
 
 const styleEdit = {
     position: 'absolute',
@@ -32,23 +32,33 @@ const styleConsult = {
 };
 
 export default function FlashCardsModal({ open, onClose, flashCardData, onSave = null, isEditing = null }) {
-    const [recto, setRecto] = useState('');
-    const [verso, setVerso] = useState('');
+    const [question, setRecto] = useState('');
+    const [reponse, setVerso] = useState('');
     const [flipped, setFlipped] = useState(false);
+    const [visibility, setVisibility] = useState(flashCardData ? flashCardData.visibilite : "public");
+
+    const handleVisibilityChange = (event) => {
+        setVisibility(event.target.value);
+    };
 
     useEffect(() => {
         if (flashCardData) {
-            setRecto(flashCardData.recto);
-            setVerso(flashCardData.verso);
-            setFlipped(false); // Réinitialise l'état de rotation au moment de l'ouverture
+            setRecto(flashCardData.question);
+            setVerso(flashCardData.reponse);
+            setFlipped(false);
         } else {
             setRecto('');
             setVerso('');
         }
+        console.log(flashCardData);
     }, [flashCardData]);
 
     const handleSave = () => {
-        onSave({ recto, verso });
+        if(flashCardData)   {
+            onSave( flashCardData.id_flashcard, question, reponse );
+        } else {
+            onSave( question, reponse, visibility );
+        }
         onClose();
     };
 
@@ -59,17 +69,40 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={isEditing ? styleEdit : styleConsult}>
+                {isEditing ?
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-controlled-radio-buttons-group"
+                        name="controlled-radio-buttons-group"
+                        value={visibility}
+                        onChange={handleVisibilityChange}
+                    >
+                        <FormControlLabel
+                            sx={{ color: 'white' }}
+                            value="private"
+                            control={<Radio sx={{ color: 'white', '&.Mui-checked': { color: 'white' } }} />}
+                            label="Privé"
+                        />
+                        <FormControlLabel
+                            sx={{ color: 'white' }}
+                            value="public"
+                            control={<Radio sx={{ color: 'white', '&.Mui-checked': { color: 'white' } }} />}
+                            label="Publique"
+                        />
+                    </RadioGroup>
+                    : null}
                 <Flashcards
-                    data={{ recto, verso }}
+                    data={{ question, reponse }}
                     isFlipped={flipped}
                     isEditing={isEditing}
-                    onChangeRecto={(newRecto) => setRecto(newRecto)}
-                    onChangeVerso={(newVerso) => setVerso(newVerso)}
+                    onChangeQuestion={setRecto}
+                    onChangeReponse={setVerso}
                     onClick={handleFlip}
+                    height={300}
                 />
                 {isEditing ?
                     <StyledButton variant="contained" color={"secondary"} content={"Enregistrer"} onClick={handleSave} />
-                         : null}
+                    : null}
 
             </Box>
         </Modal>
