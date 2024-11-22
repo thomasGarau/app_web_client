@@ -2,6 +2,8 @@
     {
         "id_carte_mentale": 1,
         "id_createur": 6,
+        "nom_createur": "Eveillé",
+        "prenom_createur": "Marie",
         "title": "Carte mentale 1",
         "date": "2024-01-02",
         "visibilite": "public",

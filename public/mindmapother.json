@@ -2,6 +2,8 @@
     {
         "id_carte_mentale": 1,
         "id_createur": 7,
+        "nom_createur": "Dupont",
+        "prenom_createur": "Jean",
         "title": "Carte mentale 1",
         "date": "2024-01-22",
         "visibilite": "private",
@@ -43,6 +45,8 @@
     {
         "id_carte_mentale": 2,
         "id_createur": 6,
+        "nom_createur": "Martin",
+        "prenom_createur": "Alice",
         "title": "Carte mentale 2",
         "date": "2024-01-23",
         "visibilite": "public",
@@ -84,6 +88,8 @@
     {
         "id_carte_mentale": 3,
         "id_createur": 7,
+        "nom_createur": "Dupont",
+        "prenom_createur": "Jean",
         "title": "Carte mentale 3",
         "date": "2024-01-24",
         "visibilite": "private",
@@ -125,6 +131,8 @@
     {
         "id_carte_mentale": 4,
         "id_createur": 6,
+        "nom_createur": "Martin",
+        "prenom_createur": "Alice",
         "title": "Carte mentale 4",
         "date": "2024-01-25",
         "visibilite": "public",
@@ -163,250 +171,263 @@
             ]
         }
     },
-    {
-        "id_carte_mentale": 5,
-        "id_createur": 7,
-        "title": "Carte mentale 5",
-        "date": "2024-01-26",
-        "visibilite": "private",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 5A",
-                    "color": "#fa10f9",
-                    "position": {
-                        "x": 13.147732512321454,
-                        "y": -360.2851318417479
+        {
+            "id_carte_mentale": 5,
+            "id_createur": 7,
+            "nom_createur": "Dupont",
+            "prenom_createur": "Jean",
+            "title": "Carte mentale 5",
+            "date": "2024-01-26",
+            "visibilite": "private",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 5A",
+                        "color": "#fa10f9",
+                        "position": {
+                            "x": 13.147732512321454,
+                            "y": -360.2851318417479
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 5B",
+                        "color": "#8aba00",
+                        "position": {
+                            "x": 410.83513836391353,
+                            "y": -99.14616144392431
+                        }
                     }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 5B",
-                    "color": "#8aba00",
-                    "position": {
-                        "x": 410.83513836391353,
-                        "y": -99.14616144392431
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-5",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
                     }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-5",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
+                ]
+            }
+        },
+        {
+            "id_carte_mentale": 6,
+            "id_createur": 6,
+            "nom_createur": "Martin",
+            "prenom_createur": "Alice",
+            "title": "Carte mentale 6",
+            "date": "2024-01-27",
+            "visibilite": "public",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 6A",
+                        "color": "#d873ea",
+                        "position": {
+                            "x": 151.1848704781504,
+                            "y": -128.89149601537918
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 6B",
+                        "color": "#ed77e0",
+                        "position": {
+                            "x": 53.545938360744685,
+                            "y": -50.76569354211392
+                        }
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-6",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
+                    }
+                ]
+            }
+        },
+        {
+            "id_carte_mentale": 7,
+            "id_createur": 7,
+            "nom_createur": "Dupont",
+            "prenom_createur": "Jean",
+            "title": "Carte mentale 7",
+            "date": "2024-01-28",
+            "visibilite": "private",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 7A",
+                        "color": "#ee02ae",
+                        "position": {
+                            "x": -20.60616887886289,
+                            "y": 232.0778222161549
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 7B",
+                        "color": "#8f7481",
+                        "position": {
+                            "x": -378.64981023192524,
+                            "y": 486.1537953234989
+                        }
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-7",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
+                    }
+                ]
+            }
+        },
+        {
+            "id_carte_mentale": 8,
+            "id_createur": 6,
+            "nom_createur": "Martin",
+            "prenom_createur": "Alice",
+            "title": "Carte mentale 8",
+            "date": "2024-01-29",
+            "visibilite": "public",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 8A",
+                        "color": "#d890f4",
+                        "position": {
+                            "x": -263.8001856916022,
+                            "y": -271.42348359897073
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 8B",
+                        "color": "#3248d2",
+                        "position": {
+                            "x": -342.4119317749868,
+                            "y": -214.68353085433102
+                        }
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-8",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
+                    }
+                ]
+            }
+        },
+        {
+            "id_carte_mentale": 9,
+            "id_createur": 7,
+            "nom_createur": "Dupont",
+            "prenom_createur": "Jean",
+            "title": "Carte mentale 9",
+            "date": "2024-01-30",
+            "visibilite": "private",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 9A",
+                        "color": "#16de7f",
+                        "position": {
+                            "x": 337.76401043978717,
+                            "y": 262.07051717302875
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 9B",
+                        "color": "#358514",
+                        "position": {
+                            "x": 286.2652067177904,
+                            "y": -282.9269386363794
+                        }
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-9",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
+                    }
+                ]
+            }
+        },
+        {
+            "id_carte_mentale": 10,
+            "id_createur": 6,
+            "nom_createur": "Martin",
+            "prenom_createur": "Alice",
+            "title": "Carte mentale 10",
+            "date": "2024-01-31",
+            "visibilite": "public",
+            "id_chapitre": 18,
+            "details": {
+                "nodes": [
+                    {
+                        "id": "1",
+                        "type": "custom",
+                        "label": "Node 10A",
+                        "color": "#2538fb",
+                        "position": {
+                            "x": 256.8346283818835,
+                            "y": -224.94001168842726
+                        }
+                    },
+                    {
+                        "id": "2",
+                        "type": "custom",
+                        "label": "Node 10B",
+                        "color": "#5a3dd8",
+                        "position": {
+                            "x": 463.3117123794535,
+                            "y": -22.186951008493224
+                        }
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "reactflow__edge-1-2-10",
+                        "source": "1",
+                        "target": "2",
+                        "sourceHandle": null,
+                        "targetHandle": null
+                    }
+                ]
+            }
         }
-    },
-    {
-        "id_carte_mentale": 6,
-        "id_createur": 6,
-        "title": "Carte mentale 6",
-        "date": "2024-01-27",
-        "visibilite": "public",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 6A",
-                    "color": "#d873ea",
-                    "position": {
-                        "x": 151.1848704781504,
-                        "y": -128.89149601537918
-                    }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 6B",
-                    "color": "#ed77e0",
-                    "position": {
-                        "x": 53.545938360744685,
-                        "y": -50.76569354211392
-                    }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-6",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
-        }
-    },
-    {
-        "id_carte_mentale": 7,
-        "id_createur": 7,
-        "title": "Carte mentale 7",
-        "date": "2024-01-28",
-        "visibilite": "private",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 7A",
-                    "color": "#ee02ae",
-                    "position": {
-                        "x": -20.60616887886289,
-                        "y": 232.0778222161549
-                    }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 7B",
-                    "color": "#8f7481",
-                    "position": {
-                        "x": -378.64981023192524,
-                        "y": 486.1537953234989
-                    }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-7",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
-        }
-    },
-    {
-        "id_carte_mentale": 8,
-        "id_createur": 6,
-        "title": "Carte mentale 8",
-        "date": "2024-01-29",
-        "visibilite": "public",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 8A",
-                    "color": "#d890f4",
-                    "position": {
-                        "x": -263.8001856916022,
-                        "y": -271.42348359897073
-                    }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 8B",
-                    "color": "#3248d2",
-                    "position": {
-                        "x": -342.4119317749868,
-                        "y": -214.68353085433102
-                    }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-8",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
-        }
-    },
-    {
-        "id_carte_mentale": 9,
-        "id_createur": 7,
-        "title": "Carte mentale 9",
-        "date": "2024-01-30",
-        "visibilite": "private",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 9A",
-                    "color": "#16de7f",
-                    "position": {
-                        "x": 337.76401043978717,
-                        "y": 262.07051717302875
-                    }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 9B",
-                    "color": "#358514",
-                    "position": {
-                        "x": 286.2652067177904,
-                        "y": -282.9269386363794
-                    }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-9",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
-        }
-    },
-    {
-        "id_carte_mentale": 10,
-        "id_createur": 6,
-        "title": "Carte mentale 10",
-        "date": "2024-01-31",
-        "visibilite": "public",
-        "id_chapitre": 18,
-        "details": {
-            "nodes": [
-                {
-                    "id": "1",
-                    "type": "custom",
-                    "label": "Node 10A",
-                    "color": "#2538fb",
-                    "position": {
-                        "x": 256.8346283818835,
-                        "y": -224.94001168842726
-                    }
-                },
-                {
-                    "id": "2",
-                    "type": "custom",
-                    "label": "Node 10B",
-                    "color": "#5a3dd8",
-                    "position": {
-                        "x": 463.3117123794535,
-                        "y": -22.186951008493224
-                    }
-                }
-            ],
-            "edges": [
-                {
-                    "id": "reactflow__edge-1-2-10",
-                    "source": "1",
-                    "target": "2",
-                    "sourceHandle": null,
-                    "targetHandle": null
-                }
-            ]
-        }
-    }
-]
+    ]
+    

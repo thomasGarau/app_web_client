@@ -6,8 +6,8 @@ const NodeControls = ({ selectedColor, onColorChange, onAddNode, onSave }) => {
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '20%',
-                height: '100%',
+                width: '100%',
+                height: '20%',
                 justifyContent: 'center',
                 margin: '20px',
             }}

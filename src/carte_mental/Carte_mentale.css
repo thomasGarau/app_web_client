@@ -45,6 +45,16 @@
     height : 100%;
 }
 
+.container-create-cm-left{
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 20px;
+    width: 20%;
+    height: 100%;
+}
+
 .verticalBarStyle {
     position: absolute;
     height: 90%;

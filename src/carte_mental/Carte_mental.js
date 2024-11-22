@@ -5,7 +5,7 @@ import { Pagination, Badge } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
-import PeopleIcon from '@mui/icons-material/People';
+import BadgeCarteMentale from './composents/BadgeCarteMentale';
 
 function Carte_mental() {
   const { id } = useParams();
@@ -77,38 +77,20 @@ function Carte_mental() {
           <div className='container-element-carte-mentale'>
           {paginatedCartes.map((carte) => ( 
             <div style={{width : '200px'}} > 
-            <Badge
-              key={carte.id_carte_mentale}
-              badgeContent={
-                <PeopleIcon fontSize="small" />
-            }
-            invisible={carte.id_createur === id_utilisateur} // Masquer le badge si l'utilisateur est le créateur
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            sx={{
-              "& .MuiBadge-badge": {
-                backgroundColor: '#133D56', // Couleur de fond personnalisée
-                color: '#ffffff', // Couleur du texte ou de l'icône à l'intérieur
-                height: "20px", // Taille fixe pour le badge
-                minWidth: "20px", // Largeur minimale pour le badge
-              },
-            }}
-          >
-            <div
-              className='element-carte-mentale'
-              onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
-              style={{ cursor: 'pointer', position: 'relative' }}
-            >
-              <p>{carte.title}</p>
-              <img
-                src={`${process.env.PUBLIC_URL}/cartementale.png`}
-                alt="Carte mentale"
-                style={{ borderRadius: '8px' }}
-              />
-            </div>
-          </Badge>
+           <BadgeCarteMentale isOtherUser={carte.id_createur !== id_utilisateur} userName={carte.prenom_createur + ' ' + carte.nom_createur}>
+                  <div
+                    className='element-carte-mentale'
+                    onClick={() => handleCardClick(carte.id_carte_mentale)}
+                    style={{ cursor: 'pointer', position: 'relative' }}
+                  >
+                    <p>{carte.title}</p>
+                    <img
+                      src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                      alt="Carte mentale"
+                      style={{ borderRadius: '8px' }}
+                    />
+                  </div>
+                </BadgeCarteMentale>
 
             </div>
           ))}
@@ -125,18 +107,23 @@ function Carte_mental() {
           <h3>Cartes mentales d'autres utilisateurs</h3>
           <div className='container-element-carte-mentale'>
             {paginatedCartesAutres.map((carte) => (
-              <div
-                key={carte.id_carte_mentale}
-                className='element-carte-mentale'
-                onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
-                style={{ cursor: 'pointer' }}
-              >
-                <p>{carte.title}</p>
-                <img
-                  src={`${process.env.PUBLIC_URL}/cartementale.png`}
-                  alt="Carte mentale"
-                />
+              <div style={{width : '200px'}} > 
+                <BadgeCarteMentale isOtherUser={true} userName={carte.prenom_createur + ' ' + carte.nom_createur}>
+                  <div
+                    key={carte.id_carte_mentale}
+                    className='element-carte-mentale'
+                    onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <p>{carte.title}</p>
+                    <img
+                      src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                      alt="Carte mentale"
+                    />
+                  </div>
+                </BadgeCarteMentale>
               </div>
+
             ))}
           </div>
           <Pagination

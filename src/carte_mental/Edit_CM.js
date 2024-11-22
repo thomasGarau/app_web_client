@@ -14,6 +14,7 @@ import NodeControls from './composents/NodeControls';
 import TitleEditor from './composents/TitleEditor';
 import CustomNode from './composents/CustomNode';
 import { toPng } from 'html-to-image';
+import LockSwitch from './composents/LockSwitch';
 
 export default function Edit_CM() {
     const { id_chap, id_CM } = useParams(); 
@@ -26,6 +27,7 @@ export default function Edit_CM() {
     const [selectedColor, setSelectedColor] = useState('#ffffff');
     const [showMiniMap, setShowMiniMap] = useState(true);
     const [showControls, setShowControls] = useState(true);
+    const [isLocked, setIsLocked] = useState(null);
     const reactFlowWrapper = useRef(null);
 
     useEffect(() => {
@@ -42,6 +44,9 @@ export default function Edit_CM() {
                     console.log('Données de la carte mentale:', data);
                     const details = data.details || {};
                     setTitle(details.title || 'Carte mentale');
+                    const newIsLocked = data.visibilite === 'public' ? true : false;
+                    setIsLocked(newIsLocked);
+
                     setNodes(
                         details.nodes.map((node) => ({
                             id: node.id,
@@ -63,6 +68,7 @@ export default function Edit_CM() {
         } else if (id_chap) {
             // Initialiser une nouvelle carte mentale
             setTitle('Nouvelle carte mentale');
+            setIsLocked(true);
             setNodes([
                 {
                     id: '1',
@@ -81,6 +87,8 @@ export default function Edit_CM() {
             console.error('Erreur: ID du chapitre ou de la carte mentale non spécifié.');
         }
     }, [id_CM]);
+
+
 
     const handleNodeLabelChange = (newLabel, nodeId) => {
         setNodes((nds) =>
@@ -136,6 +144,7 @@ export default function Edit_CM() {
     const handleSave = () => {
         const mentalMap = {
             title,
+            visibilite: isLocked ? 'public' : 'prive',
             nodes: nodes.map(({ id, type, data, position }) => ({
                 id,
                 type,
@@ -193,14 +202,25 @@ export default function Edit_CM() {
         [selectedColor]
     );
 
+
+      const handleSwitchChange = (event) => {
+        setIsLocked(event.target.checked); // Mettez à jour l'état selon l'interaction
+        console.log('isLocked:', event.target.checked);
+      };
+
+
+
     return (
         <div className="container-create-cm" >
-            <NodeControls
-                selectedColor={selectedColor}
-                onColorChange={handleNodeColorChange}
-                onAddNode={handleAddNode}
-                onSave={handleSave}
-            />
+            <div  className='container-create-cm-left'>
+                <NodeControls
+                    selectedColor={selectedColor}
+                    onColorChange={handleNodeColorChange}
+                    onAddNode={handleAddNode}
+                    onSave={handleSave}
+                />
+                <LockSwitch isLocked={isLocked} onChange={handleSwitchChange} />
+            </div>
             <div className='container-edit-title' >
                 <TitleEditor
                     title={title}
