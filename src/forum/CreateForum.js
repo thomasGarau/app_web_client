@@ -22,10 +22,13 @@ const CreateForum = () => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
+        console.log('id_chap', id_chap);
         if (id_chap) {
             getRessourceParChap(id_chap).then(data => {
-                setEntityId(data[0].id_cours);
-                setEntities(data);
+                console.log('ressources', data.cours);
+                console.log('ressources', data.cours[0].id);
+                setEntityId(data.cours[0].id);
+                setEntities(data.cours);
             }).catch(error => console.error("Erreur lors de la récupération des cours :", error));
         } else if (id_quizz) {
             getQuizzInfo(id_quizz).then(data => {
@@ -139,7 +142,7 @@ const CreateForum = () => {
                             }}
                         >
                             {entities.map(entity => (
-                                <MenuItem key={entity.id_cours || entity.id_quizz} value={entity.id_cours || entity.id_quizz}>
+                                <MenuItem key={entity.id || entity.id_quizz} value={entity.id || entity.id_quizz}>
                                     {entity.label}
                                 </MenuItem>
                             ))}
