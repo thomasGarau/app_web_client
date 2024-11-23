@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Box, TextField, Avatar, Typography } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import { getUserInfo } from '../API/ProfileAPI';
-import { createAnnotationCours } from '../API/AnnotationAPI';
+import { createAnnotationCours, createAnnotationQuiz } from '../API/AnnotationAPI';
 
-const AddAnnotationModal = ({ open, handleClose, resourceId }) => {
+const AddAnnotationModal = ({ open, handleClose, resourceId, parentType }) => {
 
     const [annotation, setAnnotation] = useState('');
     const [user, setUser] = useState('');
@@ -19,7 +19,11 @@ const AddAnnotationModal = ({ open, handleClose, resourceId }) => {
     };
 
     const handleCreateAnnotation = async () => {
-        await createAnnotationCours(resourceId ,annotation);
+        if (parentType === 'Study') {
+            await createAnnotationCours(resourceId, annotation);
+        } else if (parentType === 'AnnotationQuiz') {
+            await createAnnotationQuiz(parseInt(resourceId), annotation);
+        }
         setAnnotation('');
         handleClose();
     };

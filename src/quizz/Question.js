@@ -9,6 +9,7 @@ import "@fontsource/nanum-pen-script";
 import './Question.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { all } from 'axios';
+import AnnotationQuiz from '../annotation/AnnotationQuiz.js';
 
 function Question() {
     const navigate = useNavigate();
@@ -106,6 +107,7 @@ function Question() {
 
     return (
         <div className='background-question'>
+            <AnnotationQuiz quizId={quizId} questionId={questionId} />
             <div className='base_container_quizz_question'>
             <Typography sx={{fontSize: { xs: "2em", sm: "3em", md: "4em" }}} className='quizz-title'>{quizzInfo.label || 'Titre non disponible'}</Typography>
                 <div className='question-quest-container'>

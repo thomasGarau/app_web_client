@@ -1,35 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, Button, Box, IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { getAnnotationsCours } from '../API/AnnotationAPI';
+import { getAnnotationsCours, getAnnotationsQuiz } from '../API/AnnotationAPI';
+import { setAnnotations, setError, setLoading, setSelectedAnnotation } from '../Slice/annotationSlice';
+import { se } from 'date-fns/locale';
 
-const AnnotationDrawer = ({ open, drawerClose, addAnnotation, setSelectedAnnotation, resourceId }) => {
+
+const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType }) => {
+    const dispatch = useDispatch();
+    const annotations = useSelector(state => state.annotation.annotations);
+    const selectedAnnotation = useSelector(state => state.annotation.selectedAnnotation);
     
-    const [annotations, setAnnotations] = useState([]);
-
     useEffect(() => {
         fetchAnnotations();
     }, [open]);
 
     const fetchAnnotations = async () => {
         try {
-            const data = await getAnnotationsCours(resourceId);
-            setAnnotations(data);
+            dispatch(setLoading(true));
+            let data;
+            if (parentType === 'Study') {
+                data = await getAnnotationsCours(resourceId);
+            } else if (parentType === 'AnnotationQuiz') {
+                data = await getAnnotationsQuiz(parseInt(resourceId));
+            }
+            dispatch(setAnnotations(data));
         }
         catch (error) {
             console.error('Erreur lors de la récupération des annotations:', error);
+            dispatch(setError(error.message));
+        }
+        finally {
+            dispatch(setLoading(false));
         }
     }
 
-    const changeAnnotation = (selectedAnnotation) => {
-        setAnnotations(prevAnnotations => {
-            return prevAnnotations.map(annotation => {
-                if (annotation.id_annotation === selectedAnnotation.id_annotation) {
-                    setSelectedAnnotation(selectedAnnotation);
-                }
-                setSelectedAnnotation(annotation);
-            });
-        });
+    const handleAnnotationClick = (annotation) => {
+        console.log(annotation);
+        dispatch(setSelectedAnnotation(annotation));
+        console.log("selectedAnnotation", selectedAnnotation);
     };
 
     return (
@@ -41,36 +51,45 @@ const AnnotationDrawer = ({ open, drawerClose, addAnnotation, setSelectedAnnotat
                 },
             }}
             open={open}
-            onClose={drawerClose}
+            onClose={onClose}
         >
-            <div style={{ backgroundColor: "#133D56" }}>
+            <Box >
                 {annotations.map((annotation, index) => (
-                    <Button
+                    <Box 
                         key={annotation.id_annotation || index}
-                        style={{
-                            borderBottom: "solid",
-                            borderRadius: "0px",
-                            height: "73px",
-                            color: "#f5f5f5",
-                            transition: "0.2s",
-                            width: "100%"
+                        onClick={() => { handleAnnotationClick(annotation); onClose(); }}
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                            }
                         }}
-                        className="button-annotation"
-                        variant="plain"
-                        onClick={() => { changeAnnotation(annotation); }}
                     >
-                        <span style={{
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            maxWidth: "100%",
-                            textAlign: "left",
-                            paddingLeft: "10px",
-                            fontSize: "x-large",
-                            overflow: "hidden",
-                        }}>
-                            {annotation.contenu === '' ? "Cliquer ici" : annotation.contenu}
-                        </span>
-                    </Button>
+                        <Button
+                            style={{
+                                borderBottom: "1px solid rgba(255,255,255,0.1)",
+                                borderRadius: "0px",
+                                height: "73px",
+                                color: "#f5f5f5",
+                                transition: "all 0.2s ease",
+                                width: "100%",
+                                justifyContent: "flex-start",
+                                padding: "12px"
+                            }}
+                            className="button-annotation"
+                            variant="text"
+                        >
+                            <Typography style={{
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                maxWidth: "100%",
+                                textAlign: "left",
+                            }}>
+                                {annotation.contenu || "No content"}
+                            </Typography>
+                        </Button>
+                    </Box>
                 ))}
                 <Box style={{ margin: "10px 5px", display: "flex", alignItems: "center" }}>
                 <IconButton className="icon-add" style={{ transition: "0.2s" }} onClick={() => addAnnotation(resourceId)}>
@@ -80,7 +99,7 @@ const AnnotationDrawer = ({ open, drawerClose, addAnnotation, setSelectedAnnotat
                         ajouter une annotation
                     </Typography>
                 </Box>
-            </div>
+            </Box>
         </Drawer>
     );
 };

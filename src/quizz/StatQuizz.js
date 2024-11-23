@@ -9,6 +9,7 @@ import './StatQuizz.css';
 import "@fontsource/nanum-pen-script";
 import { green, red } from '@mui/material/colors';
 import { getTokenAndRole } from '../services/Cookie.js';
+import AnnotationQuiz from '../annotation/AnnotationQuiz.js';
 
 
 
@@ -57,6 +58,7 @@ function StatQuizz() {
                     {listQuestions && listQuestions.length > 0 ? (
                         listQuestions.map((question, index) => (
                             <Box sx={{ width: { xs: '80%', sm: '75%', md: '50%' } }} key={question.id_question} className="question-container" onClick={() => handleQuestionClick(question.id_question)}>
+                                
                                 <Typography sx={{
                                     flex: 1, fontSize: { xs: "0.8em", sm: "1.2em", md: "1.6em" },
                                     overflow: 'hidden',

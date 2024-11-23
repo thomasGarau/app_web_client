@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRessourceParChap, addRessource,deleteRessourceApi,  addCoursProgression } from '../API/RessourceAPI';
+import { getRessourceParChap, addRessource, deleteRessourceApi, addCoursProgression } from '../API/RessourceAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, Typography, AccordionActions, Box, Popover, Modal, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -24,6 +24,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import AnnotationDrawer from '../annotation/AnnotationDrawer';
 import AddAnnotationModal from '../annotation/AddAnnotationModal';
 import { createFlashcard } from '../API/FlashcardsAPI';
+import Annotation from '../annotation/Annotation';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
@@ -69,8 +70,9 @@ function Study() {
         startTime: null,
         elapsedTime: 0,
     });
-    const [selectedAnnotation, setSelectedAnnotation] = useState(null);
+    const selectedAnnotation = useSelector(state => state.annotation.selectedAnnotation);
     const [openAddAnnotation, setOpenAddAnnotation] = useState(false);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const scroll = useSelector((state) => state.pdfViewer.scroll);
     const progression = useSelector((state) => state.pdfViewer.progression);
@@ -182,8 +184,8 @@ function Study() {
         }
     };
 
-    const handleToggleFlashcard = () => {
-        setFlashcardOpen(prev => !prev);
+    const handleAnnotationUpdate = () => {
+        setRefreshTrigger(prev => prev + 1);
     };
 
     const handleDrawerOpen = useCallback((resourceId) => {
@@ -308,11 +310,12 @@ function Study() {
         <div className='background-study'>
             <div className='sub_container_text_question'>
                 <AnnotationDrawer
+                    parentType={'Study'}
                     open={drawerState.isOpen}
-                    drawerClose={handleDrawerClose}
-                    setSelectedAnnotation={setSelectedAnnotation}
+                    onClose={handleDrawerClose}
                     addAnnotation={addAnnotation}
-                    resourceId={drawerState.activeResourceId} />
+                    resourceId={drawerState.activeResourceId}
+                />
                 <div className='text-part'>
 
                     <h1 className='study-title'>Ressource du chapitre</h1>
@@ -446,7 +449,8 @@ function Study() {
 
                 )}
                 <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
-                <AddAnnotationModal open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
+                <AddAnnotationModal parentType="Study" open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
+                {selectedAnnotation && (<Annotation  />)}
                 <QuestionForum id_chap={id} role={role} />
             </div>
         </div>

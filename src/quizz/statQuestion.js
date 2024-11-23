@@ -11,6 +11,7 @@ import './Question.css';
 import StyledButton from '../composent/StyledBouton.js';
 import { all } from 'axios';
 import { Box, Typography } from '@mui/material';
+import AnnotationQuiz from '../annotation/AnnotationQuiz.js';
 
 function StatQuestion() {
     const navigate = useNavigate();
@@ -81,6 +82,7 @@ function StatQuestion() {
     return (
         <div className='background-question'>
             <div className='base_container_quizz_question'>
+                <AnnotationQuiz quizId={quizId} questionId={questionId} />
                 <Typography sx={{ fontSize: { xs: "2em", sm: "2.5em", md: "3em" } }} className='quizz-title'>{infos.label || 'Titre non disponible'}</Typography>
                 <div className='question-quest-container'>
                     <Typography sx={{ fontSize: { xs: "1em", sm: "1.5em", md: "2em" } }} className='Question_titre'>{currentQuestion.label || 'Texte de question non disponible'}</Typography>
