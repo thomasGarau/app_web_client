@@ -88,3 +88,12 @@ export const updateFlashcard = async (id_flashcard, question, reponse) => {
         throw error;
     }
 }
+
+export const getDailyFlashcard = async () => {
+    try {
+        const response = await api.post('/flashcard/daily-flashcards');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

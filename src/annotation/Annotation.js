@@ -62,6 +62,7 @@ function Annotation() {
     useEffect(() => {
         const fetchResponses = async () => {
             const data = await getAnnotationResponses(selectedAnnotation.id_annotation);
+            console.log(data);
             setResponses(data);
         };
         fetchResponses();
@@ -121,8 +122,8 @@ function Annotation() {
         <Draggable
             handle=".drag-handle"
             bounds="parent"
-            defaultPosition={{ x: 20, y: 50 }}
-            grid={[1, 1]} // Smooth 1px grid movement
+            defaultPosition={{ x: 20, y: 200 }}
+            grid={[1, 1]}
             scale={1}
             defaultClassName="react-draggable"
         >
@@ -173,8 +174,6 @@ function Annotation() {
                         <CloseIcon />
                     </IconButton>
                 </Box>
-
-                {/* Content container with scroll */}
                 <Box sx={{
                     overflowY: 'auto',
                     flex: 1,
@@ -270,7 +269,7 @@ function Annotation() {
                                 <Avatar sx={{ alignSelf: "baseline" }} />
                                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                                     <Typography sx={{ marginLeft: 1 }} variant="h6" align="center">
-                                        {`${user.nom} ${user.prenom}`}
+                                        {`${response.nom} ${response.prenom}`}
                                     </Typography>
                                     <Typography>
                                         {formatDate(response.date)}
