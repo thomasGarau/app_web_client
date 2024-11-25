@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MethodeJ from "./composent/MethodeJ.js";
 import StyledButton from "../composent/StyledBouton.js";
 import FlashCardsModal from "../flashcards/FlashcardsModal.js";
+import { getDailyFlashcard } from "../API/FlashcardsAPI.js";
 
 
 function Home() {
@@ -18,7 +19,6 @@ function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [role, setRole] = useState('');
 
-  // Nouveaux états pour la flashcard du jour et pour la modal
   const [dailyFlashcard, setDailyFlashcard] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -58,29 +58,15 @@ function Home() {
     setSearchQuery(e.target.value.trim().toLowerCase());
   };
 
-  // Simulation d'une liste de flashcards
-  const flashcards = [
-    { recto: "Question 1", verso: "Réponse 1" },
-    { recto: "Question 2", verso: "Réponse 2" },
-    { recto: "Question 3", verso: "Réponse 3" },
-  ];
 
-  // Génère une flashcard du jour ou la récupère du localStorage
   useEffect(() => {
-    const savedFlashcard = JSON.parse(localStorage.getItem('dailyFlashcard'));
-    const today = new Date().toDateString();
-
-    if (!savedFlashcard || savedFlashcard.date !== today) {
-      const randomFlashcard = flashcards[Math.floor(Math.random() * flashcards.length)];
-      const dailyFlashcardWithDate = { ...randomFlashcard, date: today };
-      localStorage.setItem('dailyFlashcard', JSON.stringify(dailyFlashcardWithDate));
-      setDailyFlashcard(dailyFlashcardWithDate);
-    } else {
-      setDailyFlashcard(savedFlashcard);
+    const dailyFlashcard = async () => {
+      const response = await getDailyFlashcard();   
+      setDailyFlashcard(response[0]);
     }
+    dailyFlashcard();
   }, []);
 
-  // Ouvre et ferme la modal de flashcard
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
 
