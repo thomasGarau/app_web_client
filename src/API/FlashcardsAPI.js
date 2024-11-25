@@ -97,3 +97,16 @@ export const getDailyFlashcard = async () => {
         throw error;
     }
 }
+
+export const flashcardAnswer = async (id_flashcard, answer) => {
+    try {
+        const body = {
+            flashcard: id_flashcard,
+            answer: answer,
+        };
+        const response = await api.post('/flashcard/flashcard-answer', body);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { setProgression } from './pdfViewerSlice';
+import { setProgression } from './progressionSlice';
 
 const videoSlice = createSlice({
     name: 'video',

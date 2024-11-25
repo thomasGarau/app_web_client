@@ -61,7 +61,7 @@ function Home() {
 
   useEffect(() => {
     const dailyFlashcard = async () => {
-      const response = await getDailyFlashcard();   
+      const response = await getDailyFlashcard();
       setDailyFlashcard(response[0]);
     }
     dailyFlashcard();
@@ -189,13 +189,14 @@ function Home() {
                 ))}
               </List>
             </div>
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center"}}>
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <MethodeJ />
-              <Box sx={{display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+              <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
                 <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={handleOpenModal} />
               </Box>
             </Box>
             <FlashCardsModal
+              isAnswering={true}
               open={isModalOpen}
               onClose={handleCloseModal}
               flashCardData={dailyFlashcard}

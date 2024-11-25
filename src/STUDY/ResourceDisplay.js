@@ -6,17 +6,14 @@ import YouTubePlayer from './YoutubePlayer';
 import { getRessourceById } from '../API/RessourceAPI';
 
 
-const ResourceDisplay = ({ ressource = {} }) => {
+const ResourceDisplay = ({ ressource = {}, oldProg, onProgressUpdate, index }) => {
 
     const [fileType, setFileType] = useState('');
     const [fileUrl, setFileUrl] = useState('');
 
     const fetchRessource = async (ressource) => {
         try {
-            // Récupère le fichier en tant que Blob via l'API
             const data = await getRessourceById(ressource.id);
-    
-            // Si `data` est un Blob, on peut créer une URL
             if (data instanceof Blob || data instanceof File) {
                 const fileUrl = URL.createObjectURL(data);
                 setFileUrl(fileUrl);
@@ -44,7 +41,7 @@ const ResourceDisplay = ({ ressource = {} }) => {
         <div>
             {fileType ? (
                 fileType === 'pdf' ? (
-                    <PDFViewer fileBlob={fileUrl} width="100%" height="600" />
+                    <PDFViewer oldProg={oldProg} index={index} resourceId={ressource.id} fileBlob={fileUrl} onProgressUpdate={onProgressUpdate} width="100%" height="600" />
                 ) : fileType === 'video' ? (
                     fileUrl.includes('youtube.com') || fileUrl.includes('youtu.be') ? (
                         <YouTubePlayer videoId={new URL(fileUrl).searchParams.get('v') || fileUrl.split('/').pop()} />

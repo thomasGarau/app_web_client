@@ -6,7 +6,7 @@ import { getTokenAndRole } from '../services/Cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'react-router-dom';
 
-export default function Flashcards({ data, isFlipped, onClick, isEditing, onChangeQuestion, onChangeReponse, height = null, onRemoveFromCollection = null }) {
+export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnswering, onChangeQuestion, onChangeReponse, height = null, onRemoveFromCollection = null }) {
 
     const { id_chap } = useParams();
     const [isFavorite, setIsFavorite] = useState(false);
@@ -163,7 +163,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, onChan
                         transform: 'rotateY(180deg)',
                     }}
                 >
-                    {isEditing ? (
+                    {isEditing || isAnswering ? (
                         <CardContent sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <TextField
                                 rows={4}

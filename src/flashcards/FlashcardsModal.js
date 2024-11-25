@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Box, RadioGroup, Radio, FormControlLabel } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import Flashcards from './Flashcards';
+import { flashcardAnswer } from '../API/FlashcardsAPI';
 
 const styleEdit = {
     position: 'absolute',
@@ -31,9 +32,9 @@ const styleConsult = {
     p: 4,
 };
 
-export default function FlashCardsModal({ open, onClose, flashCardData, onSave = null, isEditing = null }) {
-    const [question, setRecto] = useState('');
-    const [reponse, setVerso] = useState('');
+export default function FlashCardsModal({ open, onClose, flashCardData, onSave = null, isEditing = null, isAnswering = null }) {
+    const [question, setQuestion] = useState('');
+    const [reponse, setReponse] = useState('');
     const [flipped, setFlipped] = useState(false);
     const [visibility, setVisibility] = useState(flashCardData ? flashCardData.visibilite : "public");
 
@@ -43,21 +44,31 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
 
     useEffect(() => {
         if (flashCardData) {
-            setRecto(flashCardData.question);
-            setVerso(flashCardData.reponse);
+            setQuestion(flashCardData.question);
+            if (isAnswering !== null && !isAnswering) {
+                setReponse(flashCardData.reponse);
+            } else {
+                setReponse('');
+            }
             setFlipped(false);
         } else {
-            setRecto('');
-            setVerso('');
+            setQuestion('');
+            setReponse('');
         }
-        console.log(flashCardData);
-    }, [flashCardData]);
+        console.log(reponse);
+    }, [flashCardData, isAnswering]);
 
-    const handleSave = () => {
-        if(flashCardData)   {
-            onSave( flashCardData.id_flashcard, question, reponse );
-        } else {
-            onSave( question, reponse, visibility );
+    const handleSave = async () => {
+        if (isAnswering) {
+            await flashcardAnswer(flashCardData.id_flashcard, reponse)
+            isAnswering = false;
+        }
+        else {
+            if (flashCardData) {
+                onSave(flashCardData.id_flashcard, question, reponse);
+            } else {
+                onSave(question, reponse, visibility);
+            }
         }
         onClose();
     };
@@ -68,7 +79,7 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={isEditing ? styleEdit : styleConsult}>
+            <Box sx={isEditing || isAnswering ? styleEdit : styleConsult}>
                 {isEditing ?
                     <RadioGroup
                         row
@@ -94,14 +105,15 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
                 <Flashcards
                     data={{ question, reponse }}
                     isFlipped={flipped}
+                    isAnswering={isAnswering}
                     isEditing={isEditing}
-                    onChangeQuestion={setRecto}
-                    onChangeReponse={setVerso}
+                    onChangeQuestion={setQuestion}
+                    onChangeReponse={setReponse}
                     onClick={handleFlip}
                     height={300}
                 />
-                {isEditing ?
-                    <StyledButton variant="contained" color={"secondary"} content={"Enregistrer"} onClick={handleSave} />
+                {isEditing || isAnswering ?
+                    <StyledButton variant="contained" color={"secondary"} content={isAnswering ? "Valider" : "Enregistrer"} onClick={handleSave} />
                     : null}
 
             </Box>
