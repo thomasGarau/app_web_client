@@ -2,6 +2,8 @@
         "id_carte_mentale": 1,
         "date": "2024-01-02",
         "visibilite": "public",
+        "id_createur" : 5,
+        "is_collection": true,
         "id_chapitre": 18,
         "details": {
             "title": "Carte mentale 1",

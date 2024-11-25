@@ -5,7 +5,7 @@ export default function StyledButton({ content, fontSize, width, onClick, color,
     const styledButton = {
         position: isAbsolute ? 'absolute' : 'relative',
         fontFamily: 'Shadows Into Light',
-        fontSize: fontSize ? fontSize : { xs: '1em', sm: '1.2em', md: '1.5em' },
+        fontSize:{ xs: `${fontSize ? fontSize - 0.5 : 1}em`, sm: `${fontSize ? fontSize - 0.3 : 1.2}em`, md: `${fontSize ? fontSize : 1.5}em` },
         border: 'none',
         color: color === "primary" ? 'white' : 'black',
         textAlign: 'center',

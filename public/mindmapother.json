@@ -6,6 +6,7 @@
         "prenom_createur": "Jean",
         "title": "Carte mentale 1",
         "date": "2024-01-22",
+        "is_collection": false,
         "visibilite": "private",
         "id_chapitre": 18,
         "details": {
@@ -48,6 +49,7 @@
         "nom_createur": "Martin",
         "prenom_createur": "Alice",
         "title": "Carte mentale 2",
+        "is_collection": true,
         "date": "2024-01-23",
         "visibilite": "public",
         "id_chapitre": 18,
@@ -92,6 +94,7 @@
         "prenom_createur": "Jean",
         "title": "Carte mentale 3",
         "date": "2024-01-24",
+        "is_collection": false,
         "visibilite": "private",
         "id_chapitre": 18,
         "details": {
