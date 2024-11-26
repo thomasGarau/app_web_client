@@ -10,9 +10,9 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
 
     const { id_chap } = useParams();
     const [isFavorite, setIsFavorite] = useState(false);
-    const [flashcards, setFlashcards] = useState([]);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    console.log("Flashcards.js: data", data, isAnswering, isEditing);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -35,7 +35,6 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
             try {
                 const response = await getUserFlashcards(id_chap);
                 const flashcardsArray = Array.isArray(response) ? response : [];
-                setFlashcards(flashcardsArray);
                 
                 const isInCollection = flashcardsArray.some(
                     flashcard => flashcard.id_flashcard === data.id_flashcard
@@ -74,7 +73,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
         <Box
             sx={{
                 perspective: '1000px',
-                width: '100%',
+                width: {xs:'inherit', sm:'100%'},
                 height: height == null ? '200px' : height,
                 cursor: 'pointer',
             }}

@@ -1,35 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Box, RadioGroup, Radio, FormControlLabel } from '@mui/material';
+import { Modal, Box, RadioGroup, Radio, FormControlLabel, useMediaQuery } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import Flashcards from './Flashcards';
 import { flashcardAnswer } from '../API/FlashcardsAPI';
 
-const styleEdit = {
+const baseStyle = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    height: 300,
+    p: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+};
+
+const styleEdit = {
+    ...baseStyle,
     bgcolor: '#093146',
     border: '2px solid #000',
     borderRadius: 10,
     boxShadow: 24,
-    p: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
 };
 
 const styleConsult = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    height: 300,
+    ...baseStyle,
     bgcolor: '#ffffff00',
-    p: 4,
 };
 
 export default function FlashCardsModal({ open, onClose, flashCardData, onSave = null, isEditing = null, isAnswering = null }) {
@@ -37,6 +32,24 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
     const [reponse, setReponse] = useState('');
     const [flipped, setFlipped] = useState(false);
     const [visibility, setVisibility] = useState(flashCardData ? flashCardData.visibilite : "public");
+
+    const isLandscape = useMediaQuery('(orientation: landscape)');
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
+
+    const modalStyle = (baseStyle) => ({
+        ...baseStyle,
+        width: isSmallScreen 
+            ? (isLandscape ? '90vh' : '90vw')
+            : 600,
+        height: isSmallScreen 
+            ? (isLandscape ? '90vw' : '60vh')
+            : 300,
+        transform: isSmallScreen
+            ? (isLandscape 
+                ? 'translate(-50%, -50%) rotate(90deg)'
+                : 'translate(-50%, -50%)')
+            : 'translate(-50%, -50%)',
+    });
 
     const handleVisibilityChange = (event) => {
         setVisibility(event.target.value);
@@ -79,7 +92,7 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={isEditing || isAnswering ? styleEdit : styleConsult}>
+            <Box sx={modalStyle(isEditing || isAnswering ? styleEdit : styleConsult)}>
                 {isEditing ?
                     <RadioGroup
                         row

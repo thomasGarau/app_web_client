@@ -11,11 +11,12 @@ export default function FlashcardsFooter({ onNewClick, onEditClick, onDelClick, 
                 position: 'fixed',
                 bottom: 0,
                 justifyContent: { xs: 'center', sm: 'space-evenly' },
-                flexDirection: { xs: 'column', sm: 'row' },
+                flexDirection: 'row' ,
                 backgroundColor: '#093146',
                 height: { xs: '100px', sm: '150px' },
                 alignItems: 'center',
                 gap: '10px',
+                zIndex: 1000
             }}
         >
             <StyledButton content={"Nouvelle flashcards"} onClick={onNewClick} color={currentMode === 'creating' ? "green" : "primary" } />

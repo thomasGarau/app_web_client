@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Fab, useMediaQuery } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createFlashcard, deleteFlashcard, getAllFlashcards, getUserFlashcards, updateFlashcard } from '../API/FlashcardsAPI';
 import FlashcardsDisplayer from './FlashcardsDisplayer';
@@ -23,7 +24,7 @@ const CollectionDisplayer = () => {
     const [selectedFlashCard, setSelectedFlashCard] = useState(null);
     const [currentMode, setCurrentMode] = useState(MODES.CONSULTING);
     const navigate = useNavigate();
-
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         fetchMyCollection();
@@ -128,18 +129,48 @@ const CollectionDisplayer = () => {
     };
 
     return (
-        <Box sx={{ position: 'relative', top: 150, width: '100%' }}>
+        <Box sx={{
+            position: 'relative',
+            top: 150,
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+            overflow: 'auto',
+            flexGrow: 1,
+            paddingBottom: { xs: '120px', sm: '170px' },
+            flexWrap: 'wrap',
+        }}>
             <Box sx={{
                 display: 'flex', justifyContent: 'space-around', marginBottom: 2, alignItems: 'center'
             }}>
                 <Typography variant="h4" gutterBottom>
                     Ma collection de flashcards
                 </Typography>
-                <StyledButton content={'Chercher des flashcards'} width={350} color={'primary'} onClick={toSearch} />
+                {isSmallScreen ? (
+                    <Fab 
+                        color="primary" 
+                        aria-label="search"
+                        onClick={toSearch}
+                        sx={{
+                            position: 'fixed',
+                            bottom: 125,
+                            right: 16
+                        }}
+                    >
+                        <SearchIcon />
+                    </Fab>
+                ) : (
+                    <StyledButton 
+                        content={'Chercher des flashcards'} 
+                        width={350} 
+                        color={'primary'} 
+                        onClick={toSearch} 
+                    />
+                )}
             </Box>
             {flashcards && (
                 <FlashcardsDisplayer
-                    flashCardsList={ flashcards}
+                    flashCardsList={flashcards}
                     currentMode={currentMode}
                     handleOpenModal={handleOpenModal}
                     handleDeleteCard={removeFlashcard}
@@ -168,6 +199,7 @@ const CollectionDisplayer = () => {
                     && currentMode === MODES.EDITING
                     || currentMode === MODES.CREATING
                 }
+                isAnswering={false}
             />
         </Box>
     );

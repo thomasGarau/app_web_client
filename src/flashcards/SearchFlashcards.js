@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getAllFlashcards } from "../API/FlashcardsAPI";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import FlashcardsDisplayer from "./FlashcardsDisplayer";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Fuse from 'fuse.js';
 import FlashCardsModal from "./FlashcardsModal";
 
@@ -76,8 +76,24 @@ function SearchFlashcards() {
 
 
     return (
-        <div style={{ position: 'relative', top: 150 }}>
-            <div style={{ width: "50%", zIndex: 2, marginLeft: 15, position: 'relative' }}>
+        <div style={{
+            position: 'relative',
+            top: 150,
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+            overflow: 'auto',
+            flexWrap: 'wrap',
+        }}>
+            <Box sx={{
+                width: { xs: '90%', md: '50%' },
+                zIndex: 1,
+                marginLeft: { sm: 15 },
+                position: 'relative',
+                display: "flex",
+                flexDirection: 'column',
+                
+            }}>
                 <Typography variant="h4" gutterBottom>
                     Parcourez les flashcards!
                 </Typography>
@@ -87,7 +103,7 @@ function SearchFlashcards() {
                     onSelect={handleOnSelect}
                     placeholder="Rechercher des flashcards"
                 />
-            </div>
+            </Box>
             <FlashcardsDisplayer
                 flashCardsList={searchResults.length > 0 ? searchResults : flashcards}
                 currentMode={'consulting'}

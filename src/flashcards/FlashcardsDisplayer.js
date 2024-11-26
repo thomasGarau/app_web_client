@@ -1,4 +1,4 @@
-import { Box, Pagination } from '@mui/material';
+import { Box, Pagination, useMediaQuery } from '@mui/material';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import FlashcardsBox from './FlashcardsBox';
 import { handleFlipCard } from './FlashcardsUtils';
@@ -13,6 +13,8 @@ export default function FlashcardsDisplayer({ flashCardsList, currentMode, handl
         if (screenWidth < 1024) return 6;
         return 8;
     });
+
+    const isSmallScreen = useMediaQuery('(max-width:600px)'); 
 
     useEffect(() => {
         const handleResize = () => {
@@ -64,22 +66,24 @@ export default function FlashcardsDisplayer({ flashCardsList, currentMode, handl
                 flashCards={paginationData ? paginationData.currentCards: null}
                 onRemoveFromCollection={onRemoveFromCollection}
             />
-            <Pagination
-                count={paginationData ? paginationData.totalPages: null}
-                page={paginationData ? paginationData.adjustedCurrentPage : null}
-                onChange={handlePageChange}
-                variant="outlined"
-                shape="rounded"
-                sx={{
-                    marginTop: '16px', display: 'flex',
-                    justifyContent: 'center',
-                    position: 'fixed',
-                    right: '50%',
-                    bottom: '170px',
-                    transform: 'translateX(50%)',
-                    margin: '30px 0px'
-                }}
-            />
+            {!isSmallScreen && (
+                <Pagination
+                    count={paginationData ? paginationData.totalPages: null}
+                    page={paginationData ? paginationData.adjustedCurrentPage : null}
+                    onChange={handlePageChange}
+                    variant="outlined"
+                    shape="rounded"
+                    sx={{
+                        marginTop: '16px', display: 'flex',
+                        justifyContent: 'center',
+                        position: 'fixed',
+                        right: '50%',
+                        bottom: '170px',
+                        transform: 'translateX(50%)',
+                        margin: '30px 0px'
+                    }}
+                />
+            )}
         </Box>
     );
 }
