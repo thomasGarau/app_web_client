@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
 import ReactFlow, {
     addEdge,
     MiniMap,
@@ -13,12 +13,17 @@ import './Carte_mentale.css';
 import NodeControls from './composents/NodeControls';
 import TitleEditor from './composents/TitleEditor';
 import CustomNode from './composents/CustomNode';
-import { toPng } from 'html-to-image';
+import { toBlob } from 'html-to-image';
 import LockSwitch from './composents/LockSwitch';
 
+import {createCM, getCmDetails} from '../API/CmAPI';
+import StyledButton from '../composent/StyledBouton';
+import { set } from 'date-fns';
+
 export default function Edit_CM() {
-    const { id_chap, id_CM } = useParams(); 
-    const [title, setTitle] = useState('Nouvelle carte mentale');
+    const { id_chap, id_CM } = useParams();
+    const navigate = useNavigate();
+    const [titre, settitre] = useState('Nouvelle carte mentale');
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -32,18 +37,11 @@ export default function Edit_CM() {
 
     useEffect(() => {
         if (id_CM) {
-            // Charger les données de la carte mentale existante
-            fetch(`${process.env.PUBLIC_URL}/mindmap1.json`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors du chargement de la carte mentale');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
+            const res = getCmDetails(id_CM);
+                res.then((data) => {
                     console.log('Données de la carte mentale:', data);
                     const details = data.details || {};
-                    setTitle(details.title || 'Carte mentale');
+                    settitre(details.titre || 'Carte mentale');
                     const newIsLocked = data.visibilite === 'public' ? true : false;
                     setIsLocked(newIsLocked);
 
@@ -67,7 +65,7 @@ export default function Edit_CM() {
                 });
         } else if (id_chap) {
             // Initialiser une nouvelle carte mentale
-            setTitle('Nouvelle carte mentale');
+            settitre('Nouvelle carte mentale');
             setIsLocked(true);
             setNodes([
                 {
@@ -141,59 +139,57 @@ export default function Edit_CM() {
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const mentalMap = {
-            title,
+            titre,
             visibilite: isLocked ? 'public' : 'prive',
-            nodes: nodes.map(({ id, type, data, position }) => ({
-                id,
-                type,
-                label: data.label,
-                color: data.color,
-                position,
-            })),
-            edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
-                id,
-                source,
-                target,
-                sourceHandle,
-                targetHandle,
-            })),
+            chapitre: id_chap,
+            details: {
+                nodes: nodes.map(({ id, type, data, position }) => ({
+                    id,
+                    type,
+                    label: data.label,
+                    color: data.color,
+                    position,
+                })),
+                edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
+                    id,
+                    source,
+                    target,
+                    sourceHandle,
+                    targetHandle,
+                })),
+            },
         };
-
+    
         const mentalMapJSON = JSON.stringify(mentalMap, null, 2);
-
-        const blob = new Blob([mentalMapJSON], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${title}.json`;
-        link.click();
-        URL.revokeObjectURL(url);
-
+    
         if (reactFlowWrapper.current) {
             setShowMiniMap(false);
             setShowControls(false);
-            setTimeout(() => {
-                toPng(reactFlowWrapper.current)
-                    .then((dataUrl) => {
-                        const imgLink = document.createElement('a');
-                        imgLink.href = dataUrl;
-                        imgLink.download = `${title}.png`;
-                        imgLink.click();
-                        setShowMiniMap(true);
-                        setShowControls(true);
-                    })
-                    .catch((err) => {
-                        console.error('Erreur lors de la capture de l\'image:', err);
-                        setShowMiniMap(true);
-                        setShowControls(true);
-                    });
-            }, 100);
+    
+            try {
+                const blob = await toBlob(reactFlowWrapper.current, { quality: 0.8 });
+                console.log('Image blob:', blob);
+                if(!id_CM) {
+                await createCM(mentalMapJSON, blob);
+                console.log('Carte mentale créée avec succès');
+                navigate('/carte_mentale/' + id_chap);
+                } else {
+                    console.log('Modification de la carte mentale');
+                }
+                
+            } catch (error) {
+                console.error("Erreur lors de la capture ou de l'envoi des données:", error);
+            } finally {
+                setShowMiniMap(true);
+                setShowControls(true);
+            }
+        } else {
+            console.error("L'élément reactFlowWrapper est introuvable.");
         }
-
-
     };
+    
 
     const nodeTypes = useMemo(
         () => ({
@@ -203,16 +199,24 @@ export default function Edit_CM() {
     );
 
 
-      const handleSwitchChange = (event) => {
-        setIsLocked(event.target.checked); // Mettez à jour l'état selon l'interaction
-        console.log('isLocked:', event.target.checked);
+      function handleSwitchChange () {
+        setIsLocked(!isLocked);
       };
 
+      function handleRetour()  {
+        navigate('/carte_mentale/' + id_chap);
+      }
 
 
     return (
         <div className="container-create-cm" >
             <div  className='container-create-cm-left'>
+                <StyledButton
+                    content={"Retour"}
+                    color={"primary"}
+                    onClick={handleRetour}
+                    width={"200"}
+                />
                 <NodeControls
                     selectedColor={selectedColor}
                     onColorChange={handleNodeColorChange}
@@ -223,10 +227,10 @@ export default function Edit_CM() {
             </div>
             <div className='container-edit-title' >
                 <TitleEditor
-                    title={title}
+                    title={titre}
                     isEditing={isEditing}
                     onEditClick={() => setIsEditing(true)}
-                    onTitleChange={(e) => setTitle(e.target.value)}
+                    onTitleChange={(e) => settitre(e.target.value)}
                     onBlur={() => setIsEditing(false)}
                 />
                 <div

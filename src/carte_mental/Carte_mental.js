@@ -6,6 +6,7 @@ import StyledButton from '../composent/StyledBouton';
 import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
 import BadgeCarteMentale from './composents/BadgeCarteMentale';
+import { getCMUser, getAllCM } from "../API/CmAPI";
 
 function Carte_mental() {
   const { id } = useParams();
@@ -22,10 +23,9 @@ function Carte_mental() {
   }
 
   async function fetchData(params) {
-      const { token, role } = await getTokenAndRole();
+      const { token } = await getTokenAndRole();
       const decodedToken = jwtDecode(token);
       setId_utilisateur(decodedToken.id_etudiant);
-      console.log('id_utilisateur:', id_utilisateur);
   }
 
   // Gestion de la pagination
@@ -50,20 +50,20 @@ function Carte_mental() {
 
   useEffect(() => {
     fetchData();
-    fetch(`${process.env.PUBLIC_URL}/mindMap.json`)
-      .then((response) => response.json())
-      .then((data) => setCartes(data))
-      .catch((error) => console.error("Erreur lors du chargement des cartes mentales :", error));
+    const data = getCMUser(id);
+    data.then((res) => {
+      setCartes(res);
+    });
 
-    fetch(`${process.env.PUBLIC_URL}/mindmapother.json`)
-      .then((response) => response.json())
-      .then((data) => setCartesAutresUtilisateurs(data))
-      .catch((error) => console.error("Erreur lors du chargement des cartes mentales des autres utilisateurs :", error));
+    const dataAutres = getAllCM(id);
+    dataAutres.then((res) => {
+      setCartesAutresUtilisateurs(res);
+    });
   }, []);
 
   // Gestion du clic sur une carte mentale
   const handleCardClick = (carteId) => {
-    navigate(`/voir_carte_mentale/${carteId}`);
+    navigate(`/voir_carte_mentale/${id}/${carteId}`);
   };
 
   return (
@@ -83,9 +83,9 @@ function Carte_mental() {
                     onClick={() => handleCardClick(carte.id_carte_mentale)}
                     style={{ cursor: 'pointer', position: 'relative' }}
                   >
-                    <p>{carte.title}</p>
+                    <p>{carte.titre}</p>
                     <img
-                      src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                      src={carte.url}
                       alt="Carte mentale"
                       style={{ borderRadius: '8px' }}
                     />
@@ -115,9 +115,9 @@ function Carte_mental() {
                     onClick={() => handleCardClick(carte.id_carte_mentale)} // Redirection au clic
                     style={{ cursor: 'pointer' }}
                   >
-                    <p>{carte.title}</p>
+                    <p>{carte.titre}</p>
                     <img
-                      src={`${process.env.PUBLIC_URL}/cartementale.png`}
+                      src={carte.url}
                       alt="Carte mentale"
                     />
                   </div>

@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React from 'react';
 
-export default function StyledButton({ content, fontSize, width, onClick, color, ariaDescribedby, isAbsolute, isDisabled }) {
+export default function StyledButton({ content, fontSize, width, onClick, color, ariaDescribedby, isAbsolute, isDisabled, isHidden }) {
     const styledButton = {
         position: isAbsolute ? 'absolute' : 'relative',
         fontFamily: 'Shadows Into Light',
@@ -10,7 +10,7 @@ export default function StyledButton({ content, fontSize, width, onClick, color,
         color: color === "primary" ? 'white' : 'black',
         textAlign: 'center',
         textDecoration: 'none',
-        display: 'inline-block',
+        display: isHidden ? 'none' :  'inline-block',
         borderRadius: '50px',
         width: { xs: `${width ? width - 200 : 200}px`, sm: `${width ? width - 100 : 300}px`, md: `${width ? width : 400}px` },
         boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)',
