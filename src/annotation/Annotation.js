@@ -1,7 +1,8 @@
 import { Avatar, Box, Typography, IconButton, Button, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import React, { useState, useRef, useEffect } from 'react';
-import { createAnnotationResponse, getAnnotationResponses, removeAnnotation, removeAnnotationResponse, updateAnnotation, updateAnnotationResponse } from "../API/AnnotationAPI";
+import { createAnnotationResponse, getAnnotationResponses, removeAnnotation, removeAnnotationResponse, updateAnnotation, updateAnnotationResponse, updateAnnotationState } from "../API/AnnotationAPI";
 import { format, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
@@ -116,6 +117,15 @@ function Annotation() {
         }
     }
 
+    const closeAnnotation = async (annotationId) => {
+        try {
+            await updateAnnotationState(annotationId, 'resolu');
+        } catch (error) {
+            console.error('Error deleting response:', error);
+        }
+        dispatch(setSelectedAnnotation(null));
+    }
+
     return (
         <Draggable
             handle=".drag-handle"
@@ -165,12 +175,22 @@ function Annotation() {
                     }}
                 >
                     <Typography>Annotation</Typography>
-                    <IconButton
-                        onClick={() => dispatch(setSelectedAnnotation(null))}
-                        sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
+                    <Box>
+                        <IconButton
+                            onClick={() => {
+                                closeAnnotation(selectedAnnotation.id_annotation);
+                            }}
+                            sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
+                        >
+                            <CheckIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => dispatch(setSelectedAnnotation(null))}
+                            sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
                 </Box>
                 <Box sx={{
                     overflowY: 'auto',

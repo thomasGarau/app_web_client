@@ -72,12 +72,14 @@ const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType
                                 transition: "all 0.2s ease",
                                 width: "100%",
                                 justifyContent: "flex-start",
-                                padding: "12px"
+                                padding: "12px",
+                                display: "flex",
+                                justifyContent: "space-between",
                             }}
                             className="button-annotation"
                             variant="text"
                         >
-                            <Typography style={{
+                            <Typography sx={{
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
                                 overflow: "hidden",
@@ -85,6 +87,9 @@ const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType
                                 textAlign: "left",
                             }}>
                                 {annotation.contenu || "No content"}
+                            </Typography>
+                            <Typography sx={{textAlign: "right"}}>
+                                {annotation.etat_annotation || "No state"}
                             </Typography>
                         </Button>
                     </Box>

@@ -137,3 +137,16 @@ export const removeAnnotationResponse = async (reponseId) => {
         throw error;
     }
 }
+
+export const updateAnnotationState = async (annotationId, etat) => {
+    try {
+        const body = {
+            annotation: annotationId,
+            etat: etat
+        };
+        const response = await api.put('/annotation/update-annotation-state', body);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}   
