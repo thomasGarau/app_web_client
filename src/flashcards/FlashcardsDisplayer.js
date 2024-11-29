@@ -3,9 +3,10 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import FlashcardsBox from './FlashcardsBox';
 import { handleFlipCard } from './FlashcardsUtils';
 
-export default function FlashcardsDisplayer({ flashCardsList, currentMode, handleOpenModal, handleDeleteCard, onRemoveFromCollection = null }) { 
+export default function FlashcardsDisplayer({ flashCardsList, CorS}) { 
 
     const [flashCards, setFlashCards] = useState(flashCardsList);
+    console.log(flashCardsList);
     const [currentPage, setCurrentPage] = useState(1);
     const [cardsPerPage, setCardsPerPage] = useState(() => {
         const screenWidth = window.innerWidth;
@@ -59,12 +60,8 @@ export default function FlashcardsDisplayer({ flashCardsList, currentMode, handl
     return (
         <Box sx={{ flexGrow: 1 }}>
             <FlashcardsBox
-                handleDeleteCard={handleDeleteCard}
-                handleFlipCard={callFlipCard}
-                handleOpenModal={handleOpenModal}
-                currentMode={currentMode}
+                CorS={CorS}
                 flashCards={paginationData ? paginationData.currentCards: null}
-                onRemoveFromCollection={onRemoveFromCollection}
             />
             {!isSmallScreen && (
                 <Pagination

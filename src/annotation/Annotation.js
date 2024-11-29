@@ -50,7 +50,6 @@ function Annotation() {
             return;
         }
         try {
-            console.log(selectedAnnotation.id_annotation, answer);
             await createAnnotationResponse(selectedAnnotation.id_annotation, answer);
             setAnswer('');
             setResponseMode(false);
@@ -62,7 +61,6 @@ function Annotation() {
     useEffect(() => {
         const fetchResponses = async () => {
             const data = await getAnnotationResponses(selectedAnnotation.id_annotation);
-            console.log(data);
             setResponses(data);
         };
         fetchResponses();

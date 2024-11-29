@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { CardContent, Typography, Box, TextField, Card } from '@mui/material';
-import FavoriteButton from '../composent/FavoriteButton';
+import FavoriteButton from './FavoriteButton';
 import { addFlashCardToCollection, getUserFlashcards, removeFlashCardToCollection } from '../API/FlashcardsAPI';
 import { getTokenAndRole } from '../services/Cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useParams } from 'react-router-dom';
+import EditButton from './EditButton';
+import DeleteButton from './DeleteButton';
+import { handleOpenModal } from './FlashcardsUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentQuestion, setCurrentReponse } from '../Slice/flashcardsSlice';
+import { current } from '@reduxjs/toolkit';
 
-export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnswering, onChangeQuestion, onChangeReponse, height = null, onRemoveFromCollection = null }) {
+export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnswering, height = null, responseStatus = null }) {
 
     const { id_chap } = useParams();
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    console.log("Flashcards.js: data", data, isAnswering, isEditing);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const currentFlashcard = useSelector(state => state.flashcards.currentFlashcard);
+    const [user, setUser] = useState(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -30,15 +38,15 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
     useEffect(() => {
         const checkIfFavorite = async () => {
             if (!user || !data.id_flashcard || !id_chap) return;
-            
+
             setIsLoading(true);
             try {
                 const response = await getUserFlashcards(id_chap);
                 const flashcardsArray = Array.isArray(response) ? response : [];
-                
+
                 const isInCollection = flashcardsArray.some(
                     flashcard => flashcard.id_flashcard === data.id_flashcard
-                    && user.id_etudiant !== data.id_utilisateur
+                        && user.id_etudiant !== data.id_utilisateur
                 );
                 setIsFavorite(isInCollection);
             } catch (error) {
@@ -50,35 +58,19 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
         };
 
         checkIfFavorite();
-    }, [id_chap, user, data.id_flashcard]);
-
-    const handleToggleFavorite = async () => {
-        if (isLoading) return;
-        
-        try {
-            if (isFavorite) {
-                await removeFlashCardToCollection(data.id_flashcard);
-                onRemoveFromCollection();
-                setIsFavorite(false);
-            } else {
-                await addFlashCardToCollection(data.id_flashcard);
-                setIsFavorite(true);
-            }
-        } catch (error) {
-            console.error('Error toggling favorite:', error);
-        }
-    };
+    }, [id_chap, user, data]);
 
     return (
         <Box
             sx={{
                 perspective: '1000px',
-                width: {xs:'inherit', sm:'100%'},
+                width: { xs: 'inherit', sm: '100%' },
                 height: height == null ? '200px' : height,
                 cursor: 'pointer',
             }}
-            onClick={onClick}
+            onClick={data ? onClick : null}
         >
+
             <Box
                 sx={{
                     width: '100%',
@@ -94,6 +86,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                     },
                 }}
             >
+
                 {/* Question */}
                 <Card
                     sx={{
@@ -104,18 +97,24 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor:
+                            responseStatus &&
+                                responseStatus === true ? '#90EE90' :
+                                responseStatus === false ? '#e70000' :
+                                    data ? '#f5f5f5' :
+                                        '#e70000',
                         borderRadius: '10px',
                         transform: 'rotateY(0deg)',
                     }}
                 >
+
                     {isEditing ? (
                         <CardContent sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <TextField
                                 rows={4}
                                 variant="outlined"
                                 value={data.question}
-                                onChange={(e) => onChangeQuestion(e.target.value)}
+                                onChange={(e) => dispatch(setCurrentQuestion(e.target.value))}
                                 fullWidth
                                 multiline
                                 label="Question"
@@ -133,17 +132,30 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                     ) : (
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                {data.question}
+                                {responseStatus ? "Correcte!" : responseStatus == false ? "Incorrect" : data ? data.question : "Erreur de chargement"}
                             </Typography>
                         </CardContent>
                     )}
-                    {user !== null && data.id_utilisateur !== user.id_etudiant && (
-                        <FavoriteButton
-                            
-                            isFavorite={isFavorite}
-                            onToggleFavorite={handleToggleFavorite}
-                        />
-                    )}
+                    {user !== null &&
+                        data &&
+                        data.id_utilisateur && (
+                            user.id_etudiant === data.id_utilisateur && !isAnswering && !isEditing ? (
+                                <>
+                                    <EditButton data={data} />
+                                    <DeleteButton data={data} />
+                                </>
+                            ) : (
+                                data.question && (
+                                    <FavoriteButton
+                                        isFavorite={isFavorite}
+                                        data={data}
+                                        onFavorite={setIsFavorite}
+                                        onClick={() => console.log("Favorite button clicked")}
+                                    />
+                                )
+                            )
+                        )}
+
 
                 </Card>
 
@@ -167,8 +179,11 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={data.reponse}
-                                onChange={(e) => onChangeReponse(e.target.value)}
+                                value={isAnswering ? currentFlashcard.reponse : data.reponse}
+                                onChange={(e) => {
+                                    dispatch(setCurrentReponse(e.target.value));
+
+                                }}
                                 fullWidth
                                 multiline
                                 label="Reponse"
@@ -186,16 +201,30 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                     ) : (
                         <CardContent>
                             <Typography variant="h5" component="div">
-                                {data.reponse}
+                                {data ? data.reponse : "Erreur de chargement"}
                             </Typography>
                         </CardContent>
                     )}
-                    {user !== null && data.id_utilisateur !== user.id_etudiant && (
-                        <FavoriteButton
-                            isFavorite={isFavorite}
-                            onToggleFavorite={handleToggleFavorite}
-                        />
-                    )}
+                    {user !== null &&
+                        data &&
+                        data.id_utilisateur && (
+                            user.id_etudiant === data.id_utilisateur && !isAnswering && !isEditing ? (
+                                <>
+                                    <EditButton data={data} />
+                                    <DeleteButton data={data} />
+                                </>
+                            ) : (
+                                data.question && (
+                                    <FavoriteButton
+                                        isFavorite={isFavorite}
+                                        data={data}
+                                        onFavorite={setIsFavorite}
+                                        onClick={() => console.log("Favorite button clicked")}
+                                    />
+                                )
+                            )
+                        )}
+
                 </Card>
             </Box>
         </Box>

@@ -6,21 +6,20 @@ import FlashcardsDisplayer from "./FlashcardsDisplayer";
 import { Box, Typography } from "@mui/material";
 import Fuse from 'fuse.js';
 import FlashCardsModal from "./FlashcardsModal";
+import { useDispatch, useSelector } from "react-redux";
+import { setFlashcards } from "../Slice/flashcardsSlice";
+import { handleOpenModal } from "./FlashcardsUtils";
 
 function SearchFlashcards() {
-    const MODES = {
-        CONSULTING: 'consulting',
-        EDITING: 'editing',
-        DELETING: 'deleting',
-        CREATING: 'creating'
-    };
+
+
     const { id_chap } = useParams();
     const [search, setSearch] = useState('');
-    const [flashcards, setFlashcards] = useState([]);
+    const flashcards = useSelector(state => state.flashcards.flashcards);
+    const modalState = useSelector(state => state.flashcards.modalState);
     const [searchResults, setSearchResults] = useState(flashcards);
-    const [selectedFlashCard, setSelectedFlashCard] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentMode, setCurrentMode] = useState(MODES.CONSULTING);
+    const dispatch = useDispatch();
+
     const fuseOptions = {
         keys: ['question', 'reponse'],
         includeScore: true,
@@ -51,28 +50,11 @@ function SearchFlashcards() {
     useEffect(() => {
         const fetchFlashcards = async () => {
             const response = await getAllFlashcards(id_chap);
-            setFlashcards(response);
+            dispatch(setFlashcards(response));
         };
 
         fetchFlashcards();
     }, []);
-
-    const handleOpenModal = (flashCard = null) => {
-        if (flashCard) {
-            setSelectedFlashCard(flashCard);
-
-        } else {
-            setCurrentMode(MODES.CREATING);
-        }
-        setIsModalOpen(true);
-
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedFlashCard(null);
-        setCurrentMode(MODES.CONSULTING);
-    };
 
 
     return (
@@ -80,19 +62,17 @@ function SearchFlashcards() {
             position: 'relative',
             top: 150,
             display: 'flex',
-            flexDirection: 'column',
-            alignContent: 'center',
+            flexFlow: 'column wrap',
             overflow: 'auto',
-            flexWrap: 'wrap',
         }}>
             <Box sx={{
                 width: { xs: '90%', md: '50%' },
                 zIndex: 1,
-                marginLeft: { sm: 15 },
+                marginLeft: 2,
                 position: 'relative',
                 display: "flex",
                 flexDirection: 'column',
-                
+
             }}>
                 <Typography variant="h4" gutterBottom>
                     Parcourez les flashcards!
@@ -105,18 +85,11 @@ function SearchFlashcards() {
                 />
             </Box>
             <FlashcardsDisplayer
+                CorS={'S'}
                 flashCardsList={searchResults.length > 0 ? searchResults : flashcards}
-                currentMode={'consulting'}
-                handleOpenModal={handleOpenModal}
-                id_chap={id_chap}
 
             />
-            <FlashCardsModal
-                open={isModalOpen}
-                onClose={handleCloseModal}
-                flashCardData={selectedFlashCard}
-                isEditing={false}
-            />
+            <FlashCardsModal />
         </div>
     );
 }

@@ -10,6 +10,8 @@ import MethodeJ from "./composent/MethodeJ.js";
 import StyledButton from "../composent/StyledBouton.js";
 import FlashCardsModal from "../flashcards/FlashcardsModal.js";
 import { getDailyFlashcard } from "../API/FlashcardsAPI.js";
+import { handleOpenModal } from "../flashcards/FlashcardsUtils.js";
+import { useDispatch } from "react-redux";
 
 
 function Home() {
@@ -18,10 +20,10 @@ function Home() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [role, setRole] = useState('');
-
+  const dispatch = useDispatch();
   const [dailyFlashcard, setDailyFlashcard] = useState(null);
-  const [isModalOpen, setModalOpen] = useState(false);
 
+  
   const handleListItemClick = (id) => {
     navigate(`/ue/${id}`);
   };
@@ -66,9 +68,6 @@ function Home() {
     }
     dailyFlashcard();
   }, []);
-
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
 
   return (
 
@@ -192,15 +191,10 @@ function Home() {
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <MethodeJ />
               <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-                <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={handleOpenModal} />
+                <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)} />
               </Box>
             </Box>
-            <FlashCardsModal
-              isAnswering={true}
-              open={isModalOpen}
-              onClose={handleCloseModal}
-              flashCardData={dailyFlashcard}
-            />
+            <FlashCardsModal />
           </div>
           {isSecure}
 

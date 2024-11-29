@@ -37,9 +37,7 @@ const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType
     }
 
     const handleAnnotationClick = (annotation) => {
-        console.log(annotation);
         dispatch(setSelectedAnnotation(annotation));
-        console.log("selectedAnnotation", selectedAnnotation);
     };
 
     return (

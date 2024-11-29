@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Box, RadioGroup, Radio, FormControlLabel, useMediaQuery } from '@mui/material';
 import StyledButton from '../composent/StyledBouton';
 import Flashcards from './Flashcards';
-import { flashcardAnswer } from '../API/FlashcardsAPI';
+import { createFlashcard, flashcardAnswer, updateFlashcard } from '../API/FlashcardsAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentQuestion, setCurrentReponse, setFlashcards } from '../Slice/flashcardsSlice';
+import { fetchMyCollection, handleCloseModal } from './FlashcardsUtils';
 
 const baseStyle = {
     position: 'absolute',
@@ -27,63 +30,74 @@ const styleConsult = {
     bgcolor: '#ffffff00',
 };
 
-export default function FlashCardsModal({ open, onClose, flashCardData, onSave = null, isEditing = null, isAnswering = null }) {
-    const [question, setQuestion] = useState('');
-    const [reponse, setReponse] = useState('');
-    const [flipped, setFlipped] = useState(false);
-    const [visibility, setVisibility] = useState(flashCardData ? flashCardData.visibilite : "public");
+export default function FlashCardsModal() {
 
+    const [flipped, setFlipped] = useState(false);
+    const currentFlashcard = useSelector(state => state.flashcards.currentFlashcard);
+    const modalState = useSelector(state => state.flashcards.modalState);
+    const [visibility, setVisibility] = useState(currentFlashcard ? currentFlashcard.visibilite : "public");
+    const dispatch = useDispatch();
     const isLandscape = useMediaQuery('(orientation: landscape)');
     const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const [responseStatus, setResponseStatus] = useState(null); 
+
 
     const modalStyle = (baseStyle) => ({
         ...baseStyle,
-        width: isSmallScreen 
+        width: isSmallScreen
             ? (isLandscape ? '90vh' : '90vw')
             : 600,
-        height: isSmallScreen 
+        height: isSmallScreen
             ? (isLandscape ? '90vw' : '60vh')
             : 300,
         transform: isSmallScreen
-            ? (isLandscape 
+            ? (isLandscape
                 ? 'translate(-50%, -50%) rotate(90deg)'
                 : 'translate(-50%, -50%)')
             : 'translate(-50%, -50%)',
     });
 
-    const handleVisibilityChange = (event) => {
-        setVisibility(event.target.value);
+    const handleVisibilityChange = (value) => {
+        setVisibility(value);
     };
 
     useEffect(() => {
-        if (flashCardData) {
-            setQuestion(flashCardData.question);
-            if (isAnswering !== null && !isAnswering) {
-                setReponse(flashCardData.reponse);
-            } else {
-                setReponse('');
+        if (currentFlashcard) {
+            dispatch(setCurrentQuestion(currentFlashcard.question));
+            if (modalState.isAnswering !== null && !modalState.isAnswering) {
+                dispatch(setCurrentReponse(currentFlashcard.reponse));
             }
-            setFlipped(false);
-        } else {
-            setQuestion('');
-            setReponse('');
+
         }
-        console.log(reponse);
-    }, [flashCardData, isAnswering]);
+    }, [currentFlashcard, modalState.isAnswering]);
 
     const handleSave = async () => {
-        if (isAnswering) {
-            await flashcardAnswer(flashCardData.id_flashcard, reponse)
-            isAnswering = false;
-        }
-        else {
-            if (flashCardData) {
-                onSave(flashCardData.id_flashcard, question, reponse);
-            } else {
-                onSave(question, reponse, visibility);
+        try {
+            if (modalState.isAnswering) {
+                // Compare answers and set status
+                const isCorrect = true
+
+                setResponseStatus(isCorrect);
+
+                // Wait 4 seconds then close
+                setTimeout(() => {
+                    handleCloseModal(dispatch);
+                    setResponseStatus(null); // Reset status
+                }, 4000);
+
+                return;
             }
+            if (currentFlashcard && !currentFlashcard.new) {
+                await updateFlashcard(currentFlashcard.id_flashcard, currentFlashcard.question, currentFlashcard.reponse);
+            } else {
+                (console.log(visibility));
+                await createFlashcard(currentFlashcard.id_chapitre, currentFlashcard.question, currentFlashcard.reponse, visibility);
+            }
+            await fetchMyCollection(currentFlashcard.id_chapitre, dispatch);
+            handleCloseModal(dispatch);
+        } catch (error) {
+            console.error('Error saving flashcard:', error);
         }
-        onClose();
     };
 
     const handleFlip = () => {
@@ -91,19 +105,19 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
     };
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={modalStyle(isEditing || isAnswering ? styleEdit : styleConsult)}>
-                {isEditing ?
+        <Modal open={modalState.isModalOpen} onClose={() => handleCloseModal(dispatch)}>
+            <Box sx={modalStyle(modalState.isEditing || modalState.isAnswering ? styleEdit : styleConsult)}>
+                {modalState.isEditing ?
                     <RadioGroup
                         row
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="controlled-radio-buttons-group"
                         value={visibility}
-                        onChange={handleVisibilityChange}
+                        onChange={(e) => handleVisibilityChange(e.target.value)}
                     >
                         <FormControlLabel
                             sx={{ color: 'white' }}
-                            value="private"
+                            value="prive"
                             control={<Radio sx={{ color: 'white', '&.Mui-checked': { color: 'white' } }} />}
                             label="Privé"
                         />
@@ -116,17 +130,16 @@ export default function FlashCardsModal({ open, onClose, flashCardData, onSave =
                     </RadioGroup>
                     : null}
                 <Flashcards
-                    data={{ question, reponse }}
+                    data={currentFlashcard}
                     isFlipped={flipped}
-                    isAnswering={isAnswering}
-                    isEditing={isEditing}
-                    onChangeQuestion={setQuestion}
-                    onChangeReponse={setReponse}
+                    isAnswering={modalState.isAnswering}
+                    isEditing={modalState.isEditing}
                     onClick={handleFlip}
                     height={300}
+                    responseStatus={responseStatus}
                 />
-                {isEditing || isAnswering ?
-                    <StyledButton variant="contained" color={"secondary"} content={isAnswering ? "Valider" : "Enregistrer"} onClick={handleSave} />
+                {modalState.isEditing || modalState.isAnswering ?
+                    <StyledButton variant="contained" color={"secondary"} content={modalState.isAnswering ? "Valider" : "Enregistrer"} onClick={() => handleSave()} />
                     : null}
 
             </Box>

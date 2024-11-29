@@ -32,7 +32,6 @@ export const createFlashcard = async (id_chapitre, question, reponse, visibilite
             reponse: reponse,
             visibilite: visibilite
         };
-        console.log(body);
         const response = await api.post('/flashcard/create-flashcard', body);
         return response.data;
     } catch (error) {
@@ -75,7 +74,6 @@ export const deleteFlashcard = async (id_flashcard) => {
 }
 
 export const updateFlashcard = async (id_flashcard, question, reponse) => {
-    console.log(id_flashcard, question, reponse);
     try {
         const body = {
             flashcard: id_flashcard,

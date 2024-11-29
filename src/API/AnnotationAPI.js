@@ -2,12 +2,12 @@ import api from '../config/axiosConfig';
 
 
 export const getAnnotationsCours = async (id_cours) => {
-    console.log(id_cours)
+
     try {
         const body = {
             cours: id_cours
         };
-        console.log(body)
+
         const response = await api.post('/annotation/annotation-cours', body);
         return response.data;
     } catch (error) {
@@ -45,7 +45,6 @@ export const createAnnotationCours = async (id_cours, contenu) => {
 }
 
 export const createAnnotationQuiz = async (id_question, contenu) => {
-    console.log(id_question, contenu)
     try {
         const body = {
             question : id_question,
