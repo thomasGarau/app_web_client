@@ -18,6 +18,24 @@ export const createCM = async (data, path) => {
     }
 };
 
+export const updateCM = async (data, path) => {
+    try {
+        const formData = new FormData();
+        formData.append('data', data);
+        formData.append('path', path);
+
+        const response = await api.put(`/carte-mentale/update-cm`, formData, {
+            headers: {
+                'Content-Type':'multipart/form-data'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 
 export const getCMUser = async (id_chap) => {

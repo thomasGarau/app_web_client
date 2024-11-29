@@ -1,56 +1,43 @@
 import React from 'react';
+import StyledButton from '../../composent/StyledBouton';
+import '../Carte_mentale.css';
 
-const NodeControls = ({ selectedColor, onColorChange, onAddNode, onSave }) => {
+const NodeControls = ({ selectedColor, onColorChange, onAddNode, onSave, handleDeleteSelected }) => {
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                height: '20%',
-                justifyContent: 'center',
-                margin: '20px',
-            }}
-        >
+        <div className='node-controls-cm'>
             <input
                 type="color"
                 value={selectedColor}
                 onChange={(e) => onColorChange(e.target.value)}
                 style={{
-                    width: '100%',
-                    height: '40px',
+                    width: '200px',
+                    height: '60px',
                     cursor: 'pointer',
                     border: 'none',
+                    padding : "0 10px",
+                    margin : " 0 10px",
                 }}
             />
-            <button
-                style={{
-                    margin: '10px 0',
-                    padding: '10px 20px',
-                    backgroundColor: '#4caf50',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                }}
+            <StyledButton
+                content={"Ajouter une idée"}
+                color={"primary"}
+                width={"200"}
                 onClick={onAddNode}
-            >
-                Ajouter une idée
-            </button>
-            <button
-                style={{
-                    margin: '10px 0',
-                    padding: '10px 20px',
-                    backgroundColor: '#2196F3',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                }}
+            />
+            <StyledButton
+                content={"Enregistrer"}
+                color={"primary"}
                 onClick={onSave}
-            >
-                Enregistrer
-            </button>
+                width={"200"}
+            />
+
+            <StyledButton
+                content={"Supprimer"}
+                color={"danger"}
+                onClick={handleDeleteSelected}
+                width={"200"}
+            />
+
         </div>
     );
 };

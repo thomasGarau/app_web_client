@@ -8,6 +8,7 @@ const TitleEditor = ({ title, isEditing, onEditClick, onTitleChange, onBlur }) =
                 <input
                     type="text"
                     value={title}
+                    className="titre-carte-mentale-input"
                     onChange={onTitleChange}
                     onBlur={onBlur}
                     autoFocus

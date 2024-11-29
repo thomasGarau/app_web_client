@@ -52,7 +52,7 @@ useEffect(() => {
 
 
     function navEditCM() {
-        navigate(`/edit_carte_mentale/${id_CM}`);
+        navigate(`/edit_carte_mentale/${id_chap}/${id_CM}`);
     }
 
     async function handleToggleCollection() {
@@ -157,7 +157,7 @@ useEffect(() => {
             </div>
             <div className='container-voir-cm-image'>
                 <h1>{title}</h1>
-                <img src={image} alt="Carte mentale" style={{ height: '60%'}} />
+                <img src={image} alt="Carte mentale" />
             </div>
 
 

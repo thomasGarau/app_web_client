@@ -16,7 +16,7 @@ import CustomNode from './composents/CustomNode';
 import { toBlob } from 'html-to-image';
 import LockSwitch from './composents/LockSwitch';
 
-import {createCM, getCmDetails} from '../API/CmAPI';
+import {createCM, getCmDetails, updateCM} from '../API/CmAPI';
 import StyledButton from '../composent/StyledBouton';
 import { set } from 'date-fns';
 
@@ -29,6 +29,7 @@ export default function Edit_CM() {
     const [isEditing, setIsEditing] = useState(false);
     const [nodeIdCounter, setNodeIdCounter] = useState(2);
     const [selectedNodeId, setSelectedNodeId] = useState(null);
+    const [selectedEdgeId, setSelectedEdgeId] = useState(null);
     const [selectedColor, setSelectedColor] = useState('#ffffff');
     const [showMiniMap, setShowMiniMap] = useState(true);
     const [showControls, setShowControls] = useState(true);
@@ -41,10 +42,10 @@ export default function Edit_CM() {
                 res.then((data) => {
                     console.log('Données de la carte mentale:', data);
                     const details = data.details || {};
-                    settitre(details.titre || 'Carte mentale');
+                    settitre(data.titre || 'Carte mentale');
                     const newIsLocked = data.visibilite === 'public' ? true : false;
                     setIsLocked(newIsLocked);
-
+                    
                     setNodes(
                         details.nodes.map((node) => ({
                             id: node.id,
@@ -114,6 +115,32 @@ export default function Edit_CM() {
         setNodeIdCounter((count) => count + 1);
     };
 
+    const handleDeleteSelected = () => {
+        if (selectedNodeId) {
+            handleDeleteNode(selectedNodeId);
+            setSelectedNodeId(null); // Réinitialiser la sélection
+        }
+        if(selectedEdgeId) {
+            handleDeleteEdge(selectedEdgeId);
+            setSelectedEdgeId(null);
+        }
+    };
+    
+
+
+    const handleDeleteNode = (nodeId) => {
+        setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+        setEdges((eds) =>
+            eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+        );
+    };
+
+    
+    const handleDeleteEdge = (edgeId) => {
+        setEdges((eds) => eds.filter((edge) => edge.id !== edgeId));
+    };
+    
+
     const handleNodeClick = (nodeId) => {
         setNodes((currentNodes) => {
             const node = currentNodes.find((n) => n.id === nodeId);
@@ -140,27 +167,53 @@ export default function Edit_CM() {
     };
 
     const handleSave = async () => {
-        const mentalMap = {
-            titre,
-            visibilite: isLocked ? 'public' : 'prive',
-            chapitre: id_chap,
-            details: {
-                nodes: nodes.map(({ id, type, data, position }) => ({
-                    id,
-                    type,
-                    label: data.label,
-                    color: data.color,
-                    position,
-                })),
-                edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
-                    id,
-                    source,
-                    target,
-                    sourceHandle,
-                    targetHandle,
-                })),
-            },
-        };
+        let mentalMap = {};
+        if(!id_CM) {
+            mentalMap = {
+                titre,
+                visibilite: isLocked ? 'public' : 'prive',
+                chapitre: id_chap,
+                details: {
+                    nodes: nodes.map(({ id, type, data, position }) => ({
+                        id,
+                        type,
+                        label: data.label,
+                        color: data.color,
+                        position,
+                    })),
+                    edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
+                        id,
+                        source,
+                        target,
+                        sourceHandle,
+                        targetHandle,
+                    })),
+                },
+            };
+        } 
+        else {
+            mentalMap = {
+                titre,
+                visibilite: isLocked ? 'public' : 'prive',
+                cm : id_CM,
+                details: {
+                    nodes: nodes.map(({ id, type, data, position }) => ({
+                        id,
+                        type,
+                        label: data.label,
+                        color: data.color,
+                        position,
+                    })),
+                    edges: edges.map(({ id, source, target, sourceHandle, targetHandle }) => ({
+                        id,
+                        source,
+                        target,
+                        sourceHandle,
+                        targetHandle,
+                    })),
+                },
+            };
+        }
     
         const mentalMapJSON = JSON.stringify(mentalMap, null, 2);
     
@@ -174,10 +227,11 @@ export default function Edit_CM() {
                 if(!id_CM) {
                 await createCM(mentalMapJSON, blob);
                 console.log('Carte mentale créée avec succès');
-                navigate('/carte_mentale/' + id_chap);
                 } else {
-                    console.log('Modification de la carte mentale');
+                    await updateCM(mentalMapJSON, blob);
+                    console.log('Carte mentale mise à jour avec succès');
                 }
+                navigate('/carte_mentale/' + id_chap);
                 
             } catch (error) {
                 console.error("Erreur lors de la capture ou de l'envoi des données:", error);
@@ -189,6 +243,11 @@ export default function Edit_CM() {
             console.error("L'élément reactFlowWrapper est introuvable.");
         }
     };
+    
+    const handleEdgeClick = (event, edge) => {
+        setSelectedEdgeId(edge.id);
+    };
+    
     
 
     const nodeTypes = useMemo(
@@ -222,6 +281,7 @@ export default function Edit_CM() {
                     onColorChange={handleNodeColorChange}
                     onAddNode={handleAddNode}
                     onSave={handleSave}
+                    handleDeleteSelected={handleDeleteSelected}
                 />
                 <LockSwitch isLocked={isLocked} onChange={handleSwitchChange} />
             </div>
@@ -245,6 +305,7 @@ export default function Edit_CM() {
                         onConnect={onConnect}
                         nodeTypes={nodeTypes}
                         fitView
+                        onEdgeClick={handleEdgeClick}
                     >
                         {showMiniMap && <MiniMap />}
                         {showControls && <Controls />}

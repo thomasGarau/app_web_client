@@ -79,7 +79,7 @@ const MaterialUISwitch = styled(({ isLocked, onChange, ...props }) => (
 
 export default function LockSwitch({ isLocked, onChange, label }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '30px' }}>
       <span style={{ marginTop: '8px', fontSize: '20px', color: '#333' }}>
         {"Visibilité de votre carte mentale"}
       </span>

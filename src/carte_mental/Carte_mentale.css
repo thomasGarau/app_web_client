@@ -1,10 +1,12 @@
 .container-carte-mentale {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+  display: flex
+;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    margin-top: 10%;
 }
 
 
@@ -17,11 +19,7 @@
   height: 100%;
 }
 
-.titre-carte-mentale {
-  font-size: 1em;
-  font-weight: bold;
-  margin-top: 125px;
-}
+
 
 .container-grey-carte-mentale {
   display: flex;
@@ -45,14 +43,27 @@
     height : 100%;
 }
 
+.container-right-carte-mentale h3, .container-left-carte-mentale h3 {
+  font-size : 1em;
+}
+
 .container-create-cm-left{
   display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-start;
     padding-left: 20px;
     width: 20%;
     height: 100%;
+}
+
+.node-controls-cm{
+  display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 40%;
+    justify-content: center;
+    margin: 60px 0px 20px;
 }
 
 .verticalBarStyle {
@@ -82,6 +93,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 40%;
     background-color: white;
     border-radius: 20px;
     margin-top: 10px;
@@ -94,6 +106,7 @@
 
 .element-carte-mentale p {
   margin : 5px;
+  font-size: 1em;
 }
 
 
@@ -105,9 +118,18 @@
   align-items: center;
 }
 
+.container-edit-title{
+  height: 75%;
+  margin-top : 125px
+}
+
 .container-voir-cm-image{
   justify-content: center;
   
+}
+
+.container-voir-cm-image img {
+  height: 60%;
 }
 
 .reactflow-container {
@@ -127,7 +149,75 @@
 }
 
 
-@media (max-width: 600px) {
+.container-element-cm-badge {
+  width : 40%;
+  height : 50%
+}
+
+.titre-carte-mentale-home {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.titre-carte-mentale{
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.titre-carte-mentale h1, .titre-carte-mentale-input {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+
+@media (max-width: 650px) {
+
+  .container-grey-carte-mentale, .container_voir_cm {
+    display: flex;
+    flex-direction: column;
+    height : 100%;
+  }
+
+  .container-voir-cm-image{
+    width: 90%;
+    justify-content: flex-start;
+  }
+
+  .container-voir-cm-image img {
+    width: 100%;
+  }
+
+  .container-left-carte-mentale, .container-right-carte-mentale {
+    width : 95%;
+    height: 45%;
+    align-items: center;
+    padding: 0;
+  }
+
+  .container-element-carte-mentale {
+    
+    padding-bottom: 10px;
+  }
+
+  .container-voir-cm-boutons {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 20%;
+    padding-top: 30px;
+  }
+
+  .verticalBarStyle {
+    display: none;
+  }
+
+
   .button-voir-cm{
     font-size: 0.7em;
   }

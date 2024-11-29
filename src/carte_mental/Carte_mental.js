@@ -68,7 +68,7 @@ function Carte_mental() {
 
   return (
     <div className='container-carte-mentale'>
-      <div className='titre-carte-mentale'>
+      <div className='titre-carte-mentale-home'>
         <h1>Carte Mentale du chapitre n°{id}</h1>
       </div>
       <div className='container-grey-carte-mentale'>
@@ -76,8 +76,8 @@ function Carte_mental() {
           <h3>Vos cartes mentales</h3>
           <div className='container-element-carte-mentale'>
           {paginatedCartes.map((carte) => ( 
-            <div style={{width : '200px'}} > 
-           <BadgeCarteMentale isOtherUser={carte.id_createur !== id_utilisateur} userName={carte.prenom_createur + ' ' + carte.nom_createur}>
+            <div className='container-element-cm-badge' > 
+           <BadgeCarteMentale isOtherUser={carte.id_utilisateur !== id_utilisateur} userName={carte.prenom + ' ' + carte.nom}>
                   <div
                     className='element-carte-mentale'
                     onClick={() => handleCardClick(carte.id_carte_mentale)}
@@ -107,8 +107,8 @@ function Carte_mental() {
           <h3>Cartes mentales d'autres utilisateurs</h3>
           <div className='container-element-carte-mentale'>
             {paginatedCartesAutres.map((carte) => (
-              <div style={{width : '200px'}} > 
-                <BadgeCarteMentale isOtherUser={true} userName={carte.prenom_createur + ' ' + carte.nom_createur}>
+              <div className='container-element-cm-badge' > 
+                <BadgeCarteMentale isOtherUser={true} userName={carte.prenom + ' ' + carte.nom}>
                   <div
                     key={carte.id_carte_mentale}
                     className='element-carte-mentale'
