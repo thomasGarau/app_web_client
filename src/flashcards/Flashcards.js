@@ -113,7 +113,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={data.question}
+                                value={data ? data.question : "Erreur"}
                                 onChange={(e) => dispatch(setCurrentQuestion(e.target.value))}
                                 fullWidth
                                 multiline
@@ -145,7 +145,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     <DeleteButton data={data} />
                                 </>
                             ) : (
-                                data.question && (
+                                data.question && !isEditing && (
                                     <FavoriteButton
                                         isFavorite={isFavorite}
                                         data={data}
@@ -179,7 +179,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={isAnswering ? currentFlashcard.reponse : data.reponse}
+                                value={isAnswering ? currentFlashcard.reponse : data ? data.reponse : "erreur"}
                                 onChange={(e) => {
                                     dispatch(setCurrentReponse(e.target.value));
 
@@ -214,7 +214,7 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     <DeleteButton data={data} />
                                 </>
                             ) : (
-                                data.question && (
+                                data.question && !isEditing && (
                                     <FavoriteButton
                                         isFavorite={isFavorite}
                                         data={data}

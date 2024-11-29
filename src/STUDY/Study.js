@@ -183,14 +183,6 @@ function Study() {
         setIsAdding(false);
     };
 
-    const handleSaveFlashCard = async (question, reponse, visibilite) => {
-        try {
-            await createFlashcard(id, question, reponse, visibilite);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const handleDrawerOpen = useCallback((resourceId) => {
         setDrawerState({
             isOpen: true,
@@ -388,7 +380,7 @@ function Study() {
                     </Modal>
 
                 )}
-                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} onSave={handleSaveFlashCard} />
+                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} chapterId={id} />
                 <AddAnnotationModal parentType="Study" open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
                 {selectedAnnotation && (<Annotation />)}
                 <QuestionForum id_chap={id} role={role} />

@@ -73,10 +73,7 @@ export default function FlashcardsDisplayer({ flashCardsList, CorS}) {
                     sx={{
                         marginTop: '16px', display: 'flex',
                         justifyContent: 'center',
-                        position: 'fixed',
-                        right: '50%',
                         bottom: '170px',
-                        transform: 'translateX(50%)',
                         margin: '30px 0px'
                     }}
                 />

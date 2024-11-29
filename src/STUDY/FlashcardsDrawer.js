@@ -3,12 +3,23 @@ import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, Select,
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StyledButton from '../composent/StyledBouton';
 import Flashcards from '../flashcards/Flashcards';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentFlashcard } from '../Slice/flashcardsSlice';
+import { createFlashcard } from '../API/FlashcardsAPI';
 
-const FlashCardDrawer = ({ onSave }) => {
+const FlashCardDrawer = ({ chapterId }) => {
     const [question, setQuestion] = useState('');
     const [reponse, setReponse] = useState('');
     const [expanded, setExpanded] = useState(false);
-    const [selectedCollection, setSelectedCollection] = useState('');
+    const emptyFlashcard = {
+        id_chapitre: chapterId,
+        question: '',
+        reponse: '',
+        new: true,
+    };
+    const dispatch = useDispatch();
+    const currentFlashcard = useSelector(state => state.flashcards.currentFlashcard);
+    
     const [flipped, setFlipped] = useState(false);
     const [visibility, setVisibility] = useState("public");
 
@@ -16,13 +27,18 @@ const FlashCardDrawer = ({ onSave }) => {
         setVisibility(event.target.value);
     };
 
-    const handleSave = () => {
-        if (question && reponse) {
-            onSave(question, reponse, visibility);
-            setQuestion('');
-            setReponse('');
+    const handleSaveFlashCard = async () => {
+        try {
+            await createFlashcard(chapterId, currentFlashcard.question, currentFlashcard.reponse, visibility);
+            dispatch(setCurrentFlashcard(emptyFlashcard))
+        } catch (error) {
+            console.error(error);
         }
     };
+
+    useEffect(() => {
+        dispatch(setCurrentFlashcard(emptyFlashcard));
+    }, [chapterId])
 
     const handleToggleAccordion = () => {
         setExpanded(!expanded);
@@ -79,7 +95,7 @@ const FlashCardDrawer = ({ onSave }) => {
                         >
                             <FormControlLabel
                                 sx={{ color: 'white' }}
-                                value="private"
+                                value="prive"
                                 control={<Radio sx={{ color: 'white', '&.Mui-checked': { color: 'white' } }} />}
                                 label="Privé"
                             />
@@ -91,14 +107,13 @@ const FlashCardDrawer = ({ onSave }) => {
                             />
                         </RadioGroup>
                         <Flashcards
-                            data={{ question, reponse }}
+                            data={currentFlashcard}
                             isFlipped={flipped}
                             isEditing={true}
-                            onChangeQuestion={(newQuestion) => setQuestion(newQuestion)}
-                            onChangeReponse={(newReponse) => setReponse(newReponse)}
+                            isAnswering={false}
                             onClick={handleFlip}
                         />
-                        <StyledButton content={"Enregistrer"} width={250} color={"secondary"} onClick={handleSave} />
+                        <StyledButton content={"Enregistrer"} width={250} color={"secondary"} onClick={handleSaveFlashCard} />
                     </Box>
                 </AccordionDetails>
             </Accordion>
