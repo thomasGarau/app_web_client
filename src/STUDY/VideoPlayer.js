@@ -1,16 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setProgressionVideo, setTime, incrementerPause } from '../Slice/videoSlice';
+import { setProgression } from '../Slice/progressionSlice';
+import { addCoursProgression } from '../API/RessourceAPI';
 
-const VideoPlayer = ({ videoUrl }) => {
+const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     const videoRef = useRef(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const dispatch = useDispatch();
 
-    const calculateProgression = (currentTime, duration) => {
-        if (duration === 0) return 0; 
-        return (currentTime / duration) * 100;
+    const calculateProgression = () => {
+        if (progression.progression > oldProg) {
+            const percentage = Math.round((currentTime / duration) * 100);
+            const clampedPercentage = Math.max(0, Math.min(100, percentage))
+            return clampedPercentage;
+        }
+        else {
+            return progression.progression;
+        }        
     };
 
     const handleTimeUpdate = () => {
@@ -31,12 +39,28 @@ const VideoPlayer = ({ videoUrl }) => {
     };
 
     useEffect(() => {
-        const progression = calculateProgression(currentTime, duration);
+        videoRef.current.currentTime = progression.progression * duration / 100;
+        const clampedPercentage = calculateProgression();
 
         dispatch(setTime(currentTime));
-        dispatch(setProgressionVideo(progression));
+        dispatch(setProgression({ resourceId, clampedPercentage, index }));
 
     }, [currentTime, duration, dispatch]);
+
+    useEffect(() => {
+        const updateProgression = async () => {
+            if (progression.progression > oldProg) {
+                try {
+                    console.log('Updating progression:', progression.progression);
+                    await addCoursProgression(resourceId, `${progression.progression}`);
+                } catch (error) {
+                    console.error('Error updating progression:', error);
+                }
+            }
+        };
+
+        updateProgression();
+    }, [progression, resourceId, oldProg]);
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto' }}>
@@ -47,7 +71,7 @@ const VideoPlayer = ({ videoUrl }) => {
                 controls
                 style={{ border: '1px solid #ccc' }}
                 onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata} 
+                onLoadedMetadata={handleLoadedMetadata}
                 onPause={handlePause}
             >
                 <source src={videoUrl} type="video/mp4" />

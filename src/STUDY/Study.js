@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRessourceParChap, addRessource, deleteRessourceApi } from '../API/RessourceAPI';
+import { getRessourceParChap, addRessource, deleteRessourceApi, getChapitreById, addCoursProgression } from '../API/RessourceAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, Typography, AccordionActions, Box, Popover, Modal, LinearProgress, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -17,7 +17,7 @@ import PopoverError from '../composent/PopoverError';
 import { recolteInteraction } from '../API/jMethodeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import ResourceDisplay from './ResourceDisplay';
-import { setAllProgressions } from '../Slice/progressionSlice';
+import { setAllProgressions, setProgression } from '../Slice/progressionSlice';
 import { setPause, setTime } from '../Slice/videoSlice';
 import FlashCardDrawer from './FlashcardsDrawer';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -76,6 +76,7 @@ function Study() {
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
     const [isFlashcardOpen, setFlashcardOpen] = useState(false);
     const [resourceIdAddAnnotation, setResourceIdAddAnnotation] = useState(null);
+    const [ChapterName, setChapterName] = useState('');
     const [drawerState, setDrawerState] = useState({
         isOpen: false,
         activeResourceId: null
@@ -104,9 +105,12 @@ function Study() {
             const response_info = await getUserInfo();
             setRole(response_info.role);
             const data = await getRessourceParChap(id);
+            const data2 = await getChapitreById(id);
+            console.log(data.cours)
+            setChapterName(data2[0].label);
             dispatch(setAllProgressions(data.cours));
             setRessources(data.cours);
-            
+
         } catch (error) {
             console.error("Erreur lors de la récupération des ressources :", error);
         }
@@ -214,6 +218,12 @@ function Study() {
 
     const handleAccordionChange = useCallback(async (index, ressource) => {
         setExpandedIndex(prevIndex => (prevIndex === index ? -1 : index));
+        if (ressource.type === 'img') {
+            const resourceId = ressource.id;
+            const clampedPercentage = 100;
+            dispatch(setProgression({ resourceId, clampedPercentage, index }))
+            await addCoursProgression(resourceId, `${clampedPercentage}`);
+        }
     }, [expandedIndex]);
 
     const handleProgressUpdate = (resourceId, newProgression) => {
@@ -225,9 +235,18 @@ function Study() {
     };
 
     const getProgressionValue = (resourceId) => {
-        const progression = progressions.find(p => p.id === resourceId).progression;
-        return progression ? progression : 0;
+        const resource = progressions.find(p => p.id === resourceId);
+        if (resource) {
+            if (typeof resource.progression === 'number') {
+                return parseFloat(resource.progression.toFixed(0));
+            }
+            else if (typeof resource.progression === 'string') {
+                return parseFloat(resource.progression);
+            }
+        }
+        return 0;
     };
+
 
     return (
         <div className='background-study'>
@@ -241,7 +260,7 @@ function Study() {
                 />
                 <div className='text-part'>
 
-                    <h1 className='study-title'>Ressource du chapitre</h1>
+                    <h1 className='study-title'>Chapitre {ChapterName}</h1>
                     {ressources.length > 0 ? (
                         ressources.map((ressource, index) => (
 

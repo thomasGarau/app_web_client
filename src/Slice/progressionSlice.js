@@ -10,9 +10,12 @@ const progressionSlice = createSlice({
     reducers: {
         setAllProgressions: (state, action) => {
             state.progressions = action.payload;
+            console.log(state.progressions);
         },
-        setProgression: (state, action) => {           
+        setProgression: (state, action) => {
+            console.log('Updating progression:', action);           
             const { resourceId, clampedPercentage, index } = action.payload;
+            console.log(state.progressions[index].progression);
             state.progressions[index].progression = clampedPercentage;
 
         }

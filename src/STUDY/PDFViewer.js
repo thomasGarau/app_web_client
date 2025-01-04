@@ -10,10 +10,9 @@ import { setProgression } from '../Slice/progressionSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { set } from 'lodash';
 
-const PDFViewer = ({ fileBlob, resourceId, oldProg, onProgressUpdate, index }) => {
+const PDFViewer = ({ fileBlob, resourceId, oldProg, onProgressUpdate, index, progression }) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
     const viewerRef = useRef(null);
-    const progression = useSelector((state) => state.progression.progressions[index] || oldProg);
 
 
     const dispatch = useDispatch();
