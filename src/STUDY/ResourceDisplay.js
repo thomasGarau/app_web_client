@@ -18,9 +18,11 @@ const ResourceDisplay = ({ ressource = {}, oldProg, onProgressUpdate, index }) =
     const fetchRessource = async (ressource) => {
         try {
             const data = await getRessourceById(ressource.id);
+            console.log(data);
             if (data instanceof Blob || data instanceof File) {
                 const fileUrl = URL.createObjectURL(data);
                 setFileUrl(fileUrl);
+
             } else {
                 throw new Error("La ressource récupérée n'est pas un Blob ou un File");
             }

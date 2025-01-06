@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRessourceParChap, addRessource, deleteRessourceApi, getChapitreById, addCoursProgression } from '../API/RessourceAPI';
+import { getRessourceParChap, addRessource, deleteRessourceApi, getChapitreById, addCoursProgression, getRessourceById } from '../API/RessourceAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, Typography, AccordionActions, Box, Popover, Modal, LinearProgress, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -8,7 +8,6 @@ import DownloadIcon from '@mui/icons-material/Download';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../API/ProfileAPI';
 import StyledButton from '../composent/StyledBouton';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { decodeJWT } from '../services/decode';
 import { getTokenAndRole } from '../services/Cookie';
@@ -18,12 +17,10 @@ import { recolteInteraction } from '../API/jMethodeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import ResourceDisplay from './ResourceDisplay';
 import { setAllProgressions, setProgression } from '../Slice/progressionSlice';
-import { setPause, setTime } from '../Slice/videoSlice';
 import FlashCardDrawer from './FlashcardsDrawer';
 import CommentIcon from '@mui/icons-material/Comment';
 import AnnotationDrawer from '../annotation/AnnotationDrawer';
 import AddAnnotationModal from '../annotation/AddAnnotationModal';
-import { createFlashcard } from '../API/FlashcardsAPI';
 import Annotation from '../annotation/Annotation';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
@@ -262,6 +259,29 @@ function Study() {
         return 0;
     };
 
+    const fetchRessource = async (ressource) => {
+        try {
+            const data = await getRessourceById(ressource.id);
+            if (data instanceof Blob || data instanceof File) {
+                const fileUrl = URL.createObjectURL(data);
+                return fileUrl;
+
+            } else {
+                throw new Error("La ressource récupérée n'est pas un Blob ou un File");
+            }
+        } catch (error) {
+            console.error("Erreur lors de la récupération des ressources :", error);
+        }
+    };
+
+    const downloadResource = async (ressource) => {
+        const link = document.createElement('a');
+        link.href = await fetchRessource(ressource);
+        link.setAttribute('download', ressource.label);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     return (
         <div className='background-study'>
@@ -283,9 +303,9 @@ function Study() {
                         sx={{
                             marginBottom: 2,
                             height: 10,
-                            borderRadius: 5, 
+                            borderRadius: 5,
                             '& .MuiLinearProgress-bar': {
-                                borderRadius: 5, 
+                                borderRadius: 5,
                             },
                         }}
                     />
@@ -317,7 +337,7 @@ function Study() {
                                             <DeleteIcon />
                                         </div>
                                     )}
-                                    <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
+                                    <div className='icon-study' onClick={() => downloadResource(ressource)}>
                                         <DownloadIcon />
                                     </div>
                                     <div className='icon-study' onClick={(e) => {

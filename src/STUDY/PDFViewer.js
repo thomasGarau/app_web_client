@@ -89,6 +89,7 @@ const PDFViewer = ({ fileBlob, resourceId, oldProg, onProgressUpdate, index, pro
         const updateProgression = async () => {
             if (progression.progression > oldProg) {
                 try {
+                    console.log('Old progression:', oldProg);
                     console.log('Updating progression:', progression.progression);
                     await addCoursProgression(resourceId, `${progression.progression}`);
                 } catch (error) {
