@@ -3,7 +3,7 @@ import { Box, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteFlashcard } from '../API/FlashcardsAPI';
 import { useDispatch } from 'react-redux';
-import { fetchMyCollection } from './FlashcardsUtils';
+import { fetchMyCollection, handleCloseModal } from './FlashcardsUtils';
 
 const DeleteButton = ({ data, onClick, size = 'medium' }) => {
 
@@ -14,6 +14,7 @@ const DeleteButton = ({ data, onClick, size = 'medium' }) => {
         try {
             await deleteFlashcard(data.id_flashcard);
             await fetchMyCollection(data.id_chapitre, dispatch);
+            handleCloseModal(dispatch);
         } catch (error) {
             console.error(error);
         }

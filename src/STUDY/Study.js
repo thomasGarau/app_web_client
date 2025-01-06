@@ -75,6 +75,7 @@ function Study() {
     const [expandedIndex, setExpandedIndex] = useState(-1);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
     const [isFlashcardOpen, setFlashcardOpen] = useState(false);
+    const [chapterProgress, setChapterProgress] = useState(0);
     const [resourceIdAddAnnotation, setResourceIdAddAnnotation] = useState(null);
     const [ChapterName, setChapterName] = useState('');
     const [drawerState, setDrawerState] = useState({
@@ -98,6 +99,14 @@ function Study() {
     const ressourceMp4 = { type: 'video', url: '/test.mp4' }
     const ressourceYt = { type: 'video', url: 'https://www.youtube.com/watch?v=5YIyTF7izJk' }
     const ressourceImg = { type: 'img', url: '/logo_rond.png' }
+
+    useEffect(() => {
+        var progress = 0;
+        for (let i = 0; i < progressions.length; i++) {
+            progress += parseInt(progressions[i].progression);
+        }
+        setChapterProgress(progress / progressions.length);
+    }, [progressions]);
 
 
     const fetchRessources = useCallback(async () => {
@@ -267,6 +276,20 @@ function Study() {
                 <div className='text-part'>
 
                     <h1 className='study-title'>Chapitre {ChapterName}</h1>
+
+                    <LinearProgress
+                        variant="determinate"
+                        value={chapterProgress}
+                        sx={{
+                            marginBottom: 2,
+                            height: 10,
+                            borderRadius: 5, 
+                            '& .MuiLinearProgress-bar': {
+                                borderRadius: 5, 
+                            },
+                        }}
+                    />
+
                     {ressources.length > 0 ? (
                         ressources.map((ressource, index) => (
 

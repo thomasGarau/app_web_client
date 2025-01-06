@@ -3,6 +3,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 
+const actions = [
+    { icon: <DeleteIcon />, name: 'Supprimé', action: 'delete' },
+    { icon: <EditIcon />, name: 'Editer le titre', action: 'edit' },
+];
+
 function ChapitreList({ chapters, editChapterId, nom, isEditing, onEdit, onDelete, onSave, onQuizClick, onCourseClick, errorAnchorEl, errorMessage, open, handleClosePopover, setNom }) {
     return (
         <div className='container-chap-chap-ue-prof'>
