@@ -52,12 +52,9 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     useEffect(() => {
 
         const clampedPercentage = calculateProgression();
-        console.log('Clamped percentage:', clampedPercentage);
         dispatch(setTime(currentTime));
         dispatch(setProgression({ resourceId, clampedPercentage, index }));
         const updateProgression = async () => {
-            console.log('Old progression:', oldProg);
-            console.log('New progression:', progressionValue);
             if (progressionValue > oldProg) {
                 try {
                     console.log('Updating progression:', progressionValue);
