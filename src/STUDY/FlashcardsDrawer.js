@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentFlashcard } from '../Slice/flashcardsSlice';
 import { createFlashcard } from '../API/FlashcardsAPI';
 
-const FlashCardDrawer = ({ chapterId }) => {
+const FlashCardDrawer = ({ open, chapterId, onClose }) => {
     const [question, setQuestion] = useState('');
     const [reponse, setReponse] = useState('');
     const [expanded, setExpanded] = useState(false);
@@ -31,6 +31,7 @@ const FlashCardDrawer = ({ chapterId }) => {
         try {
             await createFlashcard(chapterId, currentFlashcard.question, currentFlashcard.reponse, visibility);
             dispatch(setCurrentFlashcard(emptyFlashcard))
+            setExpanded(false);
         } catch (error) {
             console.error(error);
         }
@@ -56,7 +57,7 @@ const FlashCardDrawer = ({ chapterId }) => {
                 top: '40%',
                 transform: 'translateY(-50%)',
                 zIndex: 1000,
-                width: expanded ? { xl: '200px', sm: '400px' } : '50px',
+                width: expanded ? { xl: '400px', sm: '400px' } : '50px',
                 transition: '0.3s ease',
                 maxHeight: '64px',
             }}

@@ -11,11 +11,13 @@ import { getTokenAndRole } from '../services/Cookie';
 import { jwtDecode } from 'jwt-decode';
 import StyledButton from '../composent/StyledBouton';
 import { fetchMyCollection, handleCloseModal } from './FlashcardsUtils';
+import { getChapitreById } from '../API/RessourceAPI';
 
 const CollectionDisplayer = () => {
 
     const { id_chap } = useParams();
     const [user, setUser] = useState(null);
+    const [chapitre, setChapitre] = useState(null);
     const flashcards = useSelector(state => state.flashcards.flashcards);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -27,6 +29,12 @@ const CollectionDisplayer = () => {
             const decodedToken = jwtDecode(token);
             setUser(decodedToken.id_etudiant);
         };
+        const fetchChapter = async () => {
+            const chapitre = await getChapitreById(id_chap);
+            console.log(chapitre);
+            setChapitre(chapitre[0]);
+        }
+        fetchChapter();
         fetchData();
     }, []);
 
@@ -65,7 +73,7 @@ const CollectionDisplayer = () => {
                 display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: 2, alignItems: 'center'
             }}>
                 <Typography sx={{ marginLeft: 2 }} variant="h4" gutterBottom>
-                    Ma collection de flashcards
+                    Flashcards du chapitre {chapitre && chapitre.label}
                 </Typography>
                 {isSmallScreen ? (
                     <Fab

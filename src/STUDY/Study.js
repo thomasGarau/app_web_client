@@ -234,6 +234,12 @@ function Study() {
         );
     };
 
+    const handleFlashcardDrawerClose = () => {
+        console.log('close');
+        setFlashcardOpen(false);
+        console.log(isFlashcardOpen);
+    };
+
     const getProgressionValue = (resourceId) => {
         const resource = progressions.find(p => p.id === resourceId);
         if (resource) {
@@ -399,7 +405,7 @@ function Study() {
                     </Modal>
 
                 )}
-                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} chapterId={id} />
+                <FlashCardDrawer open={isFlashcardOpen} onClose={() => handleFlashcardDrawerClose()} chapterId={id} />
                 <AddAnnotationModal parentType="Study" open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
                 {selectedAnnotation && (<Annotation />)}
                 <QuestionForum id_chap={id} role={role} />

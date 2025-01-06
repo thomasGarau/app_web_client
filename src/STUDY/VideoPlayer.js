@@ -8,17 +8,17 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     const videoRef = useRef(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [progressionValue, setProgressionValue] = useState(0);
     const dispatch = useDispatch();
 
     const calculateProgression = () => {
-        if (progression.progression > oldProg) {
+        if (progressionValue > oldProg) {
             const percentage = Math.round((currentTime / duration) * 100);
             const clampedPercentage = Math.max(0, Math.min(100, percentage))
             return clampedPercentage;
         }
-        else {
-            return progression.progression;
-        }        
+        return progression.progression;
+
     };
 
     const handleTimeUpdate = () => {
@@ -39,20 +39,29 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     };
 
     useEffect(() => {
-        videoRef.current.currentTime = progression.progression * duration / 100;
-        const clampedPercentage = calculateProgression();
-
-        dispatch(setTime(currentTime));
-        dispatch(setProgression({ resourceId, clampedPercentage, index }));
-
-    }, [currentTime, duration, dispatch]);
+        setProgressionValue(parseInt(progression.progression, 10));
+    }, [progression.progression]);
 
     useEffect(() => {
+        if (!isNaN(progressionValue)) {
+            videoRef.current.currentTime = progressionValue * duration / 100;
+        }
+    }, [progressionValue, duration]);
+
+
+    useEffect(() => {
+
+        const clampedPercentage = calculateProgression();
+        console.log('Clamped percentage:', clampedPercentage);
+        dispatch(setTime(currentTime));
+        dispatch(setProgression({ resourceId, clampedPercentage, index }));
         const updateProgression = async () => {
-            if (progression.progression > oldProg) {
+            console.log('Old progression:', oldProg);
+            console.log('New progression:', progressionValue);
+            if (progressionValue > oldProg) {
                 try {
-                    console.log('Updating progression:', progression.progression);
-                    await addCoursProgression(resourceId, `${progression.progression}`);
+                    console.log('Updating progression:', progressionValue);
+                    await addCoursProgression(resourceId, `${progressionValue}`);
                 } catch (error) {
                     console.error('Error updating progression:', error);
                 }
@@ -60,7 +69,8 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
         };
 
         updateProgression();
-    }, [progression, resourceId, oldProg]);
+
+    }, [currentTime, duration, dispatch]);
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto' }}>

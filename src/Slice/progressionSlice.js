@@ -12,10 +12,8 @@ const progressionSlice = createSlice({
             state.progressions = action.payload;
             console.log(state.progressions);
         },
-        setProgression: (state, action) => {
-            console.log('Updating progression:', action);           
+        setProgression: (state, action) => {  
             const { resourceId, clampedPercentage, index } = action.payload;
-            console.log(state.progressions[index].progression);
             state.progressions[index].progression = clampedPercentage;
 
         }
