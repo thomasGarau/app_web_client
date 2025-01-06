@@ -90,7 +90,7 @@ export default function FlashCardsModal() {
             if (currentFlashcard && !currentFlashcard.new) {
                 await updateFlashcard(currentFlashcard.id_flashcard, currentFlashcard.question, currentFlashcard.reponse);
             } else {
-                (console.log(visibility));
+                (console.log(visibility, currentFlashcard.id_chapitre, currentFlashcard.question, currentFlashcard.reponse));
                 await createFlashcard(currentFlashcard.id_chapitre, currentFlashcard.question, currentFlashcard.reponse, visibility);
             }
             await fetchMyCollection(currentFlashcard.id_chapitre, dispatch);
