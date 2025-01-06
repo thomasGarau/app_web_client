@@ -9,6 +9,8 @@ import { addCoursProgression } from '../API/RessourceAPI';
 import { setProgression } from '../Slice/progressionSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { set } from 'lodash';
+import './PDFViewer.css';
+
 
 const PDFViewer = ({ fileBlob, resourceId, oldProg, onProgressUpdate, index, progression }) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
