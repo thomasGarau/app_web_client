@@ -22,6 +22,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import AnnotationDrawer from '../annotation/AnnotationDrawer';
 import AddAnnotationModal from '../annotation/AddAnnotationModal';
 import Annotation from '../annotation/Annotation';
+import { setSelectedAnnotation } from '../Slice/annotationSlice';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
@@ -230,6 +231,7 @@ function Study() {
             dispatch(setProgression({ resourceId, clampedPercentage, index }))
             await addCoursProgression(resourceId, `${clampedPercentage}`);
         }
+        dispatch(setSelectedAnnotation(null));
     }, [expandedIndex]);
 
     const handleProgressUpdate = (resourceId, newProgression) => {
@@ -241,9 +243,7 @@ function Study() {
     };
 
     const handleFlashcardDrawerClose = () => {
-        console.log('close');
         setFlashcardOpen(false);
-        console.log(isFlashcardOpen);
     };
 
     const getProgressionValue = (resourceId) => {
