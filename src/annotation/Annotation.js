@@ -194,16 +194,20 @@ function Annotation() {
                 >
                     <Typography>Annotation</Typography>
                     <Box>
-                        {currentUser && selectedAnnotation.id_utilisateur === currentUser.id_etudiant && (
+                        {currentUser && (
                             <>
-                                <IconButton
-                                    onClick={() => {
-                                        closeAnnotation(selectedAnnotation.id_annotation);
-                                    }}
-                                    sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
-                                >
-                                    <CheckIcon />
-                                </IconButton>
+                                {selectedAnnotation.id_utilisateur === currentUser.id_etudiant
+                                    && selectedAnnotation.etat_annotation !== "resolu"
+                                    && (
+                                        <IconButton
+                                            onClick={() => {
+                                                closeAnnotation(selectedAnnotation.id_annotation);
+                                            }}
+                                            sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
+                                        >
+                                            <CheckIcon />
+                                        </IconButton>
+                                    )}
                                 <IconButton
                                     onClick={() => dispatch(setSelectedAnnotation(null))}
                                     sx={{ color: 'rgba(0, 0, 0, 0.54)' }}
@@ -277,8 +281,12 @@ function Annotation() {
                         ) : (
                             <>
                                 <Typography sx={{ padding: 1, flexGrow: 1 }}>{selectedAnnotation.contenu}</Typography>
-                                {currentUser && selectedAnnotation.id_utilisateur === currentUser.id_etudiant && (
+                                {currentUser 
+                                && selectedAnnotation.id_utilisateur === currentUser.id_etudiant 
+                                && selectedAnnotation.etat_annotation !== "resolu"
+                                && (
                                     <Box sx={{ display: 'flex', gap: 1, marginRight: 1 }}>
+                                        
                                         <IconButton
                                             size="small"
                                             onClick={(e) => {
@@ -399,7 +407,7 @@ function Annotation() {
                             </Box>
                         </Box>
                     ))}
-                    {responseMode && (
+                    {responseMode && selectedAnnotation.etat_annotation !== "resolu" && (
                         <Box sx={{ margin: 2, display: 'flex', flexDirection: 'column' }}>
                             <TextField
                                 label="Réponse"
@@ -416,7 +424,6 @@ function Annotation() {
                                         borderColor: '#f5f5f5',
                                         borderRadius: "50px",
                                     },
-
                                 }}
                                 variant="outlined"
                                 fullWidth
@@ -424,6 +431,7 @@ function Annotation() {
                             <Button onClick={handleAddAnswer} variant="contained" sx={{ marginTop: 2, width: '20%', alignSelf: 'flex-end' }}>Envoyer</Button>
                         </Box>
                     )}
+
                 </Box>
             </Box>
         </Draggable>
