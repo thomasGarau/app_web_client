@@ -128,6 +128,20 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     }
                                 }}
                             />
+                            {isEditing && (
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        position: "absolute",
+                                        bottom: 8,
+                                        color: "rgba(0, 0, 0, 0.6)",
+                                        fontSize: "0.75rem",
+                                        fontStyle: "italic"
+                                    }}
+                                >
+                                    Cliquez sur le bord de la carte pour la retourner
+                                </Typography>
+                            )}
                         </CardContent>
                     ) : (
                         <CardContent>
@@ -197,6 +211,20 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     }
                                 }}
                             />
+                            {isEditing && (
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        position: "absolute",
+                                        bottom: 8,
+                                        color: "rgba(0, 0, 0, 0.6)",
+                                        fontSize: "0.75rem",
+                                        fontStyle: "italic"
+                                    }}
+                                >
+                                    Cliquez sur le bord de la carte pour la retourner
+                                </Typography>
+                            )}
                         </CardContent>
                     ) : (
                         <CardContent>
