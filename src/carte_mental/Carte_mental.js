@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { getTokenAndRole } from '../services/Cookie';
 import BadgeCarteMentale from './composents/BadgeCarteMentale';
 import { getCMUser, getAllCM } from "../API/CmAPI";
+import { getChapitreById } from "../API/RessourceAPI";
 
 function Carte_mental() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ function Carte_mental() {
   const [pageAutres, setPageAutres] = useState(1); // Nouvelle pagination pour autres utilisateurs
   const itemsPerPage = 2;
   const [id_utilisateur, setId_utilisateur] = useState(undefined);
+  const [nameChap, setNameChap] = useState(undefined);
 
   function handleCreateCmClick() {
     navigate(`/creer_carte_mentale/${id}`);
@@ -55,6 +57,11 @@ function Carte_mental() {
       setCartes(res);
     });
 
+    const data1 = getChapitreById(id);
+    data1.then((res) => {
+      setNameChap(res[0].label);
+    });
+
     const dataAutres = getAllCM(id);
     dataAutres.then((res) => {
       setCartesAutresUtilisateurs(res);
@@ -69,7 +76,7 @@ function Carte_mental() {
   return (
     <div className='container-carte-mentale'>
       <div className='titre-carte-mentale-home'>
-        <h1>Carte Mentale du chapitre n°{id}</h1>
+        <h1>Carte Mentale du chapitre "{nameChap}"</h1>
       </div>
       <div className='container-grey-carte-mentale'>
         <div className='container-left-carte-mentale'>
