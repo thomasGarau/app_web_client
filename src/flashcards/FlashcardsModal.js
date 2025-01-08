@@ -75,16 +75,9 @@ export default function FlashCardsModal() {
         try {
             if (modalState.isAnswering) {
                 // Compare answers and set status
-                const isCorrect = true
-
-                setResponseStatus(isCorrect);
-
-                // Wait 4 seconds then close
-                setTimeout(() => {
-                    handleCloseModal(dispatch);
-                    setResponseStatus(null); // Reset status
-                }, 4000);
-
+                const data = await flashcardAnswer(currentFlashcard.id_flashcard, currentFlashcard.reponse);
+                console.log(data);
+                setResponseStatus(data);
                 return;
             }
             if (currentFlashcard && !currentFlashcard.new) {
