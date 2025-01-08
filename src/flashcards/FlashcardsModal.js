@@ -64,12 +64,12 @@ export default function FlashCardsModal() {
     useEffect(() => {
         if (currentFlashcard) {
             dispatch(setCurrentQuestion(currentFlashcard.question));
-            if (modalState.isAnswering !== null && !modalState.isAnswering) {
-                dispatch(setCurrentReponse(currentFlashcard.reponse));
+            if (modalState.isAnswering !== null && modalState.isAnswering === true) {
+                dispatch(setCurrentReponse(""));
             }
 
         }
-    }, [currentFlashcard, modalState.isAnswering]);
+    }, [modalState.isAnswering]);
 
     const handleSave = async () => {
         try {

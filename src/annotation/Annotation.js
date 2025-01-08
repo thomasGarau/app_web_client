@@ -24,12 +24,9 @@ function Annotation() {
     const [editingResponseId, setEditingResponseId] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [editedResponse, setEditedResponse] = useState('');
+    const [userProfile, setUserProfile] = useState('');
     const boxRef = useRef(null);
-    const user = {
-        nom: "Doe",
-        prenom: "John"
-    };
-    console.log("se", selectedAnnotation);
+
 
     const formatDate = (dateString) => {
         const date = parseISO(dateString);
@@ -56,6 +53,8 @@ function Annotation() {
             try {
                 const { token, role } = await getTokenAndRole();
                 const decodedToken = jwtDecode(token);
+                const user = await getUserInfo();
+                setUserProfile(user.url);
                 setCurrentUser(decodedToken);
                 console.log("user", decodedToken);
             }
@@ -65,6 +64,17 @@ function Annotation() {
         }
         fetchCurrentUser();
     }, []);
+
+    const fetchResponses = async () => {
+        const data = await getAnnotationResponses(selectedAnnotation.id_annotation);
+        console.log(data);
+        setResponses(data);
+    };
+
+    useEffect(() => {
+        fetchResponses();
+
+    }, [selectedAnnotation]);
 
     const handleAddAnswer = async () => {
         if (!answer || answer.trim() === '') {
@@ -80,10 +90,6 @@ function Annotation() {
     }
 
     useEffect(() => {
-        const fetchResponses = async () => {
-            const data = await getAnnotationResponses(selectedAnnotation.id_annotation);
-            setResponses(data);
-        };
         fetchResponses();
     }, [responseMode, editingResponseId]);
 
@@ -281,34 +287,34 @@ function Annotation() {
                         ) : (
                             <>
                                 <Typography sx={{ padding: 1, flexGrow: 1 }}>{selectedAnnotation.contenu}</Typography>
-                                {currentUser 
-                                && selectedAnnotation.id_utilisateur === currentUser.id_etudiant 
-                                && selectedAnnotation.etat_annotation !== "resolu"
-                                && (
-                                    <Box sx={{ display: 'flex', gap: 1, marginRight: 1 }}>
-                                        
-                                        <IconButton
-                                            size="small"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setIsEditingAnnotation(true);
-                                            }}
-                                            sx={{ '&:hover': { color: 'primary.main' } }}
-                                        >
-                                            <EditIcon fontSize="small" />
-                                        </IconButton>
-                                        <IconButton
-                                            size="small"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteAnnotation(selectedAnnotation.id_annotation);
-                                            }}
-                                            sx={{ '&:hover': { color: 'error.main' } }}
-                                        >
-                                            <DeleteIcon fontSize="small" />
-                                        </IconButton>
-                                    </Box>
-                                )}
+                                {currentUser
+                                    && selectedAnnotation.id_utilisateur === currentUser.id_etudiant
+                                    && selectedAnnotation.etat_annotation !== "resolu"
+                                    && (
+                                        <Box sx={{ display: 'flex', gap: 1, marginRight: 1 }}>
+
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setIsEditingAnnotation(true);
+                                                }}
+                                                sx={{ '&:hover': { color: 'primary.main' } }}
+                                            >
+                                                <EditIcon fontSize="small" />
+                                            </IconButton>
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteAnnotation(selectedAnnotation.id_annotation);
+                                                }}
+                                                sx={{ '&:hover': { color: 'error.main' } }}
+                                            >
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                        </Box>
+                                    )}
                             </>
                         )}
                     </Box>

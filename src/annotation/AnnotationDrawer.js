@@ -10,7 +10,6 @@ import { se } from 'date-fns/locale';
 const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType }) => {
     const dispatch = useDispatch();
     const annotations = useSelector(state => state.annotation.annotations);
-    const selectedAnnotation = useSelector(state => state.annotation.selectedAnnotation);
     
     useEffect(() => {
         fetchAnnotations();
@@ -37,6 +36,7 @@ const AnnotationDrawer = ({ open, onClose, addAnnotation, resourceId, parentType
     }
 
     const handleAnnotationClick = (annotation) => {
+        dispatch(setSelectedAnnotation(null));
         dispatch(setSelectedAnnotation(annotation));
     };
 

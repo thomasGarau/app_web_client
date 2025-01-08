@@ -193,10 +193,13 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={isAnswering ? currentFlashcard.reponse : data ? data.reponse : "erreur"}
+                                value={isEditing
+                                    ? (data ? data.reponse : "erreur")
+                                    : (isAnswering ? currentFlashcard.reponse : data.reponse)}
                                 onChange={(e) => {
-                                    dispatch(setCurrentReponse(e.target.value));
-
+                                    if (isAnswering || isEditing) {
+                                        dispatch(setCurrentReponse(e.target.value));
+                                    }
                                 }}
                                 fullWidth
                                 multiline

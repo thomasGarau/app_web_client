@@ -92,12 +92,6 @@ function Study() {
 
     const videoTimeRef = useRef(videoTime);
     const pauseRef = useRef(pause);
-
-    const ressourcePdf = { type: 'pdf', url: '/demo.pdf' }
-    const ressourceMp4 = { type: 'video', url: '/test.mp4' }
-    const ressourceYt = { type: 'video', url: 'https://www.youtube.com/watch?v=5YIyTF7izJk' }
-    const ressourceImg = { type: 'img', url: '/logo_rond.png' }
-
     useEffect(() => {
         var progress = 0;
         for (let i = 0; i < progressions.length; i++) {
