@@ -97,8 +97,12 @@ export default function FlashCardsModal() {
         setFlipped((prev) => !prev);
     };
 
+    const handleClose = () => {
+        handleCloseModal(dispatch);
+    };
+
     return (
-        <Modal open={modalState.isModalOpen} onClose={() => handleCloseModal(dispatch)}>
+        <Modal open={modalState.isModalOpen} onClose={handleClose}>
             <Box sx={modalStyle(modalState.isEditing || modalState.isAnswering ? styleEdit : styleConsult)}>
                 {modalState.isEditing ?
                     <RadioGroup
@@ -131,9 +135,13 @@ export default function FlashCardsModal() {
                     height={300}
                     responseStatus={responseStatus}
                 />
-                {modalState.isEditing || modalState.isAnswering ?
-                    <StyledButton variant="contained" color={"secondary"} content={modalState.isAnswering ? "Valider" : "Enregistrer"} onClick={() => handleSave()} />
-                    : null}
+                {modalState.isEditing || modalState.isAnswering ? (
+                    responseStatus ? (
+                        <StyledButton variant="contained" color={"secondary"} content={"Fermer"} onClick={handleClose} />
+                    ) : (
+                        <StyledButton variant="contained" color={"secondary"} content={modalState.isAnswering ? "Valider" : "Enregistrer"} onClick={handleSave} />
+                    )
+                ) : null}
 
             </Box>
         </Modal>
