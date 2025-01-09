@@ -4,7 +4,7 @@ import { getUe } from "../API/UeAPI.js";
 import { getUserInfo } from "../API/ProfileAPI.js";
 
 import "./home.css";
-import { IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography, Box } from "@mui/material";
+import { IconButton, TextField, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Avatar, Typography, Box, useMediaQuery, Fab } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import MethodeJ from "./composent/MethodeJ.js";
 import StyledButton from "../composent/StyledBouton.js";
@@ -12,6 +12,7 @@ import FlashCardsModal from "../flashcards/FlashcardsModal.js";
 import { getDailyFlashcard } from "../API/FlashcardsAPI.js";
 import { handleOpenModal } from "../flashcards/FlashcardsUtils.js";
 import { useDispatch } from "react-redux";
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 
 function Home() {
@@ -22,6 +23,7 @@ function Home() {
   const [role, setRole] = useState('');
   const dispatch = useDispatch();
   const [dailyFlashcard, setDailyFlashcard] = useState(null);
+  const isSmallHeight = useMediaQuery('(max-height:924px)');
 
   
   const handleListItemClick = (id) => {
@@ -191,10 +193,24 @@ function Home() {
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <MethodeJ />
               <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-                <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)} />
+                {!isSmallHeight ? (
+                  <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)} />
+                ) : (
+                  <Fab 
+                    color="primary" 
+                    onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)}
+                    sx={{
+                      position: 'fixed',
+                      bottom: 16,
+                      right: 16,
+                    }}
+                  >
+                    <AutoStoriesIcon />
+                  </Fab>
+                )}
               </Box>
+              <FlashCardsModal />
             </Box>
-            <FlashCardsModal />
           </div>
           {isSecure}
 
