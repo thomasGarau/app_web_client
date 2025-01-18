@@ -197,13 +197,16 @@ function Home() {
                   <StyledButton content={"Flashcard du jour"} color={"primary"} onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)} />
                 ) : (
                   <Fab 
-                    color="primary" 
-                    onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)}
                     sx={{
                       position: 'fixed',
                       bottom: 16,
                       right: 16,
+                      bgcolor: '#133D56',
+                      '&:hover': {
+                        bgcolor: '#1a4f70'
+                      }
                     }}
+                    onClick={() => handleOpenModal(dailyFlashcard, true, false, dispatch)}
                   >
                     <AutoStoriesIcon />
                   </Fab>
