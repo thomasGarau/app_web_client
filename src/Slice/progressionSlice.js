@@ -14,7 +14,9 @@ const progressionSlice = createSlice({
         },
         setProgression: (state, action) => {  
             const { resourceId, clampedPercentage, index } = action.payload;
-            state.progressions[index].progression = clampedPercentage;
+            // S'assurer que la nouvelle valeur est supérieure à l'ancienne
+            const currentProgress = state.progressions[index]?.progression || 0;
+            state.progressions[index].progression = Math.max(currentProgress, clampedPercentage);
 
         }
     }

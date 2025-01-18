@@ -12,13 +12,11 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     const dispatch = useDispatch();
 
     const calculateProgression = () => {
-        if (progressionValue > oldProg) {
-            const percentage = Math.round((currentTime / duration) * 100);
-            const clampedPercentage = Math.max(0, Math.min(100, percentage))
-            return clampedPercentage;
-        }
-        return progression.progression;
-
+        const percentage = Math.round((currentTime / duration) * 100);
+        const clampedPercentage = Math.max(0, Math.min(100, percentage));
+        
+        // Ne mettre à jour que si la nouvelle progression est supérieure à l'ancienne
+        return Math.max(clampedPercentage, parseInt(oldProg, 10));
     };
 
     const handleTimeUpdate = () => {
@@ -39,8 +37,9 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     };
 
     useEffect(() => {
+        
         setProgressionValue(parseInt(progression.progression, 10));
-    }, [progression.progression]);
+    }, [progression]);
 
     useEffect(() => {
         if (!isNaN(progressionValue)) {
@@ -52,22 +51,21 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     useEffect(() => {
 
         const clampedPercentage = calculateProgression();
-        dispatch(setTime(currentTime));
-        dispatch(setProgression({ resourceId, clampedPercentage, index }));
-        const updateProgression = async () => {
-            if (progressionValue > oldProg) {
+        if (clampedPercentage > progressionValue) {
+            dispatch(setTime(currentTime));
+            dispatch(setProgression({ resourceId, clampedPercentage, index }));
+            
+            const updateProgression = async () => {
                 try {
-                    console.log('Updating progression:', progressionValue);
-                    await addCoursProgression(resourceId, `${progressionValue}`);
+                    await addCoursProgression(resourceId, `${clampedPercentage}`);
                 } catch (error) {
                     console.error('Error updating progression:', error);
                 }
-            }
-        };
+            };
+            updateProgression();
+        }
 
-        updateProgression();
-
-    }, [currentTime, duration, dispatch]);
+    }, [currentTime, duration, dispatch, progressionValue]);
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto' }}>
