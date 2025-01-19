@@ -43,7 +43,11 @@ const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
 
     useEffect(() => {
         if (!isNaN(progressionValue)) {
-            videoRef.current.currentTime = progressionValue * duration / 100;
+            const newTime = progressionValue * duration / 100;
+            // On ne met à jour que si la différence est supérieure à 1 seconde
+            if (Math.abs(videoRef.current.currentTime - newTime) > 1) {
+                videoRef.current.currentTime = newTime;
+            }
         }
     }, [progressionValue, duration]);
 
