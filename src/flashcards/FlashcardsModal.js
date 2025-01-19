@@ -107,7 +107,7 @@ export default function FlashCardsModal() {
     return (
         <Modal open={modalState.isModalOpen} onClose={() => handleCloseModal(dispatch)}>
             <Box sx={modalStyle(modalState.isEditing || modalState.isAnswering ? styleEdit : styleConsult)}>
-                {modalState.isEditing ?
+                {modalState.isEditing && currentFlashcard.new ?
                     <RadioGroup
                         row
                         aria-labelledby="demo-controlled-radio-buttons-group"

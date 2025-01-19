@@ -176,7 +176,9 @@ function Annotation() {
                 >
                     <Typography>Annotation</Typography>
                     <Box>
-                        <IconButton
+                        
+                        {
+                            <IconButton
                             onClick={() => {
                                 closeAnnotation(selectedAnnotation.id_annotation);
                             }}
@@ -184,6 +186,7 @@ function Annotation() {
                         >
                             <CheckIcon />
                         </IconButton>
+                        }
                         <IconButton
                             onClick={() => dispatch(setSelectedAnnotation(null))}
                             sx={{ color: 'rgba(0, 0, 0, 0.54)' }}

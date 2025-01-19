@@ -29,24 +29,28 @@ export default function Ue() {
         fetchChapters();
     }, [id]);
 
-    function handleChapterClick(chapterId) {
-        setSelectedChapter(chapterId);
+    function handleChapterClick(chapter) {
+        setSelectedChapter(chapter);
+    }
+
+    function handleNavigation(type) {
+        if (selectedChapter) navigate(`/${type}/${selectedChapter.id_chapitre}`);
     }
 
     function handleCourseClick() {
-        if(selectedChapter) navigate(`/etude/${selectedChapter}`);
+        handleNavigation('etude');
     }
 
     function handleQuizzClick() {
-        if(selectedChapter) navigate(`/quizz/${selectedChapter}`);
+        handleNavigation('quizz');
     }
 
     function handleFlashcardsClick() {
-        if(selectedChapter) navigate(`/flash_cards/${selectedChapter}`);
+        handleNavigation('flash_cards');
     }
-    
+
     function handleCMClick() {
-        if(selectedChapter) navigate(`/carte_mentale/${selectedChapter}`);
+        handleNavigation('carte_mentale');
     }
 
     return (
@@ -58,7 +62,7 @@ export default function Ue() {
                     <p>Chargement en cours...</p>
                 ) : chapters.length > 0 ? (
                     chapters.map((chapter) => (
-                        <div key={chapter.id_chapitre} className={selectedChapter == chapter.id_chapitre ? "chapter-selected" : "chapter"} onClick={() => handleChapterClick(chapter.id_chapitre)}>
+                        <div key={chapter.id_chapitre} className={selectedChapter == chapter.id_chapitre ? "chapter-selected" : "chapter"} onClick={() => handleChapterClick(chapter)}>
                             <h2 className='chapter-title'>{chapter.label}</h2>
                         </div>
                     ))

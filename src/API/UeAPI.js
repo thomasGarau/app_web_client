@@ -15,6 +15,19 @@ export const getChapParUE = async (ue_id) => {
     }
 }
 
+ export const getChapitreById = async (id) => {
+    try {
+        const body = {
+            id_chapitre: id
+        };
+        const response = await api.post(`/cours/getChapitreById`, body);
+        return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export const getUeProf = async () => {
     try {
         const response = await api.get('/ue/ue-enseignant');

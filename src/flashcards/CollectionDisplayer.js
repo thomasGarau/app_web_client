@@ -11,11 +11,13 @@ import { getTokenAndRole } from '../services/Cookie';
 import { jwtDecode } from 'jwt-decode';
 import StyledButton from '../composent/StyledBouton';
 import { fetchMyCollection, handleCloseModal } from './FlashcardsUtils';
+import { getChapitreById } from '../API/UeAPI';
 
 const CollectionDisplayer = () => {
 
     const { id_chap } = useParams();
     const [user, setUser] = useState(null);
+    const [chapitre, setChapitre] = useState(null);
     const flashcards = useSelector(state => state.flashcards.flashcards);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -31,18 +33,14 @@ const CollectionDisplayer = () => {
     }, []);
 
     useEffect(() => {
-
+        getChapitre();
         fetchMyCollection(parseInt(id_chap), dispatch);
     }, [id_chap, dispatch]);
 
 
-    const newFlashcard = useCallback(async (question, reponse, visibilite) => {
-        try {
-            await createFlashcard(id_chap, question, reponse, visibilite);
-            await fetchMyCollection(id_chap, dispatch);
-        } catch (error) {
-            console.error(error);
-        }
+    const getChapitre = useCallback(async () => {
+        const response = await getChapitreById(id_chap);
+        setChapitre(response);
     }, [id_chap]);
 
     const toSearch = () => {
@@ -65,7 +63,7 @@ const CollectionDisplayer = () => {
                 display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: 2, alignItems: 'center'
             }}>
                 <Typography sx={{ marginLeft: 2 }} variant="h4" gutterBottom>
-                    Ma collection de flashcards
+                    Ma collection de flashcards / {chapitre && chapitre.titre}
                 </Typography>
                 {isSmallScreen ? (
                     <Fab
