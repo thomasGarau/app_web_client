@@ -98,9 +98,8 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor:
-                            responseStatus &&
-                                responseStatus === true ? '#90EE90' :
-                                responseStatus === false ? '#e70000' :
+                            responseStatus && responseStatus ?
+                                (responseStatus.correcte === 'juste' ? '#90EE90' : '#e70000') :
                                     data ? '#f5f5f5' :
                                         '#e70000',
                         borderRadius: '10px',
@@ -128,6 +127,20 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     }
                                 }}
                             />
+                            {isEditing && (
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        position: "absolute",
+                                        bottom: 8,
+                                        color: "rgba(0, 0, 0, 0.6)",
+                                        fontSize: "0.75rem",
+                                        fontStyle: "italic"
+                                    }}
+                                >
+                                    Cliquez sur le bord de la carte pour la retourner
+                                </Typography>
+                            )}
                         </CardContent>
                     ) : (
                         <CardContent>
@@ -135,6 +148,20 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                 {responseStatus ? "Correcte!" : responseStatus == false ? "Incorrect" : data ? data.question : "Erreur de chargement"}
                             </Typography>
                         </CardContent>
+                    )}
+                    {responseStatus && responseStatus.correcte === 'juste' && (
+                        <Typography
+                            variant="caption"
+                            sx={{
+                                position: "absolute",
+                                bottom: 8,
+                                color: "rgba(0, 0, 0, 0.6)",
+                                fontSize: "1rem",
+                                fontStyle: "italic"
+                            }}
+                        >
+                            Cliquez pour voir l'explication
+                        </Typography>
                     )}
                     {user !== null &&
                         data &&
@@ -174,15 +201,18 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                         transform: 'rotateY(180deg)',
                     }}
                 >
-                    {isEditing || isAnswering ? (
+                    {responseStatus == null && (isEditing || isAnswering) ? (
                         <CardContent sx={{ height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <TextField
                                 rows={4}
                                 variant="outlined"
-                                value={isAnswering ? currentFlashcard.reponse : data ? data.reponse : "erreur"}
+                                value={isEditing
+                                    ? (data ? data.reponse : "erreur")
+                                    : (isAnswering ? currentFlashcard.reponse : data.reponse)}
                                 onChange={(e) => {
-                                    dispatch(setCurrentReponse(e.target.value));
-
+                                    if (isAnswering || isEditing) {
+                                        dispatch(setCurrentReponse(e.target.value));
+                                    }
                                 }}
                                 fullWidth
                                 multiline
@@ -197,12 +227,31 @@ export default function Flashcards({ data, isFlipped, onClick, isEditing, isAnsw
                                     }
                                 }}
                             />
+                            {isEditing && (
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        position: "absolute",
+                                        bottom: 8,
+                                        color: "rgba(0, 0, 0, 0.6)",
+                                        fontSize: "0.75rem",
+                                        fontStyle: "italic"
+                                    }}
+                                >
+                                    Cliquez sur le bord de la carte pour la retourner
+                                </Typography>
+                            )}
                         </CardContent>
                     ) : (
                         <CardContent>
                             <Typography variant="h5" component="div">
                                 {data ? data.reponse : "Erreur de chargement"}
                             </Typography>
+                            {responseStatus && responseStatus.explication && (
+                                <Typography variant="body1" sx={{ marginTop: 2 }}>
+                                    {responseStatus.explication}
+                                </Typography>
+                            )}
                         </CardContent>
                     )}
                     {user !== null &&

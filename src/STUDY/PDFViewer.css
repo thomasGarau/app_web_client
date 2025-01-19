@@ -1,0 +1,7 @@
+.rpv-core__minimal-button[aria-label="Download"] {
+    display: none !important;
+}
+
+.rpv-core__minimal-button[aria-label="Open file"] {
+    display: none !important;
+}

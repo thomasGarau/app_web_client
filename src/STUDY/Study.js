@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRessourceParChap, addRessource, deleteRessourceApi } from '../API/RessourceAPI';
+import { getRessourceParChap, addRessource, deleteRessourceApi, getChapitreById, addCoursProgression, getRessourceById } from '../API/RessourceAPI';
 import './Study.css';
 import { Accordion, AccordionSummary, Typography, AccordionActions, Box, Popover, Modal, LinearProgress, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -8,7 +8,6 @@ import DownloadIcon from '@mui/icons-material/Download';
 import QuestionForum from '../composent/QuestionForum';
 import { getUserInfo } from '../API/ProfileAPI';
 import StyledButton from '../composent/StyledBouton';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { decodeJWT } from '../services/decode';
 import { getTokenAndRole } from '../services/Cookie';
@@ -17,14 +16,13 @@ import PopoverError from '../composent/PopoverError';
 import { recolteInteraction } from '../API/jMethodeAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import ResourceDisplay from './ResourceDisplay';
-import { setAllProgressions } from '../Slice/progressionSlice';
-import { setPause, setTime } from '../Slice/videoSlice';
+import { setAllProgressions, setProgression } from '../Slice/progressionSlice';
 import FlashCardDrawer from './FlashcardsDrawer';
 import CommentIcon from '@mui/icons-material/Comment';
 import AnnotationDrawer from '../annotation/AnnotationDrawer';
 import AddAnnotationModal from '../annotation/AddAnnotationModal';
-import { createFlashcard } from '../API/FlashcardsAPI';
 import Annotation from '../annotation/Annotation';
+import { setSelectedAnnotation } from '../Slice/annotationSlice';
 
 const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv', 'webm'];
 
@@ -75,7 +73,9 @@ function Study() {
     const [expandedIndex, setExpandedIndex] = useState(-1);
     const { errorMessage, errorAnchorEl, idEl, openAnchor, showErrorPopover, handleClosePopover } = useErrorPopover();
     const [isFlashcardOpen, setFlashcardOpen] = useState(false);
+    const [chapterProgress, setChapterProgress] = useState(0);
     const [resourceIdAddAnnotation, setResourceIdAddAnnotation] = useState(null);
+    const [ChapterName, setChapterName] = useState('');
     const [drawerState, setDrawerState] = useState({
         isOpen: false,
         activeResourceId: null
@@ -92,11 +92,13 @@ function Study() {
 
     const videoTimeRef = useRef(videoTime);
     const pauseRef = useRef(pause);
-
-    const ressourcePdf = { type: 'pdf', url: '/demo.pdf' }
-    const ressourceMp4 = { type: 'video', url: '/test.mp4' }
-    const ressourceYt = { type: 'video', url: 'https://www.youtube.com/watch?v=5YIyTF7izJk' }
-    const ressourceImg = { type: 'img', url: '/logo_rond.png' }
+    useEffect(() => {
+        var progress = 0;
+        for (let i = 0; i < progressions.length; i++) {
+            progress += parseInt(progressions[i].progression);
+        }
+        setChapterProgress(progress / progressions.length);
+    }, [progressions]);
 
 
     const fetchRessources = useCallback(async () => {
@@ -104,9 +106,12 @@ function Study() {
             const response_info = await getUserInfo();
             setRole(response_info.role);
             const data = await getRessourceParChap(id);
+            const data2 = await getChapitreById(id);
+            console.log(data.cours)
+            setChapterName(data2[0].label);
             dispatch(setAllProgressions(data.cours));
             setRessources(data.cours);
-            
+
         } catch (error) {
             console.error("Erreur lors de la récupération des ressources :", error);
         }
@@ -214,6 +219,13 @@ function Study() {
 
     const handleAccordionChange = useCallback(async (index, ressource) => {
         setExpandedIndex(prevIndex => (prevIndex === index ? -1 : index));
+        if (ressource.type === 'img') {
+            const resourceId = ressource.id;
+            const clampedPercentage = 100;
+            dispatch(setProgression({ resourceId, clampedPercentage, index }))
+            await addCoursProgression(resourceId, `${clampedPercentage}`);
+        }
+        dispatch(setSelectedAnnotation(null));
     }, [expandedIndex]);
 
     const handleProgressUpdate = (resourceId, newProgression) => {
@@ -224,9 +236,45 @@ function Study() {
         );
     };
 
+    const handleFlashcardDrawerClose = () => {
+        setFlashcardOpen(false);
+    };
+
     const getProgressionValue = (resourceId) => {
-        const progression = progressions.find(p => p.id === resourceId).progression;
-        return progression ? progression : 0;
+        const resource = progressions.find(p => p.id === resourceId);
+        if (resource) {
+            if (typeof resource.progression === 'number') {
+                return parseFloat(resource.progression.toFixed(0));
+            }
+            else if (typeof resource.progression === 'string') {
+                return parseFloat(resource.progression);
+            }
+        }
+        return 0;
+    };
+
+    const fetchRessource = async (ressource) => {
+        try {
+            const data = await getRessourceById(ressource.id);
+            if (data instanceof Blob || data instanceof File) {
+                const fileUrl = URL.createObjectURL(data);
+                return fileUrl;
+
+            } else {
+                throw new Error("La ressource récupérée n'est pas un Blob ou un File");
+            }
+        } catch (error) {
+            console.error("Erreur lors de la récupération des ressources :", error);
+        }
+    };
+
+    const downloadResource = async (ressource) => {
+        const link = document.createElement('a');
+        link.href = await fetchRessource(ressource);
+        link.setAttribute('download', ressource.label);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
@@ -241,7 +289,21 @@ function Study() {
                 />
                 <div className='text-part'>
 
-                    <h1 className='study-title'>Ressource du chapitre</h1>
+                    <h1 className='study-title'>Chapitre {ChapterName}</h1>
+
+                    <LinearProgress
+                        variant="determinate"
+                        value={chapterProgress}
+                        sx={{
+                            marginBottom: 2,
+                            height: 10,
+                            borderRadius: 5,
+                            '& .MuiLinearProgress-bar': {
+                                borderRadius: 5,
+                            },
+                        }}
+                    />
+
                     {ressources.length > 0 ? (
                         ressources.map((ressource, index) => (
 
@@ -269,7 +331,7 @@ function Study() {
                                             <DeleteIcon />
                                         </div>
                                     )}
-                                    <div className='icon-study' onClick={() => window.open(ressourceImg.url, '_blank')}>
+                                    <div className='icon-study' onClick={() => downloadResource(ressource)}>
                                         <DownloadIcon />
                                     </div>
                                     <div className='icon-study' onClick={(e) => {
@@ -380,7 +442,7 @@ function Study() {
                     </Modal>
 
                 )}
-                <FlashCardDrawer open={isFlashcardOpen} onClose={() => setFlashcardOpen(false)} chapterId={id} />
+                <FlashCardDrawer open={isFlashcardOpen} onClose={() => handleFlashcardDrawerClose()} chapterId={id} />
                 <AddAnnotationModal parentType="Study" open={openAddAnnotation} handleClose={() => setOpenAddAnnotation(false)} resourceId={resourceIdAddAnnotation} />
                 {selectedAnnotation && (<Annotation />)}
                 <QuestionForum id_chap={id} role={role} />

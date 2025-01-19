@@ -1,16 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setProgressionVideo, setTime, incrementerPause } from '../Slice/videoSlice';
+import { setProgression } from '../Slice/progressionSlice';
+import { addCoursProgression } from '../API/RessourceAPI';
 
-const VideoPlayer = ({ videoUrl }) => {
+const VideoPlayer = ({ videoUrl, resourceId, index, progression, oldProg }) => {
     const videoRef = useRef(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [progressionValue, setProgressionValue] = useState(0);
     const dispatch = useDispatch();
 
-    const calculateProgression = (currentTime, duration) => {
-        if (duration === 0) return 0; 
-        return (currentTime / duration) * 100;
+    const calculateProgression = () => {
+        const percentage = Math.round((currentTime / duration) * 100);
+        const clampedPercentage = Math.max(0, Math.min(100, percentage));
+        
+        // Ne mettre à jour que si la nouvelle progression est supérieure à l'ancienne
+        return Math.max(clampedPercentage, parseInt(oldProg, 10));
     };
 
     const handleTimeUpdate = () => {
@@ -31,12 +37,39 @@ const VideoPlayer = ({ videoUrl }) => {
     };
 
     useEffect(() => {
-        const progression = calculateProgression(currentTime, duration);
+        
+        setProgressionValue(parseInt(progression.progression, 10));
+    }, [progression]);
 
-        dispatch(setTime(currentTime));
-        dispatch(setProgressionVideo(progression));
+    useEffect(() => {
+        if (!isNaN(progressionValue)) {
+            const newTime = progressionValue * duration / 100;
+            // On ne met à jour que si la différence est supérieure à 1 seconde
+            if (Math.abs(videoRef.current.currentTime - newTime) > 1) {
+                videoRef.current.currentTime = newTime;
+            }
+        }
+    }, [progressionValue, duration]);
 
-    }, [currentTime, duration, dispatch]);
+
+    useEffect(() => {
+
+        const clampedPercentage = calculateProgression();
+        if (clampedPercentage > progressionValue) {
+            dispatch(setTime(currentTime));
+            dispatch(setProgression({ resourceId, clampedPercentage, index }));
+            
+            const updateProgression = async () => {
+                try {
+                    await addCoursProgression(resourceId, `${clampedPercentage}`);
+                } catch (error) {
+                    console.error('Error updating progression:', error);
+                }
+            };
+            updateProgression();
+        }
+
+    }, [currentTime, duration, dispatch, progressionValue]);
 
     return (
         <div style={{ maxWidth: '600px', margin: 'auto' }}>
@@ -47,7 +80,7 @@ const VideoPlayer = ({ videoUrl }) => {
                 controls
                 style={{ border: '1px solid #ccc' }}
                 onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata} 
+                onLoadedMetadata={handleLoadedMetadata}
                 onPause={handlePause}
             >
                 <source src={videoUrl} type="video/mp4" />

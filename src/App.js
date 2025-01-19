@@ -55,7 +55,7 @@ function App() {
         <Route path="/ue/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}><Layout><Ue /></Layout></RoleBasedRoute>} />
         <Route path="/quizz/:id" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><Quizz_principale /> </Layout></RoleBasedRoute>} />
         <Route path="/etude/:id" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><Study/></Layout> </RoleBasedRoute> }/>
-        <Route path="/flash_cards/:id_chap" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><CollectionDisplayer/></Layout> </RoleBasedRoute> }/>
+        <Route path="/flash_cards/:id_chap" element={ <RoleBasedRoute allowedRoles={['enseignant', 'etudiant']}> <Layout><CollectionDisplayer/></Layout> </RoleBasedRoute> }/>
         <Route path="/search_flashcards/:id_chap" element={ <RoleBasedRoute allowedRoles={['etudiant']}> <Layout><SearchFlashcards/></Layout> </RoleBasedRoute> }/>
         <Route path="/gestion_quizz" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><GestionQuizz /> </Layout></RoleBasedRoute>} />
         <Route path="/statQuizz/:quizId/:noteQuizId" element={<RoleBasedRoute allowedRoles={['etudiant']}> <Layout><StatQuizz /> </Layout></RoleBasedRoute>} />

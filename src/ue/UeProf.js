@@ -50,6 +50,7 @@ function UeProf() {
 
     const handleQuizClick = (chapterId) => navigate(`/gestion_quizz/prof/${chapterId}`);
     const handleCourseClick = (chapterId) => navigate(`/etude/${chapterId}`);
+    const handleFlashcardsClick = (chapterId) => navigate(`/flash_cards/${chapterId}`);
 
     const editChap = (chapterId) => {
         setIsEditing(true);
@@ -124,6 +125,7 @@ function UeProf() {
                     onSave={handleEditChapter}
                     onQuizClick={handleQuizClick}
                     onCourseClick={handleCourseClick}
+                    onFlashcardsClick={handleFlashcardsClick}
                     errorAnchorEl={errorAnchorEl}
                     errorMessage={errorMessage}
                     open={open}

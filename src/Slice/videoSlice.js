@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { setProgression } from './progressionSlice';
 
 const videoSlice = createSlice({
     name: 'video',

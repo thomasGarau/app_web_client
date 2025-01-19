@@ -64,33 +64,26 @@ export default function FlashCardsModal() {
     useEffect(() => {
         if (currentFlashcard) {
             dispatch(setCurrentQuestion(currentFlashcard.question));
-            if (modalState.isAnswering !== null && !modalState.isAnswering) {
-                dispatch(setCurrentReponse(currentFlashcard.reponse));
+            if (modalState.isAnswering !== null && modalState.isAnswering === true) {
+                dispatch(setCurrentReponse(""));
             }
 
         }
-    }, [currentFlashcard, modalState.isAnswering]);
+    }, [modalState.isAnswering]);
 
     const handleSave = async () => {
         try {
             if (modalState.isAnswering) {
                 // Compare answers and set status
-                const isCorrect = true
-
-                setResponseStatus(isCorrect);
-
-                // Wait 4 seconds then close
-                setTimeout(() => {
-                    handleCloseModal(dispatch);
-                    setResponseStatus(null); // Reset status
-                }, 4000);
-
+                const data = await flashcardAnswer(currentFlashcard.id_flashcard, currentFlashcard.reponse);
+                console.log(data);
+                setResponseStatus(data);
                 return;
             }
             if (currentFlashcard && !currentFlashcard.new) {
                 await updateFlashcard(currentFlashcard.id_flashcard, currentFlashcard.question, currentFlashcard.reponse);
             } else {
-                (console.log(visibility));
+                (console.log(visibility, currentFlashcard.id_chapitre, currentFlashcard.question, currentFlashcard.reponse));
                 await createFlashcard(currentFlashcard.id_chapitre, currentFlashcard.question, currentFlashcard.reponse, visibility);
             }
             await fetchMyCollection(currentFlashcard.id_chapitre, dispatch);
@@ -104,8 +97,12 @@ export default function FlashCardsModal() {
         setFlipped((prev) => !prev);
     };
 
+    const handleClose = () => {
+        handleCloseModal(dispatch);
+    };
+
     return (
-        <Modal open={modalState.isModalOpen} onClose={() => handleCloseModal(dispatch)}>
+        <Modal open={modalState.isModalOpen} onClose={handleClose}>
             <Box sx={modalStyle(modalState.isEditing || modalState.isAnswering ? styleEdit : styleConsult)}>
                 {modalState.isEditing && currentFlashcard.new ?
                     <RadioGroup
@@ -138,9 +135,13 @@ export default function FlashCardsModal() {
                     height={300}
                     responseStatus={responseStatus}
                 />
-                {modalState.isEditing || modalState.isAnswering ?
-                    <StyledButton variant="contained" color={"secondary"} content={modalState.isAnswering ? "Valider" : "Enregistrer"} onClick={() => handleSave()} />
-                    : null}
+                {modalState.isEditing || modalState.isAnswering ? (
+                    responseStatus ? (
+                        <StyledButton variant="contained" color={"secondary"} content={"Fermer"} onClick={handleClose} />
+                    ) : (
+                        <StyledButton variant="contained" color={"secondary"} content={modalState.isAnswering ? "Valider" : "Enregistrer"} onClick={handleSave} />
+                    )
+                ) : null}
 
             </Box>
         </Modal>

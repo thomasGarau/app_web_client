@@ -11,7 +11,7 @@ import { getTokenAndRole } from '../services/Cookie';
 import { jwtDecode } from 'jwt-decode';
 import StyledButton from '../composent/StyledBouton';
 import { fetchMyCollection, handleCloseModal } from './FlashcardsUtils';
-import { getChapitreById } from '../API/UeAPI';
+import { getChapitreById } from '../API/RessourceAPI';
 
 const CollectionDisplayer = () => {
 
@@ -29,6 +29,12 @@ const CollectionDisplayer = () => {
             const decodedToken = jwtDecode(token);
             setUser(decodedToken.id_etudiant);
         };
+        const fetchChapter = async () => {
+            const chapitre = await getChapitreById(id_chap);
+            console.log(chapitre);
+            setChapitre(chapitre[0]);
+        }
+        fetchChapter();
         fetchData();
     }, []);
 

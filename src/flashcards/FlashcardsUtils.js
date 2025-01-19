@@ -21,9 +21,11 @@ export const handleOpenModal = (flashcard, isAnswering, isEditing, dispatch) => 
 };
 
 export const fetchMyCollection = async (id_chap, dispatch) => {
-    console.log('Fetching flashcards for chapter:', id_chap);
+    dispatch(setFlashcards([]));
+
     try {
         const response = await getUserFlashcards(id_chap);
+        console.log('Fetched flashcards:', response);
         const processedFlashcards = response.map(flashcard => {
             if (flashcard.visibilite === 'orphelin') {
                 return { ...flashcard, orphan: true };
